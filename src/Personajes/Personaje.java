@@ -41,7 +41,7 @@ public abstract class Personaje {
      * @param mochila Mochila que llevará
      * @param armadura Valor de armadura
      * @param arma Arma que empuña
-     * @param mapa Mapa en el que está jugando
+     * @param juego
      * @param rango Radio de visión del jugador (en celdas)
      */
     public Personaje(String nombre, int vida, int energia, Mochila mochila, Armadura armadura, Arma arma, int rango, Juego juego){
