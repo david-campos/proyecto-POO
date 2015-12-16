@@ -95,6 +95,8 @@ public class ConsolaVentana extends JFrame implements Consola{
         return leer();
     }
     
+    @Override
+    public void cerrar(){}
     
     @Override
     public boolean esGrafica() {return false;}

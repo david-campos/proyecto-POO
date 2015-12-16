@@ -17,6 +17,7 @@ public interface Consola {
     public void imprimirMapa(String mensaje);
     public void imprimir (String mensaje);
     public void imprimirSinSalto(String mensaje);
+    public void cerrar();
     /**
      * Sirve para conseguir datos del usuario
      * @param descripcion Texto a mostrar previo a la introducción de los datos

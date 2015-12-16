@@ -168,7 +168,8 @@ public final class Juego {
                     cc.ejecutar();
                     return 1;
                 case "salir":
-                    cc.ejecutar();
+                    consola.cerrar();
+                    cMapa.cerrar();
                     return 0;
                 case "mover":
                     if(i+1<comando.length){

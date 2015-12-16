@@ -58,6 +58,11 @@ public final class ConsolaNormal implements Consola{
         return scnr.nextLine();
     }
 
+    /**
+     *
+     */
+    public void cerrar(){}
+    
     @Override
     public boolean esGrafica() {return false;}
 }

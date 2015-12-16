@@ -15,7 +15,8 @@ import java.util.HashMap;
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public class ConsolaMapa2 extends JFrame implements Consola{
-    private static final int DIM = 30;
+    private static final Punto DIM_TOTAL = new Punto(650, 500); //Tamaño del mapa máximo
+    private final int dim;
     
     private final ArrayList<JLabel> paneles;
     private final HashMap<String, ImageIcon> imagenes;
@@ -29,6 +30,7 @@ public class ConsolaMapa2 extends JFrame implements Consola{
         
         paneles = new ArrayList(tamMapa.x * tamMapa.y);
         imagenes = new HashMap();
+        dim = (int) Math.floor(Math.min(DIM_TOTAL.x/(double)tamMapa.x, DIM_TOTAL.y/(double)tamMapa.y));
         for(int i = 0; i < tamMapa.x * tamMapa.y; i++){
             JLabel jPanel1 = new JLabel();
             jPanel1.setBackground(Color.red);
@@ -37,9 +39,9 @@ public class ConsolaMapa2 extends JFrame implements Consola{
             imagenes.put("celda", icon);
             jPanel1.setIcon(icon);
             
-            jPanel1.setMinimumSize(new Dimension(DIM, DIM));
-            jPanel1.setPreferredSize(new Dimension(DIM, DIM));
-            jPanel1.setSize(new Dimension(DIM, DIM));
+            jPanel1.setMinimumSize(new Dimension(dim, dim));
+            jPanel1.setPreferredSize(new Dimension(dim, dim));
+            jPanel1.setSize(new Dimension(dim, dim));
             
             getContentPane().add(jPanel1);
             paneles.add(jPanel1);
@@ -62,7 +64,7 @@ public class ConsolaMapa2 extends JFrame implements Consola{
             if(imagenes.containsKey(img))
                 ico = imagenes.get(img);
             else{
-                ico = new ImageIcon("img/"+img+".png");
+                ico = new ImageIcon(new ImageIcon("img/"+img+".png").getImage().getScaledInstance(dim, dim, Image.SCALE_SMOOTH));
                 imagenes.put(img, ico);
             }
             paneles.get(i).setIcon(ico);
@@ -90,6 +92,12 @@ public class ConsolaMapa2 extends JFrame implements Consola{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>
+    
+    @Override
+    public void cerrar(){
+        setVisible(false);
+        dispose();
+    }
     
     @Override
     public boolean esGrafica() {return true;}
