@@ -404,7 +404,7 @@ public abstract class Personaje {
         return false;
     }
 
-    protected boolean atacar(Personaje enemigo, int dano) throws PersonajeException {
+    protected abstract boolean atacar(Personaje enemigo, int dano) throws PersonajeException; /*{
         if(dano <= 0){
             juego.log("Daño negativo? Güet?");  
             return false;
@@ -443,7 +443,7 @@ public abstract class Personaje {
             return false;
         }
         return true;
-    }
+    }*/
     /**
      * Tira el objeto indicado a la celda.
      * @param obj El objeto a tirar.
