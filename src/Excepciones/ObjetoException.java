@@ -11,8 +11,16 @@ package Excepciones;
  */
 public class ObjetoException extends Exception {
     
+    /**
+     *
+     */
     public ObjetoException() {        
     }
+
+    /**
+     *
+     * @param string
+     */
     public ObjetoException(String string) {
         super(string);
     }

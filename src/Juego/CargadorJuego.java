@@ -12,5 +12,11 @@ import Excepciones.CargadorException;
  * @author crist
  */
 public interface CargadorJuego {
+
+    /**
+     *
+     * @return
+     * @throws CargadorException
+     */
     public Juego cargarJuego() throws CargadorException ;    
 }

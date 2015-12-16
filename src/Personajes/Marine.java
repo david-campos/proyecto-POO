@@ -19,14 +19,43 @@ public class Marine extends Jugador {
     private static Random r = new Random();
     private double consumoPor;
 
+    /**
+     *
+     * @param nombre
+     * @param vida
+     * @param energia
+     * @param mochila
+     * @param armadura
+     * @param arma
+     * @param bn
+     * @param mapa
+     * @param rango
+     * @param juego
+     */
     public Marine(String nombre, int vida, int energia, Mochila mochila, Armadura armadura, Arma arma, Binoculares bn, Mapa mapa, int rango, Juego juego) {
         super(nombre, vida, energia, mochila, armadura, arma, bn, mapa, rango, juego); 
         consumoPor = 1;
     }
+
+    /**
+     *
+     * @param nombre
+     * @param vida
+     * @param mochilaMaxPeso
+     * @param mapa
+     * @param juego
+     */
     public Marine(String nombre, int vida, int mochilaMaxPeso, Mapa mapa, Juego juego) {
         super(nombre, vida, mochilaMaxPeso, mapa, juego); 
         consumoPor = 1;
     }
+
+    /**
+     *
+     * @param nombre
+     * @param mapa
+     * @param juego
+     */
     public Marine(String nombre, Mapa mapa, Juego juego) {
         super(nombre, mapa, juego);
         consumoPor = 1;
@@ -60,6 +89,14 @@ public class Marine extends Jugador {
         }
         return false;
     }
+
+    /**
+     *
+     * @param enemigo
+     * @param dano
+     * @return
+     * @throws PersonajeException
+     */
     @Override
     protected boolean atacar(Personaje enemigo, int dano) throws PersonajeException {
         if(dano <= 0){
@@ -149,6 +186,9 @@ public class Marine extends Jugador {
         actualizarMultiplicadorConsumo();
     }
 
+    /**
+     *
+     */
     public void actualizarMultiplicadorConsumo(){
         if(this.arma != null && this.arma.getTipo() == Arma.ARMA_DOS_MANOS && this.arma_izq != null && this.arma_izq.getTipo() == Arma.ARMA_DOS_MANOS)
             consumoPor = 1.5;

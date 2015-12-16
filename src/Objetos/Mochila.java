@@ -15,6 +15,12 @@ public class Mochila {
     private ArrayList<Objeto> contenido;
     private Consola consola;
 
+    /**
+     *
+     * @param maxObjetos
+     * @param maxPeso
+     * @param contenido
+     */
     public Mochila(int maxObjetos, int maxPeso, ArrayList<Objeto> contenido){
         if(maxObjetos > 0)
             this.maxObjetos = maxObjetos;
@@ -34,9 +40,19 @@ public class Mochila {
             consola = new ConsolaNormal();
         }
     }
+
+    /**
+     *
+     * @param maxObjetos
+     * @param maxPeso
+     */
     public Mochila(int maxObjetos, int maxPeso){
         this(maxObjetos, maxPeso, new ArrayList(maxObjetos));
     }
+
+    /**
+     *
+     */
     public Mochila(){
         this(10,50);
     }
@@ -95,6 +111,12 @@ public class Mochila {
         else
             return null;
     }
+
+    /**
+     *
+     * @param nombre
+     * @return
+     */
     public Objeto getObjeto(String nombre) {
         if(nombre != null)
             for (Objeto ob : contenido) 

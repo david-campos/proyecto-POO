@@ -6,10 +6,17 @@ import Personajes.*;
 import Objetos.*;
 import java.util.ArrayList;
 
+/**
+ *
+ * @author ElJüsticieroMisteryo
+ */
 public final class Transitable extends Celda {	
     private final ArrayList<Objeto> objetos;
     private final ArrayList<Enemigo> enemigos;
 
+    /**
+     *
+     */
     public Transitable() {
         super(0,null);
         objetos = new ArrayList();
@@ -35,6 +42,12 @@ public final class Transitable extends Celda {
     public ArrayList<Objeto> getObjetos() {
     	return (ArrayList<Objeto>) objetos.clone();
     }
+
+    /**
+     *
+     * @param nombre
+     * @return
+     */
     public Objeto getObjeto(String nombre) {
         if(nombre != null)
             for (Objeto ob: objetos)
@@ -63,6 +76,7 @@ public final class Transitable extends Celda {
     /**
      * Asocia al enemigo a esta celda. (Es llamado por Enemigo.setMapa y Enemigo.setPosicion).
      * @param enemigo El enemigo a asociar. Puede ser null si lo que se quiere es simplemente desligar el enemigo actual.
+     * @throws Excepciones.MapaExcepcion
      */
     public void addEnemigo(Enemigo enemigo) throws MapaExcepcion {
         if (enemigo != null && !enemigos.contains(enemigo) && !this.mapa.addEnemigo(enemigo)) {
@@ -76,6 +90,12 @@ public final class Transitable extends Celda {
     public int getNumEnemigos() {
         return enemigos.size();
     }
+
+    /**
+     *
+     * @param ene
+     * @throws MapaExcepcion
+     */
     public void remEnemigo(Enemigo ene) throws MapaExcepcion {
         if(ene != null){
             enemigos.remove(ene);
@@ -85,6 +105,7 @@ public final class Transitable extends Celda {
     /**
      * Elimina al enemigo en esta celda.
      * @param nombre El nombre del enemigo a eliminar.
+     * @throws Excepciones.MapaExcepcion
      */
     public void remEnemigo(String nombre) throws MapaExcepcion {
         Enemigo ene = getEnemigo(nombre);

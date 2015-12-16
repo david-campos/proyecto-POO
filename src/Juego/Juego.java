@@ -24,40 +24,80 @@ public final class Juego {
     private Consola cMapa;
     private String[] anteriorComando=null;
     
+    /**
+     *
+     * @param mapa
+     * @param jugador
+     */
     public Juego (Mapa mapa, Jugador jugador) {
         this.mapa = mapa;
         jug = jugador;
         consola = new ConsolaNormal();
         cMapa = new ConsolaMapa2(new Punto(mapa.getAncho(), mapa.getAlto()));
     }
+
+    /**
+     *
+     * @param mapa
+     */
     public Juego (Mapa mapa) {
         this(mapa, null);
     }
     
+    /**
+     *
+     * @return
+     */
     public Mapa getMapa() {
         return mapa;
     }
+
+    /**
+     *
+     * @param map
+     */
     public void setMapa(Mapa map) {
         if(map != null) 
             mapa = map;
     }
+
+    /**
+     *
+     * @return
+     */
     public Jugador getJugador() {
         return jug;
     }
+
+    /**
+     *
+     * @param j
+     */
     public void setJugador(Jugador j) {
         if(j!=null)
             jug = j;            
     }
+
+    /**
+     *
+     * @param csl
+     */
     public void setConsola(Consola csl) {
         if(csl!=null)
             consola = csl;
     }
+
+    /**
+     *
+     * @return
+     */
     public Consola getConsola() {
         return consola;
     }
     
     /**
      * Inicia el juego.
+     * @throws java.lang.Exception
      */
     public void iniciar() throws Exception {
         if(mapa == null || jug == null || consola == null || cMapa == null){
@@ -139,10 +179,18 @@ public final class Juego {
                 +jug.getVida()+"\u2665 , "
                 +jug.getEnergia()+"E ] ");
     }
+
+    /**
+     *
+     * @param mensaje
+     */
     public void log(String mensaje) {
         consola.imprimir(mensaje);
     }
 
+    /**
+     *
+     */
     public void impMapa() {
         if(mapa != null)
             if(cMapa.esGrafica())

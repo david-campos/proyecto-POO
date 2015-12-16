@@ -10,8 +10,24 @@ package Personajes;
  * @author crist
  */
 public interface PConst {
+
+    /**
+     *
+     */
     int GE_COGER = 1;
+
+    /**
+     *
+     */
     int GE_ATACAR = 10;
+
+    /**
+     *
+     */
     int GE_MOVER = 5;
+
+    /**
+     *
+     */
     int GE_MIRAR = 2;
 }

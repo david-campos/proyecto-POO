@@ -14,6 +14,15 @@ public class Armadura extends Objeto{
     private int boostVida;
     private int boostEnergia;
     
+    /**
+     *
+     * @param nombre
+     * @param descripcion
+     * @param peso
+     * @param defensa
+     * @param boostVida
+     * @param boostEnergia
+     */
     public Armadura(String nombre, String descripcion, double peso, int defensa, int boostVida, int boostEnergia){
         super(peso, nombre, descripcion);
         setDefensa(defensa);
@@ -32,23 +41,52 @@ public class Armadura extends Objeto{
         p.setEnergiaPorTurno(p.getEnergiaPorTurno() + getBoostEnergia());
     }
     
+    /**
+     *
+     * @param defensa
+     */
     public final void setDefensa(int defensa){
         if(defensa > 0)
             this.defensa = defensa;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getDefensa() {
         return defensa;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getBoostVida() {
         return boostVida;
     }
+
+    /**
+     *
+     * @param boostVida
+     */
     public final void setBoostVida(int boostVida) {
         //Pueden quitar vida... así que vale cualquier cosa
         this.boostVida = boostVida;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getBoostEnergia() {
         return boostEnergia;
     }
+
+    /**
+     *
+     * @param boostEnergia
+     */
     public final void setBoostEnergia(int boostEnergia) {
         //Puede quitar energía el boost, vale cualquier valor
         this.boostEnergia = boostEnergia;

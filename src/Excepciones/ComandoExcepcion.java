@@ -8,8 +8,17 @@ package Excepciones;
  * @author david.campos
  */
 public class ComandoExcepcion extends Exception{
+
+    /**
+     *
+     */
     public ComandoExcepcion() {
     }
+
+    /**
+     *
+     * @param message
+     */
     public ComandoExcepcion(String message) {
         super(message);
     }

@@ -27,6 +27,11 @@ public final class ConsolaNormal implements Consola{
         if(mensaje != null)
             System.out.println(mensaje);    
     }
+
+    /**
+     *
+     * @param mensaje
+     */
     @Override
     public void imprimirSinSalto(String mensaje) {
         if(mensaje != null)
@@ -58,6 +63,10 @@ public final class ConsolaNormal implements Consola{
         return scnr.nextLine();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean esGrafica() {return false;}
 }

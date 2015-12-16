@@ -9,5 +9,10 @@ import Excepciones.ComandoExcepcion;
  * @author david.campos
  */
 public interface Comando {
+
+    /**
+     *
+     * @throws ComandoExcepcion
+     */
     void ejecutar() throws ComandoExcepcion;
 }

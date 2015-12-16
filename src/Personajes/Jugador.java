@@ -19,6 +19,19 @@ import java.util.ArrayList;
 public abstract class Jugador extends Personaje {
     private Binoculares binoculares;
 
+    /**
+     *
+     * @param nombre
+     * @param vida
+     * @param energia
+     * @param mochila
+     * @param armadura
+     * @param arma
+     * @param bn
+     * @param mapa
+     * @param rango
+     * @param juego
+     */
     public Jugador(String nombre, int vida, int energia, Mochila mochila, Armadura armadura, Arma arma, Binoculares bn, Mapa mapa, int rango, Juego juego) {
         super(nombre, vida, energia, mochila, armadura, arma, rango, juego);      
         if(bn != null) {
@@ -27,12 +40,28 @@ public abstract class Jugador extends Personaje {
         if(mapa != null)
             this.mapa = mapa;
     }
+
+    /**
+     *
+     * @param nombre
+     * @param vida
+     * @param mochilaMaxPeso
+     * @param mapa
+     * @param juego
+     */
     public Jugador(String nombre, int vida, int mochilaMaxPeso, Mapa mapa, Juego juego){
         super(nombre, vida, mochilaMaxPeso, juego);
         binoculares = null; 
         if(mapa != null)
             this.mapa = mapa;
     }
+
+    /**
+     *
+     * @param nombre
+     * @param mapa
+     * @param juego
+     */
     public Jugador(String nombre, Mapa mapa, Juego juego) {
         super(nombre, juego);
         binoculares = null;
@@ -40,21 +69,43 @@ public abstract class Jugador extends Personaje {
             this.mapa = mapa;
     }
 
+    /**
+     *
+     * @return
+     */
     public Binoculares getBinoculares() {
             return binoculares;
     }
+
+    /**
+     *
+     * @param bn
+     */
     public void setBinoculares (Binoculares bn) {
         if (bn != null)
                 binoculares = bn;
     }
+
+    /**
+     *
+     * @return
+     */
     public boolean tieneBinoculares(){
         return binoculares!=null;
     }
 
+    /**
+     *
+     * @return
+     */
     public Juego getJuego() {
         return juego;
     }
 
+    /**
+     *
+     * @param juego
+     */
     public void setJuego(Juego juego) {
         this.juego = juego;
     }
@@ -117,6 +168,7 @@ public abstract class Jugador extends Personaje {
      * Mira en una celda para dar los detalles de un enemigo concreto.
      * @param c La celda en la que buscar el enemigo
      * @param nombre El nombre del enemigo
+     * @throws Excepciones.PersonajeException
      */
     public void mirar(Transitable c, String nombre) throws PersonajeException{
         if(c.getEnemigo(nombre)!=null){
@@ -125,6 +177,12 @@ public abstract class Jugador extends Personaje {
             throw new PersonajeException("No existe ese enemigo en esta celda...");
         }
     }
+
+    /**
+     *
+     * @param c
+     * @throws PersonajeException
+     */
     public void atacar(Transitable c) throws PersonajeException {
         for(Enemigo ene : c.getEnemigos())
             if(atacar(ene, (int) Math.ceil(getEfectoArmas()/(double)c.getNumEnemigos())))

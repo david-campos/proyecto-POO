@@ -13,6 +13,12 @@ import Personajes.Personaje;
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public class Explosivo extends Objeto{
+
+    /**
+     *
+     * @param peso
+     * @param nombre
+     */
     public Explosivo(double peso, String nombre) {
         super(peso, nombre, "Al usarlo, explota una vez finalizado el turno");
     }

@@ -16,27 +16,52 @@ public class ComandoMirarPorObjetos implements Comando{
     private String nombreObjeto;
     private Jugador jug;
 
+    /**
+     *
+     * @param nombreObjeto
+     * @param jug
+     */
     public ComandoMirarPorObjetos(String nombreObjeto, Jugador jug) {
         this.nombreObjeto = nombreObjeto;
         this.jug = jug;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNombreObjeto() {
         return nombreObjeto;
     }
 
+    /**
+     *
+     * @param nombreObjeto
+     */
     public void setNombreObjeto(String nombreObjeto) {
         this.nombreObjeto = nombreObjeto;
     }
 
+    /**
+     *
+     * @return
+     */
     public Jugador getJug() {
         return jug;
     }
 
+    /**
+     *
+     * @param jug
+     */
     public void setJug(Jugador jug) {
         this.jug = jug;
     }
     
+    /**
+     *
+     * @throws ComandoExcepcion
+     */
     @Override
     public void ejecutar() throws ComandoExcepcion {
         if(jug != null)

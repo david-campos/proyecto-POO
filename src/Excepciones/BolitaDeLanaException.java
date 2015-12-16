@@ -10,6 +10,10 @@ package Excepciones;
 public class BolitaDeLanaException extends Exception{
     private final String color;
 
+    /**
+     *
+     * @param color
+     */
     public BolitaDeLanaException(String color) {
         this.color = color;
     }

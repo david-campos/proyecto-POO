@@ -12,6 +12,12 @@ import Personajes.Personaje;
 public final class ToritoRojo extends Objeto{
     private final int plusEnergia;
     
+    /**
+     *
+     * @param nombre
+     * @param peso
+     * @param plus
+     */
     public ToritoRojo(String nombre, double peso, int plus){
         super(peso, nombre, "Aumenta la energía al usar, pero la disminuye en el siguiente turno.");
         //plusVida puede ser negativo, se acepta cualquier valor
@@ -26,6 +32,10 @@ public final class ToritoRojo extends Objeto{
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     public final int getPlusEnergia() {
         return plusEnergia;
     }

@@ -13,27 +13,53 @@ import Personajes.Jugador;
 public final class ComandoEquipar implements Comando{
     private Jugador jug;
     private String nombre;
+
+    /**
+     *
+     * @param jug
+     * @param nombre
+     */
     public ComandoEquipar(Jugador jug, String nombre){
         this.jug = jug;
         this.nombre = nombre;
     }
 
+    /**
+     *
+     * @return
+     */
     public Jugador getJugador() {
         return jug;
     }
 
+    /**
+     *
+     * @param jug
+     */
     public void setJugador(Jugador jug) {
         this.jug = jug;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     *
+     * @param nombre
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
     
+    /**
+     *
+     * @throws ComandoExcepcion
+     */
     @Override
     public void ejecutar() throws ComandoExcepcion {
         if(jug!=null)

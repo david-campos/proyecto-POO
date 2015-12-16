@@ -8,12 +8,29 @@ package Objetos;
  * @author david.campos
  */
 public class Arma extends Objeto{
+
+    /**
+     *
+     */
     public static final boolean ARMA_UNA_MANO = false;
+
+    /**
+     *
+     */
     public static final boolean ARMA_DOS_MANOS = true;
     private final int dano;
     private final int rango;
     private boolean tipo;
     
+    /**
+     *
+     * @param peso
+     * @param nombre
+     * @param descripcion
+     * @param rango
+     * @param dano
+     * @param tipo
+     */
     public Arma(double peso, String nombre, String descripcion, int rango, int dano, boolean tipo){
         super(peso, nombre, descripcion);
         
@@ -29,17 +46,34 @@ public class Arma extends Objeto{
         this.tipo = tipo;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean getTipo() {
         return tipo;
     }
 
+    /**
+     *
+     * @param tipo
+     */
     public void setTipo(boolean tipo) {
         this.tipo = tipo;
     }
 
+    /**
+     *
+     * @return
+     */
     public final int getDano() {
         return dano;
     }
+
+    /**
+     *
+     * @return
+     */
     public final int getRango() {
         return rango;
     }

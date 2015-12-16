@@ -20,6 +20,10 @@ public class ConsolaMapa2 extends JFrame implements Consola{
     private final ArrayList<JLabel> paneles;
     private final HashMap<String, ImageIcon> imagenes;
     
+    /**
+     *
+     * @param tamMapa
+     */
     public ConsolaMapa2(Punto tamMapa){
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         GridLayout g = new GridLayout(tamMapa.y, tamMapa.x,0,0);
@@ -69,13 +73,23 @@ public class ConsolaMapa2 extends JFrame implements Consola{
             i++;
         }
     }
+
+    /**
+     *
+     * @param mensaje
+     */
     @Override
     public void imprimir(String mensaje) {
         if(mensaje != null)
             System.out.println(mensaje);    
     }
     // <editor-fold defaultstate="collapsed" desc="No deberían ser necesarios para una consola de mapa">   
-    @Override
+
+    /**
+     *
+     * @param mensaje
+     */
+        @Override
     public void imprimirSinSalto(String mensaje) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -85,12 +99,20 @@ public class ConsolaMapa2 extends JFrame implements Consola{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String leer() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>
     
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean esGrafica() {return true;}
 }

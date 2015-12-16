@@ -18,15 +18,52 @@ import java.util.Random;
 public class Zapador extends Jugador {	
     private static Random r = new Random();
 
+    /**
+     *
+     * @param nombre
+     * @param vida
+     * @param energia
+     * @param mochila
+     * @param armadura
+     * @param arma
+     * @param bn
+     * @param mapa
+     * @param rango
+     * @param juego
+     */
     public Zapador(String nombre, int vida, int energia, Mochila mochila, Armadura armadura, Arma arma, Binoculares bn, Mapa mapa, int rango, Juego juego) {
         super(nombre, vida, energia, mochila, armadura, arma, bn, mapa, rango, juego);      
     }
+
+    /**
+     *
+     * @param nombre
+     * @param vida
+     * @param mochilaMaxPeso
+     * @param mapa
+     * @param juego
+     */
     public Zapador(String nombre, int vida, int mochilaMaxPeso, Mapa mapa, Juego juego) {
         super(nombre, vida, mochilaMaxPeso, mapa, juego); 
     }
+
+    /**
+     *
+     * @param nombre
+     * @param mapa
+     * @param juego
+     */
     public Zapador(String nombre, Mapa mapa, Juego juego) {
         super(nombre, mapa, juego);
     }
+
+    /**
+     *
+     * @param enemigo
+     * @param dano
+     * @return
+     * @throws PersonajeException
+     */
     @Override
     protected boolean atacar(Personaje enemigo, int dano) throws PersonajeException {
         if(dano <= 0){

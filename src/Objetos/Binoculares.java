@@ -12,6 +12,12 @@ import Personajes.Personaje;
 public final class Binoculares extends Objeto{
     private final int plusRango;
     
+    /**
+     *
+     * @param nombre
+     * @param peso
+     * @param plus
+     */
     public Binoculares(String nombre, double peso, int plus){
         super(peso, nombre, "Al equipar, aumenta el rango de visión.");
         //plusVida puede ser negativo, se acepta cualquier valor
@@ -27,6 +33,10 @@ public final class Binoculares extends Objeto{
         p.setRango(p.getRango() - plusRango);
     }
 
+    /**
+     *
+     * @return
+     */
     public final int getPlusRango() {
         return plusRango;
     }

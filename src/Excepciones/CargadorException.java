@@ -11,8 +11,16 @@ package Excepciones;
  */
 public class CargadorException extends Exception {
     
+    /**
+     *
+     */
     public CargadorException() {        
     }
+
+    /**
+     *
+     * @param string
+     */
     public CargadorException(String string) {
         super(string);
     }

@@ -20,27 +20,52 @@ public final class CargarJuegoPorDefecto implements CargadorJuego{
     private String tipoJugador;
     private String nombre;
     
+    /**
+     *
+     * @param nombre
+     * @param tipoJugador
+     */
     public CargarJuegoPorDefecto(String nombre, String tipoJugador) {
         this.nombre = nombre;
         this.tipoJugador = tipoJugador;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTipoJugador() {
         return tipoJugador;
     }
 
+    /**
+     *
+     * @param tipoJugador
+     */
     public void setTipoJugador(String tipoJugador) {
         this.tipoJugador = tipoJugador;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     *
+     * @param nombre
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public Juego cargarJuego(){
         boolean[] tipos = Mapa.getPlantillaAleatoria(40, 30);

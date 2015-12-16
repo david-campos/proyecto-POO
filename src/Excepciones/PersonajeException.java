@@ -11,9 +11,16 @@ package Excepciones;
  */
 public class PersonajeException extends Exception{
 
+    /**
+     *
+     */
     public PersonajeException() {
     }
 
+    /**
+     *
+     * @param message
+     */
     public PersonajeException(String message) {
         super(message);
     }

@@ -22,15 +22,36 @@ import java.util.Random;
 public abstract class Enemigo extends Personaje{
     final static Random r = new Random();
     
+    /**
+     *
+     * @param nombre
+     * @param vida
+     * @param energiaPorTurno
+     * @param posicion
+     * @param juego
+     */
     public Enemigo(String nombre, int vida, int energiaPorTurno, int[] posicion, Juego juego) {
         super(nombre, vida, energiaPorTurno, new Mochila(), null, null, 5, juego);
         mapa = null;
         if(posicion.length == 2 && posicion[0] >= 0 && posicion[1] >= 0)
             setPos(new Punto(posicion[1], posicion[0]));
     }
+
+    /**
+     *
+     * @param nombre
+     * @param posicion
+     * @param juego
+     */
     public Enemigo(String nombre, int[] posicion, Juego juego) {
         this(nombre, Math.abs(r.nextInt())%51+50,Math.abs(r.nextInt())%70+31,posicion, juego);
     }
+
+    /**
+     *
+     * @param mapa
+     * @throws MapaExcepcion
+     */
     public void setMapa(Mapa mapa) throws MapaExcepcion{
         if(mapa != null) {
             if(this.mapa == null || !this.mapa.equals(mapa)) {
@@ -67,6 +88,10 @@ public abstract class Enemigo extends Personaje{
         return true;
     }
     
+    /**
+     *
+     * @throws PersonajeException
+     */
     public void morir() throws PersonajeException {
         if(this.getVida() <= 0) {
             if(getArma() != null) tirar(getArma());
@@ -82,6 +107,12 @@ public abstract class Enemigo extends Personaje{
             }
         }
     }
+
+    /**
+     *
+     * @param a
+     * @return
+     */
     protected boolean decidirCogerArma(Arma a) {
         //El enemigo cogerá un arma si es mejor que las que lleva o simplemente puede equiparla
         //no la meterá en la mochila
@@ -100,6 +131,12 @@ public abstract class Enemigo extends Personaje{
             return getEfectoArmas() < a.getDano();
         }
     }
+
+    /**
+     *
+     * @return
+     * @throws PersonajeException
+     */
     protected boolean iaRecogerObjetos() throws PersonajeException{
         ArrayList<Objeto> obs;
         Transitable c = (Transitable) mapa.getCelda(getPos());
@@ -122,12 +159,23 @@ public abstract class Enemigo extends Personaje{
             }
         return false;
     }
+
+    /**
+     *
+     * @return
+     * @throws PersonajeException
+     */
     protected boolean iaAtacar() throws PersonajeException{
         if(enAlcance(mapa.getJugador().getPos())){
             return this.atacar(mapa.getJugador());
         }
         return false;
     }
+
+    /**
+     *
+     * @return
+     */
     protected String iaDirJugador(){
         Punto vector = Punto.resta(mapa.getJugador().getPos(), getPos());
         if(Math.abs(vector.x) > Math.abs(vector.y))
@@ -135,6 +183,12 @@ public abstract class Enemigo extends Personaje{
         else
             return vector.y>0?"S":"N";
     }
+
+    /**
+     *
+     * @return
+     * @throws PersonajeException
+     */
     protected boolean iaMover() throws PersonajeException{
         String dir="N";
         //Se mueve aleatoriamente si no ve al jugador
@@ -150,6 +204,11 @@ public abstract class Enemigo extends Personaje{
         
         return mover(dir);
     }
+
+    /**
+     *
+     * @throws PersonajeException
+     */
     public void iaTurno() throws PersonajeException{
         while(getEnergia() > 0){
             boolean hizoAlgo = false;

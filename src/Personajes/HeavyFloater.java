@@ -13,10 +13,24 @@ import Juego.Juego;
  */
 public final class HeavyFloater extends Floater{
 
+    /**
+     *
+     * @param nombre
+     * @param vida
+     * @param energiaPorTurno
+     * @param posicion
+     * @param juego
+     */
     public HeavyFloater(String nombre, int vida, int energiaPorTurno, int[] posicion, Juego juego) {
         super(nombre, vida, energiaPorTurno, posicion, juego);
     }
 
+    /**
+     *
+     * @param nombre
+     * @param posicion
+     * @param juego
+     */
     public HeavyFloater(String nombre, int[] posicion, Juego juego) {
         super(nombre, posicion, juego);
     }

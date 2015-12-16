@@ -24,6 +24,10 @@ import java.util.Random;
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public final class Mapa {
+
+    /**
+     *
+     */
     public static final Random r = new Random();
     
     /**
@@ -80,6 +84,7 @@ public final class Mapa {
      * @param descripcion Descripción del mapa
      * @param celdas Celdas que formarán el mapa
      * @param posicionInicial Posición inicial del jugador en el mapa
+     * @param juego
     */
     public Mapa(String nombre, String descripcion, Celda[][] celdas, Punto posicionInicial, Juego juego) {
         MapaBase(nombre, descripcion, juego);
@@ -102,6 +107,7 @@ public final class Mapa {
      * @param descripcion Descripción
      * @param ancho Ancho del mapa
      * @param alto Alto del mapa
+     * @param juego
      */
     public Mapa(String nombre, String descripcion, int ancho, int alto, Juego juego){
         this(nombre, descripcion, ancho, alto, new boolean[0], juego);
@@ -114,6 +120,7 @@ public final class Mapa {
      * @param ancho Ancho del mapa
      * @param alto Alto del mapa
      * @param tipos Array con la lista de tipos de las celdas (de izq. a der. de arriba abajo)
+     * @param juego
     */
     public Mapa(String nombre, String descripcion, int ancho, int alto, boolean tipos[], Juego juego) {
         MapaBase(nombre, descripcion, juego);
@@ -138,9 +145,18 @@ public final class Mapa {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public Juego getJuego() {
         return juego;
     }
+
+    /**
+     *
+     * @param juego
+     */
     public void setJuego(Juego juego) {
         this.juego = juego;
     }
@@ -219,6 +235,8 @@ public final class Mapa {
      * Añade un enemigo al mapa, se hace una llamada a setMapa, que ajusta las referencias
      * de las Celdas y demás según su posición.
      * @param enemigo El enemigo a añadir.
+     * @return 
+     * @throws Excepciones.MapaExcepcion 
      */
     public boolean addEnemigo(Enemigo enemigo) throws MapaExcepcion {
         if(!enemigos.contains(enemigo))
@@ -237,6 +255,7 @@ public final class Mapa {
     /**
      * Elimina un enemigo del mapa. Las referencias del enemigo y al enemigo se borran completamente.
      * @param enemigo El enemigo a eliminar.
+     * @throws Excepciones.MapaExcepcion
      */
     public void remEnemigo(Enemigo enemigo) throws MapaExcepcion {
         if(enemigos.contains(enemigo))
@@ -253,6 +272,11 @@ public final class Mapa {
     public Punto getPosicionInicial() {
         return posicionInicial.clone();
     }
+
+    /**
+     *
+     * @param posicionInicial
+     */
     public void setPosicionInicial(Punto posicionInicial) {
         this.posicionInicial = posicionInicial;
     }
@@ -349,6 +373,7 @@ public final class Mapa {
     }
     /**
      * Genera enemigos de forma aleatoria por el mapa.
+     * @throws Excepciones.MapaExcepcion
      */
     public void setEnemigosAleatorio() throws MapaExcepcion {
         if(juego == null)
@@ -413,6 +438,10 @@ public final class Mapa {
         return salida;
     }
     
+    /**
+     *
+     * @return
+     */
     public String visionJugadorGrafica() {
         String dibujoJugador = "jugador";
         String dibujoEnemigo = "enemigo";
@@ -437,6 +466,11 @@ public final class Mapa {
         }
         return salida;
     }
+
+    /**
+     *
+     * @return
+     */
     public ArrayList<Enemigo> getEnemigos(){
         return (ArrayList) enemigos.clone();
     }

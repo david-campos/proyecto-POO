@@ -12,6 +12,12 @@ import Personajes.Personaje;
 public final class Botiquin extends Objeto{
     private final int plusVida;
     
+    /**
+     *
+     * @param nombre
+     * @param peso
+     * @param plusVida
+     */
     public Botiquin(String nombre, double peso, int plusVida){
         super(peso, nombre, "Cura vida al usar.");
         //plusVida puede ser negativo, se acepta cualquier valor
@@ -25,6 +31,10 @@ public final class Botiquin extends Objeto{
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     public final int getPlusVida() {
         return plusVida;
     }

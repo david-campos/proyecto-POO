@@ -20,6 +20,13 @@ public final class ComandoAtacar implements Comando{
     private String nombre;
     private int x, y;
     
+    /**
+     *
+     * @param jug
+     * @param nombre
+     * @param x
+     * @param y
+     */
     public ComandoAtacar(Jugador jug, String nombre, int x, int y){
         //nombre puede ser null
         this.nombre = nombre;
@@ -28,43 +35,84 @@ public final class ComandoAtacar implements Comando{
         this.jug = jug;
     }
 
+    /**
+     *
+     * @return
+     */
     public Jugador getJug() {
         return jug;
     }
 
+    /**
+     *
+     * @param jug
+     */
     public void setJug(Jugador jug) {
         this.jug = jug;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     *
+     * @param nombre
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     *
+     * @param x
+     */
     public void setX(int x) {
         this.x = x;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     *
+     * @param y
+     */
     public void setY(int y) {
         this.y = y;
     }
     
+    /**
+     *
+     * @param x
+     * @param y
+     */
     public void setDir(int x, int y){
         setX(x);
         setY(y);
     }
     
+    /**
+     *
+     * @throws ComandoExcepcion
+     */
     @Override
     public void ejecutar() throws ComandoExcepcion {
         if(jug != null){
