@@ -1,0 +1,2 @@
+- Falta comando cargar nuevo juego!
+- Ayuda desactualizada

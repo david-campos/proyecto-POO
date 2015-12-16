@@ -1,0 +1,10 @@
+AYUDA MAPA:
+	El mapa está compuesto por casillas o celdas. Cada casilla tiene un tipo determinado, y dependiendo de su tipo el jugador podrá desplazarse por ella o no (y los enemigos también).
+	Las casillas pueden tener objetos tirados en el suelo, utiliza el comando 'mirar' para examinar la casilla.
+	
+	ELEMENTOS:
+	Los elementos que puedes observar en el mapa son los siguientes:
+		" ": Si no observas ningún dibujo, es que esa casilla es de hierba. Esta casilla es transitable.
+		"M": Las M indican que esa casilla es un muro, no podrás pasar. Esta casilla no es transitable.
+		"x": Las x indican que hay un arbusto en esta casilla. Esta casilla es transitable.
+		"§": Este símbolo indica que esta casilla es agua. Esta casilla no es transitable.

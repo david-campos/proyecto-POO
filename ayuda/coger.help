@@ -1,0 +1,6 @@
+AYUDA COGER:
+	El comando 'coger' permite recoger del suelo algún objeto que sea de interés del jugador. El jugador dispone de una mochila con un peso y capacidad máximos, cada objeto ocupa 1 de capacidad y un peso que depende del propio objeto.
+	Si lo que se solicita recoger es un arma y no se empuña en ese momento ninguna (se va a puños), coger situará el arma en la mano del jugador y no lo guardará en la mochila.
+	Debe indicarse tras un espacio el nombre del objeto que se desea recoger (los objetos se muestran con el comando mirar).
+		Ejemplo:
+			"mirar pistola_1"

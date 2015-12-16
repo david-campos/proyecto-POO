@@ -1,0 +1,5 @@
+AYUDA MOVER:
+	El comando 'mover' desplaza al jugador a una casilla adyacente (en caso de que esta sea transitable).
+	Debe indicarse la dirección de desplazamiento con 'N', 'S', 'E' u 'O'.
+		Ejemplo:
+			"mover N"

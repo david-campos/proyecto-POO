@@ -1,0 +1,7 @@
+AYUDA MIRAR:
+	El comando mirar tiene varios usos:
+	- Si se usa sin ningún argumento, mirar examina la casilla actual en busca de objetos que el jugador pueda recoger.
+	- Si a continuación se indica el nombre de un objeto, se dará una descripción detallada de ese objeto. Por ejemplo: "mirar pistola_1".
+	- Si en lugar de un nombre se dan las coordenadas de una celda (relativas al jugador) mirar devolverá una lista de los enemigos allí situados. Por ejemplo, para listar los enemigos 2 casillas a la izquierda y 1 hacia arriba del jugador, usaremos: "mirar -2 -1".
+	- Si además de las coordenadas se le da el nombre de un enemigo en esa celda, mirar devolverá información detallada sobre el enemigo en cuestión.
+	- Si introducimos "mirar mochila", obtendremos una lista detallada del contenido de nuestra mochila y sus capacidades.

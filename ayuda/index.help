@@ -1,0 +1,23 @@
+﻿AYUDA:
+	Este es el proyecto de Programación Orientada a Objetos (POO) realizado por David Campos R. y Crístofer Canosa D.
+	El objetivo del juego es destruír a todos los enemigos en el mapa sin morir. En cada turno se dispone de cierta cantidad de puntos de energía que se irán consumiendo conforme el jugador realice acciones. Cuando la energía se acabe terminará el turno.
+	
+	Para obtener ayuda sobre los elementos del mapa introducir "ayuda mapa".
+	Para obtener ayuda sobre el combate introducir "ayuda atacar".
+	
+	Repetición de comandos:
+		Puedes repetir el último comando que has introducido pulsando 'enter' sin escribir nada (línea en blanco).
+	
+	COMANDOS:
+		Para obtener ayuda sobre los comandos introducir "ayuda nombre_del_comando".
+		Los comandos disponibles son los siguientes(no se distinguen mayúsculas y minúsculas):
+		- salir: Permite salir del juego.
+		- pasar: Cede el turno.
+		- mover: Permite moverse en alguna de cuatro direcciones posibles (N/S/E/O).
+		- atacar: Permite atacar a un enemigo que se haye en alguna casilla visible.
+		- mirar: Muestra los objetos que hay en el suelo o en la mochila (introducir "ayuda mirar").
+		- coger: Coge un objeto del suelo.
+		- tirar: Tira un objeto al suelo.
+		- equipar: Equipa un objeto equipable.
+		- desequipar: Desequipa un objeto equipado.
+		- usar: usa un objeto.

@@ -1,0 +1,9 @@
+AYUDA DESEQUIPAR:
+	El comando desequipar desequipa un objeto que el jugador haya equipado previamente. Su uso es muy sencillo, pues sólo hay que indicar como parámetro lo que deseamos quitarnos:
+	- "arma_derecha"/"arma_izquierda": Desequipa el arma correspondiente, si es un arma a dos manos es irrelevante cual usemos.
+	- "armadura": Desequipa la armadura.
+	- "binoculares": Desequipa los binoculares que llevemos.
+	El objeto desequipado pasará a la mochila o, en caso de no caber, será depositado en la casilla actual.
+	
+	Ejemplo de uso:
+		"desequipar binoculares"

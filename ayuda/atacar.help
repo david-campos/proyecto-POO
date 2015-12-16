@@ -1,0 +1,7 @@
+﻿AYUDA ATACAR:
+	El comando 'atacar' permite al jugador atacar a un enemigo situado en alguna casilla visible y en el rango de alcance del arma. Cuando el jugador ataca a un enemigo, este recibe un daño que depende del arma portada por el jugador y la armadura del propio enemigo.
+	En cada golpe el jugador tiene un 20% de probabilidades de realizar un daño crítico, en este caso el daño causado por el arma es el doble.
+	Los parámetros del comando son dos coordenadas 'x y' (relativas al jugador) que indican la posición de ataque (ha de estar en el rango del jugador).
+	Por ejemplo, para atacar a un jugador que está 5 casillas más abajo y 2 más a la izquierda introduciríamos:
+		'atacar -2 5'
+	En una casilla puede haber más de un enemigo (consultar 'ayuda mirar'), en caso de que esto suceda el jugador puede elegir atacar a la celda (indicando únicamente las coordenadas) el daño causado entre los enemigos en ella situados, o atacar a un enemigo concreto, utilizando la sintaxis 'atacar x y nombre', donde x e y son coordenadas relativas al jugador y nombre es el nombre del enemigo.

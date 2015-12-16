@@ -1,0 +1,10 @@
+AYUDA EQUIPAR:
+	El comando 'equipar' equipa el objeto de la mochila indicado por el jugador. Para ello ha de pasársele un nombre.
+	
+	Los objetos equipables son los siguientes:
+		- binoculares: aumentan el rango de visión.
+		- armaduras: disminuyen el daño recibido (pueden dar boosts de vida o energía)
+		- armas
+	
+	Ejemplo de uso:
+		equipar pistola_1
