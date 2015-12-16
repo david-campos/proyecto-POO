@@ -404,46 +404,7 @@ public abstract class Personaje {
         return false;
     }
 
-    protected abstract boolean atacar(Personaje enemigo, int dano) throws PersonajeException; /*{
-        if(dano <= 0){
-            juego.log("Daño negativo? Güet?");  
-            return false;
-        }
-        
-        if(enemigo != null)
-        {
-            if(r.nextFloat() < 0.25) {
-                dano*=2;    //Daño crítico
-                if(enemigo instanceof Enemigo) juego.log("¡Has causado un daño crítico!\t");
-            }
-
-            int danoReal;
-            if(enemigo.getArmadura() != null)
-                danoReal = (int) Math.round(dano * (1-enemigo.getArmadura().getDefensa()/200.0));
-            else
-                danoReal = (int) Math.round(dano);   
-
-            int vidaResultante = enemigo.getVida() - danoReal;
-
-            enemigo.setVida(vidaResultante);
-            if(vidaResultante <= 0) {
-                if(enemigo instanceof Enemigo){
-                    ((Enemigo)enemigo).morir();
-                    juego.impMapa();
-                    juego.log("Enemigo eleminado...");
-                }
-            }else{
-                if(enemigo instanceof Enemigo)
-                    juego.log("Daño causado a " + enemigo.getNombre() + ": " + danoReal + ", vida restante: "+ enemigo.getVida());
-                else
-                    juego.log(getNombre() + " te ha causado " + danoReal + " de daño.");
-            }
-        }else{
-            juego.log("Enemigo null!");    
-            return false;
-        }
-        return true;
-    }*/
+    protected abstract boolean atacar(Personaje enemigo, int dano) throws PersonajeException;
     /**
      * Tira el objeto indicado a la celda.
      * @param obj El objeto a tirar.
