@@ -14,26 +14,12 @@ import java.util.Objects;
  */
 public abstract class Objeto {
     //nombre y descripcion son protected, pues son finales y no suponen muchos problemas
-
-    /**
-     *
-     */
-        protected final String nombre;
-
-    /**
-     *
-     */
+    protected final String nombre;
     protected final String descripcion;
     private double peso;
     
     private static long nombreDef=0;
     
-    /**
-     *
-     * @param peso
-     * @param nombre
-     * @param descripcion
-     */
     public Objeto(double peso, String nombre, String descripcion){
         if(nombre != null && !nombre.isEmpty())
             this.nombre = nombre;
@@ -52,7 +38,6 @@ public abstract class Objeto {
      * Acción realizada al usar el objeto, no hace nada,
      * sobrecargar para realizar una acción.
      * @param p Personaje que usa el objeto
-     * @return 
      */
     public boolean usar(Personaje p){ return false;}
     /**
@@ -84,18 +69,9 @@ public abstract class Objeto {
             this.peso = Peso;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getNombre() {
         return nombre;
     }
-
-    /**
-     *
-     * @return
-     */
     public String getDescripcion() {
         return descripcion;
     }

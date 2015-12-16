@@ -18,81 +18,40 @@ public class ComandoMirar implements Comando{
     private Jugador jug;
     private Celda c;
     private String nombre;
-
-    /**
-     *
-     * @param jug
-     * @param c
-     * @param nombre
-     */
     public ComandoMirar(Jugador jug, Celda c, String nombre){
         this.jug = jug;
         this.c = c;
         this.nombre = nombre;
     }
 
-    /**
-     *
-     * @return
-     */
     public Jugador getJugador() {
         return jug;
     }
 
-    /**
-     *
-     * @param jug
-     */
     public void setJugador(Jugador jug) {
         this.jug = jug;
     }
 
-    /**
-     *
-     * @return
-     */
     public Celda getCelda() {
         return c;
     }
 
-    /**
-     *
-     * @param c
-     */
     public void setCelda(Celda c) {
         this.c = c;
     }
-
-    /**
-     *
-     * @param x
-     * @param y
-     */
     public void setCelda(int x, int y){
         if(jug != null)
             this.c = jug.getMapa().getCelda(jug.getPos().x + x, jug.getPos().y + y);
     }
 
-    /**
-     *
-     * @return
-     */
     public String getNombre() {
         return nombre;
     }
 
-    /**
-     *
-     * @param nombre
-     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
     
-    /**
-     *
-     * @throws ComandoExcepcion
-     */
     @Override
     public void ejecutar() throws ComandoExcepcion {
         if(jug!=null)

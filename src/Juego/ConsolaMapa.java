@@ -14,9 +14,6 @@ import javax.swing.*;
 public class ConsolaMapa extends JFrame implements Consola{
     JTextArea area;
 
-    /**
-     *
-     */
     public ConsolaMapa() {
         area = new JTextArea(400,400);
         area.setBounds(0,0,400,400);
@@ -30,10 +27,6 @@ public class ConsolaMapa extends JFrame implements Consola{
         setVisible(true);        
     }
     
-    /**
-     *
-     * @param s
-     */
     @Override
     public void imprimir(String s) {
         area.setText(s);
@@ -43,10 +36,6 @@ public class ConsolaMapa extends JFrame implements Consola{
         area.setText(mensaje);  
     }
 
-    /**
-     *
-     * @param mensaje
-     */
     @Override
     public void imprimirSinSalto(String mensaje) {
         area.setText(mensaje);
@@ -57,19 +46,11 @@ public class ConsolaMapa extends JFrame implements Consola{
         return null;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public String leer() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean esGrafica() {return false;}
 }

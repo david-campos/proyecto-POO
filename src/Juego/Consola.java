@@ -15,17 +15,7 @@ public interface Consola {
      * @param mensaje mensaje a mostrar
      */
     public void imprimirMapa(String mensaje);
-
-    /**
-     *
-     * @param mensaje
-     */
     public void imprimir (String mensaje);
-
-    /**
-     *
-     * @param mensaje
-     */
     public void imprimirSinSalto(String mensaje);
     /**
      * Sirve para conseguir datos del usuario
@@ -33,16 +23,7 @@ public interface Consola {
      * @return Cadena introducida por el usuario.
      */
     public String leer (String descripcion);  
-
-    /**
-     *
-     * @return
-     */
     public String leer();
 
-    /**
-     *
-     * @return
-     */
     public boolean esGrafica();
 }

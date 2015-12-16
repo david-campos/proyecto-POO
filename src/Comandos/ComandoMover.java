@@ -15,53 +15,27 @@ import Personajes.Jugador;
 public final class ComandoMover implements Comando{
     private String dir;
     private Jugador jug;
-
-    /**
-     *
-     * @param jug
-     * @param direccion
-     */
     public ComandoMover(Jugador jug, String direccion){
         dir = direccion.toLowerCase();
         this.jug = jug;
     }
     
-    /**
-     *
-     * @return
-     */
     public String getDir() {
         return dir;
     }
 
-    /**
-     *
-     * @param dir
-     */
     public void setDir(String dir) {
         this.dir = dir.toLowerCase();
     }
 
-    /**
-     *
-     * @return
-     */
     public Jugador getJug() {
         return jug;
     }
 
-    /**
-     *
-     * @param jug
-     */
     public void setJug(Jugador jug) {
         this.jug = jug;
     }
     
-    /**
-     *
-     * @throws ComandoExcepcion
-     */
     @Override
     public void ejecutar() throws ComandoExcepcion{
         if(jug!=null)

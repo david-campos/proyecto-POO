@@ -20,52 +20,27 @@ public final class ComandoAyuda implements Comando{
     private String tema;
     private Consola consola;
     
-    /**
-     *
-     * @param tema
-     * @param consola
-     */
     public ComandoAyuda(String tema, Consola consola) {
         this.tema = tema;
         this.consola = consola;
     }
 
-    /**
-     *
-     * @return
-     */
     public Consola getConsola() {
         return consola;
     }
 
-    /**
-     *
-     * @param consola
-     */
     public void setConsola(Consola consola) {
         this.consola = consola;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getTema() {
         return tema;
     }
 
-    /**
-     *
-     * @param tema
-     */
     public void setTema(String tema) {
         this.tema = tema;
     }
     
-    /**
-     *
-     * @throws ComandoExcepcion
-     */
     @Override
     public void ejecutar() throws ComandoExcepcion {
        try{

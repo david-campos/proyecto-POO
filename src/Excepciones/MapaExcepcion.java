@@ -10,17 +10,9 @@ package Excepciones;
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public class MapaExcepcion extends Exception{
-
-    /**
-     *
-     */
     public MapaExcepcion() {
     }
 
-    /**
-     *
-     * @param message
-     */
     public MapaExcepcion(String message) {
         super(message);
     }

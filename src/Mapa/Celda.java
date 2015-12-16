@@ -3,65 +3,31 @@ package Mapa;
 import Excepciones.PersonajeException;
 import Personajes.Enemigo;
 
-/**
- *
- * @author ElJüsticieroMisteryo
- */
 public abstract class Celda {
-
-    /**
-     *
-     */
     public int tipo;
-
-    /**
-     *
-     */
     protected Mapa mapa;
     private boolean bomba;
 
-    /**
-     *
-     * @param tipo
-     * @param mapa
-     */
     public Celda(int tipo, Mapa mapa) {
         this.tipo = tipo;
         this.mapa = mapa; //Puede ser null
         this.bomba = false;
     }
 
-    /**
-     *
-     * @return
-     */
     public boolean isBomba() {
         return bomba;
     }
 
-    /**
-     *
-     * @param bomba
-     */
     public void setBomba(boolean bomba) {
         this.bomba = bomba;
     }
 
-    /**
-     *
-     * @return
-     */
     public String representacion(){
         if(this instanceof Transitable)
             return MConst.CE_REPR_TRANS[tipo];
         else
             return MConst.CE_REPR_NOTRANS[tipo];
     }
-
-    /**
-     *
-     * @return
-     */
     public String representacionGrafica(){
         if(this instanceof Transitable)
             return MConst.CE_REPG_TRANS[tipo];
@@ -86,11 +52,6 @@ public abstract class Celda {
         if(map != null && mapa == null) //Comprobamos que mapa sea null porque solo se puede setear el mapa una vez
             mapa = map;
     }
-
-    /**
-     *
-     * @throws PersonajeException
-     */
     public void detonar() throws PersonajeException{
         mapa.getJuego().log("¡Una bomba ha explotado!");
         detonar(0, null);

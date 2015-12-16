@@ -16,59 +16,26 @@ import java.util.ArrayList;
 public class ComandoCompuesto implements Comando{
     private final ArrayList<Comando> comandos;
 
-    /**
-     *
-     */
     public ComandoCompuesto() {
         comandos = new ArrayList();
     }
-
-    /**
-     *
-     * @param tam
-     */
     public ComandoCompuesto(int tam){
         comandos = new ArrayList(tam);
     }
 
-    /**
-     *
-     * @return
-     */
     public int size() {
         return comandos.size();
     }
-
-    /**
-     *
-     * @param e
-     * @return
-     */
     public boolean add(Comando e) {
         return comandos.add(e);
     }
-
-    /**
-     *
-     * @param c
-     * @return
-     */
     public boolean remove(Comando c) {
         return comandos.remove(c);
     }
-
-    /**
-     *
-     * @return
-     */
     public ArrayList<Comando> getComandos() {
         return (ArrayList) comandos.clone();
     }
     
-    /**
-     *
-     * @throws ComandoExcepcion
-     */
     @Override
     public void ejecutar() throws ComandoExcepcion {
         for(Comando c: comandos)

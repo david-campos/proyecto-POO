@@ -15,23 +15,10 @@ import static Personajes.Enemigo.r;
  */
 public class Sectoid extends Enemigo{
 
-    /**
-     *
-     * @param nombre
-     * @param enePos
-     * @param juego
-     */
     public Sectoid(String nombre, int[] enePos, Juego juego) {
         super(nombre, enePos, juego);
     }
     
-    /**
-     *
-     * @param enemigo
-     * @param dano
-     * @return
-     * @throws PersonajeException
-     */
     @Override
     protected boolean atacar(Personaje enemigo, int dano) throws PersonajeException {
         if(dano <= 0){
@@ -74,14 +61,6 @@ public class Sectoid extends Enemigo{
         return true;
     }
     
-    /**
-     *
-     * @param strnombre
-     * @param saludInicial
-     * @param energiaPorTurno
-     * @param pos
-     * @param juego
-     */
     public Sectoid(String strnombre, int saludInicial, int energiaPorTurno, int[] pos, Juego juego) {
         super(strnombre, saludInicial, energiaPorTurno, pos, juego);
     }

@@ -27,73 +27,40 @@ public class CargarJuegoDeFicheros implements CargadorJuego{
     private String tipoJugador;
     private static Random r = new Random();
 
-    /**
-     *
-     * @return
-     */
     public String getFicheroMapa() {
         return ficheroMapa;
     }
 
-    /**
-     *
-     * @param ficheroMapa
-     */
     public void setFicheroMapa(String ficheroMapa) {
         this.ficheroMapa = ficheroMapa;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getFicheroObjetos() {
         return ficheroObjetos;
     }
 
-    /**
-     *
-     * @param ficheroObjetos
-     */
     public void setFicheroObjetos(String ficheroObjetos) {
         this.ficheroObjetos = ficheroObjetos;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getFicheroNPCs() {
         return ficheroNPCs;
     }
 
-    /**
-     *
-     * @param ficheroNPCs
-     */
     public void setFicheroNPCs(String ficheroNPCs) {
         this.ficheroNPCs = ficheroNPCs;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getTipoJugador() {
         return tipoJugador;
     }
 
-    /**
-     *
-     * @param tipoJugador
-     */
     public void setTipoJugador(String tipoJugador) {
         this.tipoJugador = tipoJugador;
     }
     
     /**
      * Sin argumentos da la ruta por defecto de los archivos
-     * @param tipoJugador
      */
     public CargarJuegoDeFicheros(String tipoJugador) {
        ficheroMapa = "ficheros/mapa.csv";
@@ -101,14 +68,6 @@ public class CargarJuegoDeFicheros implements CargadorJuego{
        ficheroNPCs = "ficheros/npcs.csv";
        this.tipoJugador = tipoJugador;
     }
-
-    /**
-     *
-     * @param fMapa
-     * @param fObj
-     * @param fNPCs
-     * @param tipoJugador
-     */
     public CargarJuegoDeFicheros(String fMapa, String fObj, String fNPCs, String tipoJugador) {
         if(fMapa != null && fObj != null && fNPCs != null) {
             ficheroMapa = fMapa;
@@ -118,11 +77,6 @@ public class CargarJuegoDeFicheros implements CargadorJuego{
         }
     }
     
-    /**
-     *
-     * @return
-     * @throws CargadorException
-     */
     @Override
     public Juego cargarJuego() throws CargadorException {
         Mapa mapa = cargarMapa();

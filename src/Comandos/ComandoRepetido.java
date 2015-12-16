@@ -12,13 +12,6 @@ import Excepciones.ComandoExcepcion;
 public final class ComandoRepetido implements Comando{
     private final Comando comando;
     private int veces;
-
-    /**
-     *
-     * @param comando
-     * @param numeroVeces
-     * @throws ComandoExcepcion
-     */
     public ComandoRepetido(Comando comando, int numeroVeces) throws ComandoExcepcion{
         if(numeroVeces > 0)
             veces = numeroVeces;
@@ -27,10 +20,6 @@ public final class ComandoRepetido implements Comando{
         this.comando = comando;
     }
 
-    /**
-     *
-     * @throws ComandoExcepcion
-     */
     @Override
     public void ejecutar() throws ComandoExcepcion {
         if(comando != null)

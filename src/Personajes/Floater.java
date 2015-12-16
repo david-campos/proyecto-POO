@@ -14,25 +14,10 @@ import Juego.Juego;
  */
 public class Floater extends Enemigo{
 
-    /**
-     *
-     * @param nombre
-     * @param vida
-     * @param energiaPorTurno
-     * @param posicion
-     * @param juego
-     */
     public Floater(String nombre, int vida, int energiaPorTurno, int[] posicion, Juego juego) {
         super(nombre, vida, energiaPorTurno, posicion, juego);
     }
 
-    /**
-     *
-     * @param enemigo
-     * @param dano
-     * @return
-     * @throws PersonajeException
-     */
     @Override
     protected boolean atacar(Personaje enemigo, int dano) throws PersonajeException {
         if(dano <= 0){
@@ -75,12 +60,6 @@ public class Floater extends Enemigo{
         return true;
     }
     
-    /**
-     *
-     * @param nombre
-     * @param posicion
-     * @param juego
-     */
     public Floater(String nombre, int[] posicion, Juego juego) {
         super(nombre, posicion, juego);
     }

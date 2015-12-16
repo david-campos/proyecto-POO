@@ -16,38 +16,18 @@ import java.util.Random;
  * @author crist
  */
 public abstract class Personaje {
-
-    /**
-     *
-     */
     protected String nombre;
     private int vida;
     private int maxVida;
     private int energia;
     private int energiaPorTurno;
     private Mochila mochila;
-
-    /**
-     *
-     */
     protected Arma arma;
-
-    /**
-     *
-     */
     protected Arma arma_izq;    
     private Armadura armadura;
     private Punto posicion;
-
-    /**
-     *
-     */
     protected Mapa mapa; //Referencia al mapa en que se encuentra
     private int rango;
-
-    /**
-     *
-     */
     protected Juego juego;  //Para las clases hijas
     private int plusEnergia = 0;
     
@@ -93,23 +73,9 @@ public abstract class Personaje {
         this.rango = 5; //setRango lo dejará si hay un error
         setRango(rango);        
     }
-
-    /**
-     *
-     * @param Nombre
-     * @param vida
-     * @param mochilaMaxPeso
-     * @param juego
-     */
     public Personaje(String Nombre, int vida, int mochilaMaxPeso, Juego juego){
         this(Nombre, vida, 100, new Mochila(10, mochilaMaxPeso), null, null, 5, juego);
     }
-
-    /**
-     *
-     * @param Nombre
-     * @param juego
-     */
     public Personaje(String Nombre,Juego juego){
         this(Nombre, 100, 100, new Mochila(), null, null, 5, juego);
     }
@@ -214,11 +180,6 @@ public abstract class Personaje {
     public Mochila getMochila() {
         return mochila;
     }
-
-    /**
-     *
-     * @param m
-     */
     public void setMochila(Mochila m) {
         mochila = m;
     }
@@ -230,27 +191,13 @@ public abstract class Personaje {
         return armadura;
     }
     //No se necesita setArmadura porque se usa el método "equipar"
-
-    /**
-     *
-     * @return
-     */
-        public Arma getArma() {
+    public Arma getArma() {
         return arma;
     }
-
-    /**
-     *
-     * @return
-     */
     public Arma getArma_izq() {
         return arma_izq;
     }
     
-    /**
-     *
-     * @return
-     */
     public Mapa getMapa() {
         return mapa;
     }
@@ -340,8 +287,6 @@ public abstract class Personaje {
      * Mueve al personaje en la dirección indicada una casilla.
      * La casilla debe estarDisponible para ello y la acción consume energía según el peso de la mochila.
      * @param c String con uno de los valores siguientes: "N","S","E" u "O".
-     * @return 
-     * @throws Excepciones.PersonajeException 
      */
     public boolean mover(String c) throws PersonajeException {   
         c = c.toUpperCase();
@@ -382,8 +327,6 @@ public abstract class Personaje {
      * Coge el objeto (indicado por el nombre) de la celda en la que se encuentra, este índice se conoce
      * llamando al método "mirar".
      * @param nombre El nombre del objeto a coger.
-     * @return 
-     * @throws Excepciones.PersonajeException
      */
     public boolean coger(String nombre) throws PersonajeException {
         if(getEnergia() >= PConst.GE_COGER) {     
@@ -430,8 +373,7 @@ public abstract class Personaje {
     /**
      * Ataca la celda indicada. Si se le da un nombre, al enemigo indicado.
      * @param pj
-     * @return 
-     * @throws Excepciones.PersonajeException
+     * @param personaje Personaje al que atacar
      */
     public boolean atacar(Personaje pj) throws PersonajeException{
         if(getEnergia() > PConst.GE_ATACAR)
@@ -462,13 +404,6 @@ public abstract class Personaje {
         return false;
     }
 
-    /**
-     *
-     * @param enemigo
-     * @param dano
-     * @return
-     * @throws PersonajeException
-     */
     protected abstract boolean atacar(Personaje enemigo, int dano) throws PersonajeException;
     /**
      * Tira el objeto indicado a la celda.
@@ -483,19 +418,12 @@ public abstract class Personaje {
         }
         return false;
     }
-
-    /**
-     *
-     * @param nombre
-     * @throws PersonajeException
-     */
     public void equipar(String nombre) throws PersonajeException {
         equipar(mochila.getObjeto(nombre));
     }
     /**
      * Equipa el objeto
      * @param ob
-     * @throws Excepciones.PersonajeException
      */
     public void equipar(Objeto ob) throws PersonajeException {
         if(mochila.getObjetos().contains(ob)) {
@@ -556,7 +484,6 @@ public abstract class Personaje {
     /**
      * Equipa el objeto
      * @param ob
-     * @throws Excepciones.PersonajeException
      */
     public void desequipar(Objeto ob) throws PersonajeException {
         if(ob instanceof Arma) {
@@ -625,19 +552,12 @@ public abstract class Personaje {
         rangoAtaque = Math.min(rangoAtaque, getRango());
         return (posicion.dist(pt) <= rangoAtaque);
     }
-
-    /**
-     *
-     * @param nombre
-     * @throws PersonajeException
-     */
     public void usar (String nombre) throws PersonajeException {
         usar(mochila.getObjeto(nombre));
     }
     /**
      * Usa el objeto 
      * @param obj El objeto en la mochila.
-     * @throws Excepciones.PersonajeException
      */
     public void usar (Objeto obj) throws PersonajeException {
         if(obj != null && mochila.getObjetos().contains(obj))
@@ -647,10 +567,6 @@ public abstract class Personaje {
             throw new PersonajeException("No se puede usar lo que no se tiene, pirata.");
     }
 
-    /**
-     *
-     * @return
-     */
     public int manosOcupadasConArmas(){
         int manos=0;
         if(arma != null) manos++;
@@ -658,10 +574,6 @@ public abstract class Personaje {
         return manos;
     }
     
-    /**
-     *
-     * @param obj
-     */
     protected void intentarMeterMochila(Objeto obj) {
         if(!mochila.addObjeto(obj)){
             //No cabe en la mochila, se tira al suelo.
@@ -673,18 +585,9 @@ public abstract class Personaje {
         }
     }
     
-    /**
-     *
-     * @param plusEnergia
-     */
     public void setToreado(int plusEnergia) {
         this.plusEnergia = plusEnergia;                
     }
-
-    /**
-     *
-     * @return
-     */
     public int getToreado() {
         return plusEnergia;
     }

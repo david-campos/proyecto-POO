@@ -21,9 +21,6 @@ public class ConsolaVentana extends JFrame implements Consola{
     private String textoActual = "";
     private boolean hayEntrada = false;
 
-    /**
-     *
-     */
     public ConsolaVentana() {
         area = new JTextArea(400,300);
         area.setBounds(0,0,400,300);
@@ -66,11 +63,6 @@ public class ConsolaVentana extends JFrame implements Consola{
         setVisible(true);
         
     }
-
-    /**
-     *
-     * @param s
-     */
     @Override
     public void imprimir(String s) {
         area.setText(s);
@@ -80,19 +72,11 @@ public class ConsolaVentana extends JFrame implements Consola{
         imprimir(mensaje);    
     }
 
-    /**
-     *
-     * @param mensaje
-     */
     @Override
     public void imprimirSinSalto(String mensaje) {
         area.setText(mensaje);
     }
     
-    /**
-     *
-     * @return
-     */
     @Override
     public String leer() {
         while(!hayEntrada) {
@@ -111,10 +95,7 @@ public class ConsolaVentana extends JFrame implements Consola{
         return leer();
     }
     
-    /**
-     *
-     * @return
-     */
+    
     @Override
     public boolean esGrafica() {return false;}
 }
