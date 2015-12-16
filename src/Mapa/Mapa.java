@@ -413,30 +413,6 @@ public final class Mapa {
         return salida;
     }
     
-    public String visionJugadorGrafica() {
-        String dibujoJugador = "jugador";
-        String dibujoEnemigo = "enemigo";
-        String salida = "";
-
-        for(int i=0; i<getAlto();i++){
-                for(int j=0; j<celdas.get(i).size();j++)
-                {
-                    if(celdas.get(i).get(j) == null)
-                        salida += "null";
-                    else if(jugador != null && jugador.getPos().equals(new Punto(j, i)))
-                        salida += dibujoJugador;
-                    else if(!jugador.enRango(new Punto(j, i)))
-                    {
-                        salida += "no "; continue;
-                    }else if(getCelda(new Punto(j, i)) instanceof Transitable && ((Transitable)getCelda(new Punto(j, i))).getNumEnemigos() > 0) {
-                        salida += dibujoEnemigo;
-                    } else
-                        salida += getCelda(new Punto(j, i)).representacionGrafica();
-                    salida += " ";
-                }
-        }
-        return salida;
-    }
     public ArrayList<Enemigo> getEnemigos(){
         return (ArrayList) enemigos.clone();
     }

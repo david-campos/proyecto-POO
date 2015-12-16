@@ -97,8 +97,5 @@ public class ConsolaVentana extends JFrame implements Consola{
     
     @Override
     public void cerrar(){}
-    
-    @Override
-    public boolean esGrafica() {return false;}
 }
         

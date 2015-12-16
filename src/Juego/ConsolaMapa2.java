@@ -5,32 +5,44 @@
  */
 package Juego;
 
+import Mapa.Mapa;
 import Mapa.Punto;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.scene.layout.Border;
 /**
  *
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public class ConsolaMapa2 extends JFrame implements Consola{
-    private static final Punto DIM_TOTAL = new Punto(650, 500); //Tamaño del mapa máximo
     private final int dim;
     
     private final ArrayList<JLabel> paneles;
     private final HashMap<String, ImageIcon> imagenes;
+    private final JTextArea areaConsola;
     
     public ConsolaMapa2(Punto tamMapa){
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        GridLayout g = new GridLayout(tamMapa.y, tamMapa.x,0,0);
-        getContentPane().setLayout(g);
-        g.setHgap(0);
-        g.setVgap(0);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Punto dim_total = new Punto((int)Math.round(screenSize.width * 0.7), (int) Math.round(screenSize.height * 0.7)); //Tamaño del mapa máximo
+        dim = (int) Math.floor(Math.min(dim_total.x/(double)tamMapa.x, dim_total.y/(double)tamMapa.y));
         
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        
+        /*  LAYOUT DE LA VENTANA  */
+        getContentPane().setLayout(new BorderLayout());
+        
+        /*  GENERAR LOS DOS PANELES GENERALES*/
+        JPanel panelMapa = new JPanel(new GridLayout(tamMapa.y, tamMapa.x,0,0));
+        panelMapa.setSize(new Dimension(dim*tamMapa.x,dim*tamMapa.y));
+        panelMapa.setMinimumSize(panelMapa.getSize());
+        JPanel panelConsola = new JPanel();
+        panelConsola.setLayout(new BoxLayout(panelConsola, 1));
+        
+        // <editor-fold defaultstate="collapsed" desc="GENERAR CELDITAS DEL MAPA"> 
         paneles = new ArrayList(tamMapa.x * tamMapa.y);
         imagenes = new HashMap();
-        dim = (int) Math.floor(Math.min(DIM_TOTAL.x/(double)tamMapa.x, DIM_TOTAL.y/(double)tamMapa.y));
         for(int i = 0; i < tamMapa.x * tamMapa.y; i++){
             JLabel jPanel1 = new JLabel();
             jPanel1.setBackground(Color.red);
@@ -43,23 +55,45 @@ public class ConsolaMapa2 extends JFrame implements Consola{
             jPanel1.setPreferredSize(new Dimension(dim, dim));
             jPanel1.setSize(new Dimension(dim, dim));
             
-            getContentPane().add(jPanel1);
+            panelMapa.add(jPanel1);
             paneles.add(jPanel1);
         }
+        //</editor-fold>
+        
+        //<editor-fold  defaultstate="collapsed" desc="GENERAR LA CONSOLA">
+        areaConsola = new JTextArea(1, 50);
+        areaConsola.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
+        areaConsola.setBackground(new Color(50,0,0));
+        areaConsola.setForeground(new Color(200,0,0));
+        areaConsola.setMargin(new Insets(5,10,10,10));
+        panelConsola.add(areaConsola);
+        //</editor-fold>
         
         //VENTANA
+        getContentPane().add(panelMapa, BorderLayout.NORTH);
+        getContentPane().add(panelConsola, BorderLayout.SOUTH);
         setResizable(false);
-        setTitle("Mapa");
+        setTitle("Consola...");
         pack();
+        this.setLocationRelativeTo(null);
         setVisible(true);
+        toFront();
     }
 
     @Override
-    public void imprimirMapa(String mensaje) {
-        if(mensaje.split(" ").length != paneles.size())
+    public final void setVisible(boolean b) {
+        super.setVisible(b);
+        areaConsola.requestFocusInWindow();
+    }
+    
+    
+
+    @Override
+    public void imprimirMapa(Mapa map) {
+        //if(mensaje.split(" ").length != paneles.size())
             return;
-        int i=0;
-        for(String img: mensaje.split(" ")){
+        
+        /*for(String img: mensaje.split(" ")){
             ImageIcon ico;
             if(imagenes.containsKey(img))
                 ico = imagenes.get(img);
@@ -69,7 +103,7 @@ public class ConsolaMapa2 extends JFrame implements Consola{
             }
             paneles.get(i).setIcon(ico);
             i++;
-        }
+        }*/
     }
     @Override
     public void imprimir(String mensaje) {
@@ -98,7 +132,4 @@ public class ConsolaMapa2 extends JFrame implements Consola{
         setVisible(false);
         dispose();
     }
-    
-    @Override
-    public boolean esGrafica() {return true;}
 }

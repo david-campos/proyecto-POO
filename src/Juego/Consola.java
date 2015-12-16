@@ -5,6 +5,8 @@
  */
 package Juego;
 
+import Mapa.Mapa;
+
 /**
  * Interfaz para implementar la consola
  * @author crist
@@ -14,7 +16,7 @@ public interface Consola {
      * Imprime de la forma que se requiera el mensaje
      * @param mensaje mensaje a mostrar
      */
-    public void imprimirMapa(String mensaje);
+    public void imprimirMapa(Mapa map);
     public void imprimir (String mensaje);
     public void imprimirSinSalto(String mensaje);
     public void cerrar();
@@ -25,6 +27,4 @@ public interface Consola {
      */
     public String leer (String descripcion);  
     public String leer();
-
-    public boolean esGrafica();
 }

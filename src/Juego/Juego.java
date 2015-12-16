@@ -21,14 +21,12 @@ public final class Juego {
     private Mapa mapa;
     private Jugador jug;
     private Consola consola;
-    private Consola cMapa;
     private String[] anteriorComando=null;
     
     public Juego (Mapa mapa, Jugador jugador) {
         this.mapa = mapa;
         jug = jugador;
-        consola = new ConsolaNormal();
-        cMapa = new ConsolaMapa2(new Punto(mapa.getAncho(), mapa.getAlto()));
+        consola = new ConsolaMapa2(new Punto(mapa.getAncho(), mapa.getAlto()));
     }
     public Juego (Mapa mapa) {
         this(mapa, null);
@@ -60,7 +58,7 @@ public final class Juego {
      * Inicia el juego.
      */
     public void iniciar() throws Exception {
-        if(mapa == null || jug == null || consola == null || cMapa == null){
+        if(mapa == null || jug == null || consola == null){
             throw new Exception("No se puede iniciar el juego :c"); //No se incia tt...
         }
         
@@ -145,10 +143,7 @@ public final class Juego {
 
     public void impMapa() {
         if(mapa != null)
-            if(cMapa.esGrafica())
-                cMapa.imprimirMapa(mapa.visionJugadorGrafica());
-            else
-                cMapa.imprimirMapa(mapa.visionJugador());
+            consola.imprimirMapa(mapa);
     }
     
     /**
@@ -169,7 +164,6 @@ public final class Juego {
                     return 1;
                 case "salir":
                     consola.cerrar();
-                    cMapa.cerrar();
                     return 0;
                 case "mover":
                     if(i+1<comando.length){

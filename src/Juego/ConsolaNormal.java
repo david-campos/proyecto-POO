@@ -5,6 +5,7 @@
  */
 package Juego;
 
+import Mapa.Mapa;
 import java.util.Scanner;
 
 /**
@@ -23,9 +24,9 @@ public final class ConsolaNormal implements Consola{
             System.out.println(mensaje);    
     }
     @Override
-    public void imprimirMapa(String mensaje) {
-        if(mensaje != null)
-            System.out.println(mensaje);    
+    public void imprimirMapa(Mapa map) {
+        if(map != null)
+            System.out.println(map.visionJugador());
     }
     @Override
     public void imprimirSinSalto(String mensaje) {
@@ -62,7 +63,4 @@ public final class ConsolaNormal implements Consola{
      *
      */
     public void cerrar(){}
-    
-    @Override
-    public boolean esGrafica() {return false;}
 }
