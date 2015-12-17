@@ -5,7 +5,6 @@
  */
 package Personajes;
 
-import Excepciones.ObjetoException;
 import Excepciones.PersonajeException;
 import Juego.*;
 import Mapa.*;

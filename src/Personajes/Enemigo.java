@@ -50,11 +50,11 @@ public abstract class Enemigo extends Personaje{
 
     @Override
     public boolean setPos(Punto pos){
-        super.setPos(pos);
         if(mapa != null && 
             mapa.getCelda(pos) != null &&
             mapa.getCelda(pos) instanceof Transitable &&
-            ((Transitable)mapa.getCelda(pos)).estaDisponible()
+            ((Transitable)mapa.getCelda(pos)).estaDisponible() &&
+            (this instanceof Enemigo || ((Transitable)mapa.getCelda(pos)).getEnemigos().isEmpty())
         ){
             try {
                 if(mapa.getCelda(getPos()) != null)
@@ -62,9 +62,10 @@ public abstract class Enemigo extends Personaje{
                 ((Transitable)mapa.getCelda(pos)).addEnemigo(this);
             } catch (MapaExcepcion ex) {
                 juego.log(ex.getMessage());
+                return false;
             }
         }
-        return true;
+        return super.setPos(pos);
     }
     
     public void morir() throws PersonajeException {

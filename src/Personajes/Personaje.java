@@ -298,21 +298,25 @@ public abstract class Personaje {
                         pos.x = posicion.x - 1;
                         pos.y = posicion.y;
                         if( setPos(pos) ) setEnergia(getEnergia()-energiaConsumida);
+                        else return false;
                         break;
                     case "E":
                         pos.x = posicion.x + 1;
                         pos.y = posicion.y;
                         if( setPos(pos) ) setEnergia(getEnergia()-energiaConsumida);
+                        else return false;
                         break;
                     case "S":
                         pos.x = posicion.x;
                         pos.y = posicion.y + 1;
                         if( setPos(pos) ) setEnergia(getEnergia()-energiaConsumida);
+                        else return false;
                         break;
                     case "N":
                         pos.x = posicion.x;
                         pos.y = posicion.y - 1;
                         if( setPos(pos) ) setEnergia(getEnergia()-energiaConsumida);
+                        else return false;
                         break;
                     default: 
                         throw new PersonajeException("Opción incorrecta");
