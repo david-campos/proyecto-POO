@@ -460,7 +460,7 @@ public final class Mapa {
         if(posDe.en(getAncho(), getAlto()))
         {
             Transitable t = new Transitable();
-            if(dejarEscombros && getCelda(posDe).tipo == MConst.MURO)
+            if(dejarEscombros && getCelda(posDe).tipo == ConstantesMapa.MURO)
                 t.addObjeto(new Escombros());
             celdas.get(posDe.y).set(posDe.x, t);
             t.setMapa(this);

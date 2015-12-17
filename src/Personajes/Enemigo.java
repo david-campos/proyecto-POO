@@ -9,6 +9,8 @@ import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.DireccionMoverIncorrecta;
 import Excepciones.EnergiaInsuficienteException;
 import Excepciones.ImposibleCogerExcepcion;
+import Excepciones.ObjetoNoDesequipableException;
+import Excepciones.ObjetoNoEncontradoException;
 import Excepciones.ObjetoNoEquipableException;
 import Excepciones.PosicionFueraDeAlcanceException;
 import Excepciones.PosicionFueraDeRangoException;
@@ -19,6 +21,8 @@ import Mapa.Transitable;
 import Objetos.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -103,26 +107,37 @@ public abstract class Enemigo extends Personaje{
             return getEfectoArmas() < a.getDano();
         }
     }
-    protected void iaRecogerObjetos() throws ImposibleCogerExcepcion, ObjetoNoEquipableException, EnergiaInsuficienteException{
+    protected boolean iaRecogerObjetos() throws ImposibleCogerExcepcion, ObjetoNoEquipableException, EnergiaInsuficienteException{
         ArrayList<Objeto> obs;
         Transitable c = (Transitable) mapa.getCelda(getPos());
-        if( (obs = c.getObjetos()).size() > 0)
+        boolean cogioAlgo = false;
+        if( (obs = c.getObjetos()).size() > 0){
             for(Objeto o: obs){
                 if(o instanceof Arma){
                     Arma arma = (Arma) o;
                     if(decidirCogerArma(arma)){
                         if(manosOcupadasConArmas() > 1)
-                            desequipar(getArma());
+                            try {
+                                desequipar(getArma());
+                            } catch (ObjetoNoDesequipableException | ObjetoNoEncontradoException ex) {
+                                /*No puede pasar*/
+                            }
                         coger(arma.getNombre());
+                        cogioAlgo = true;
                     }
                 }else if(o instanceof Armadura){
                     Armadura armadura = (Armadura) o;
-                    if( getArmadura() == null || armadura.getDefensa() > getArmadura().getDefensa())
+                    if( getArmadura() == null || armadura.getDefensa() > getArmadura().getDefensa()){
                         coger(armadura.getNombre());
+                        cogioAlgo = true;
+                    }
                 }else if(o instanceof Botiquin || o instanceof ToritoRojo){
                     coger(o.getNombre());
+                        cogioAlgo = true;
                 } //No coge binoculares
             }
+        }
+        return cogioAlgo;
     }
     protected void iaAtacar() throws PosicionFueraDeRangoException, PosicionFueraDeAlcanceException, EnergiaInsuficienteException{
         this.atacar(mapa.getJugador());
@@ -160,10 +175,8 @@ public abstract class Enemigo extends Personaje{
                 iaMover();
                 hizoAlgo = true;
             } catch (CeldaObjetivoNoValida | DireccionMoverIncorrecta | EnergiaInsuficienteException ex) {/*No hace nada*/}
-            
             try {
-                iaRecogerObjetos();
-                hizoAlgo = true;
+                hizoAlgo = hizoAlgo || iaRecogerObjetos();
             } catch (ImposibleCogerExcepcion | ObjetoNoEquipableException | EnergiaInsuficienteException ex) {/*No hace nada*/}
             if(!hizoAlgo)
                 break;

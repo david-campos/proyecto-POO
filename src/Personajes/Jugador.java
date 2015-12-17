@@ -9,12 +9,10 @@ import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.EnemigoNoEncontradoException;
 import Excepciones.EnergiaInsuficienteException;
 import Excepciones.ImposibleCogerExcepcion;
-import Excepciones.ObjetoException;
 import Excepciones.ObjetoNoDesequipableException;
 import Excepciones.ObjetoNoEncontradoException;
 import Excepciones.ObjetoNoEquipableException;
 import Excepciones.ObjetoNoUsableException;
-import Excepciones.PersonajeException;
 import Juego.*;
 import Mapa.*;
 import Objetos.*;
@@ -136,11 +134,11 @@ public abstract class Jugador extends Personaje {
     }
     @Override
     public void coger(String nombre) throws EnergiaInsuficienteException, ObjetoNoEquipableException, ImposibleCogerExcepcion{
-        if(getEnergia() >= PConst.GE_COGER) { 
+        if(getEnergia() >= ConstantesPersonajes.GE_COGER) { 
             Objeto obj;
             if((obj = ((Transitable)mapa.getCelda(getPos())).getObjeto(nombre)) != null) {
                 if(obj instanceof Binoculares && binoculares == null){
-                    setEnergia(getEnergia() - PConst.GE_COGER);
+                    setEnergia(getEnergia() - ConstantesPersonajes.GE_COGER);
                     ((Transitable)mapa.getCelda(getPos())).remObjeto(obj);
                     getMochila().addObjeto(obj);
                     equipar(obj.getNombre());
@@ -180,12 +178,13 @@ public abstract class Jugador extends Personaje {
     }
     
     @Override
-    public void desequipar(Objeto ob) throws ObjetoNoDesequipableException{
+    public void desequipar(Objeto ob) throws ObjetoNoDesequipableException, ObjetoNoEncontradoException{
         if(ob instanceof Binoculares)
             desequipar((Binoculares)ob);
         else 
             super.desequipar(ob);
     }
+    
     private void desequipar(Binoculares bn) {
     	if(bn!= null) {
             if(bn.equals(binoculares)) {

@@ -22,7 +22,7 @@ import javax.swing.text.BadLocationException;
  *
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
-public class ConsolaMapa2 extends JFrame implements Consola{
+public class ConsolaGrafica extends JFrame implements Consola{
     private final int dim;
     private final ArrayList<JLabel> paneles;
     private final HashMap<String, ImageIcon> imagenes;
@@ -33,7 +33,7 @@ public class ConsolaMapa2 extends JFrame implements Consola{
     private final JPanel panelMapa;
     private final ArrayBlockingQueue<String> comandos;
     
-    public ConsolaMapa2(Punto tamMapa){
+    public ConsolaGrafica(Punto tamMapa){
         comandos = new ArrayBlockingQueue(10);
         
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);

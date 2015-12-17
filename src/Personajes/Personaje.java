@@ -292,10 +292,10 @@ public abstract class Personaje {
 
     //MÉTODOS
     protected int obtenerConsumoEnergiaMover(){
-        return (int) (PConst.GE_MOVER + Math.round(mochila.pesoActual()/5));
+        return (int) (ConstantesPersonajes.GE_MOVER + Math.round(mochila.pesoActual()/5));
     }
     protected int obtenerConsumoEnergiaAtacar(){
-        return (int) (PConst.GE_ATACAR);
+        return (int) (ConstantesPersonajes.GE_ATACAR);
     }
     /**
      * Mueve al personaje en la dirección indicada una casilla.
@@ -344,10 +344,10 @@ public abstract class Personaje {
      * @param nombre El nombre del objeto a coger.
      */
     public void coger(String nombre) throws ImposibleCogerExcepcion, ObjetoNoEquipableException, EnergiaInsuficienteException{
-        if(getEnergia() >= PConst.GE_COGER) {     
+        if(getEnergia() >= ConstantesPersonajes.GE_COGER) {     
             Objeto obj;
             if((obj = ((Transitable)mapa.getCelda(posicion)).getObjeto(nombre)) != null) {
-                setEnergia(getEnergia() - PConst.GE_COGER);
+                setEnergia(getEnergia() - ConstantesPersonajes.GE_COGER);
             
                 boolean cogido=false;
 

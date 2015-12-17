@@ -1,6 +1,5 @@
 package Mapa;
 
-import Excepciones.PersonajeException;
 import Personajes.Enemigo;
 
 public abstract class Celda {
@@ -17,22 +16,21 @@ public abstract class Celda {
     public boolean isBomba() {
         return bomba;
     }
-
     public void setBomba(boolean bomba) {
         this.bomba = bomba;
     }
 
     public String representacion(){
         if(this instanceof Transitable)
-            return MConst.CE_REPR_TRANS[tipo];
+            return ConstantesMapa.CE_REPR_TRANS[tipo];
         else
-            return MConst.CE_REPR_NOTRANS[tipo];
+            return ConstantesMapa.CE_REPR_NOTRANS[tipo];
     }
     public String representacionGrafica(){
         if(this instanceof Transitable)
-            return MConst.CE_REPG_TRANS[tipo];
+            return ConstantesMapa.CE_REPG_TRANS[tipo];
         else
-            return MConst.CE_REPG_NOTRANS[tipo];
+            return ConstantesMapa.CE_REPG_NOTRANS[tipo];
     }
     /**
      * Obtiene la referencia al mapa en el que se sitúa la celda.
@@ -59,7 +57,7 @@ public abstract class Celda {
         mapa.getJuego().impMapa();
     }
     private void detonar(int lejania, String dir){
-        if(lejania >= 2)
+        if(lejania >= ConstantesMapa.EXPLOSION_MAX_RAD)
             return;
         if(this instanceof Transitable) {
             Transitable transitable = (Transitable) this;
@@ -74,7 +72,7 @@ public abstract class Celda {
             }
             
             Punto pt = mapa.getPosDe(this);
-            tipo = MConst.BOQUETE;
+            tipo = ConstantesMapa.BOQUETE;
             if(dir == null)
             {
                 if(mapa.getCelda(pt.x, pt.y - 1) != null) mapa.getCelda(pt.x, pt.y - 1).detonar(lejania+1, "n");

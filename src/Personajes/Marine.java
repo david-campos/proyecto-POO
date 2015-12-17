@@ -6,8 +6,8 @@
 package Personajes;
 
 import Excepciones.ObjetoNoDesequipableException;
+import Excepciones.ObjetoNoEncontradoException;
 import Excepciones.ObjetoNoEquipableException;
-import Excepciones.PersonajeException;
 import Juego.Juego;
 import Mapa.*;
 import Objetos.*;
@@ -67,7 +67,7 @@ public class Marine extends Jugador {
         actualizarMultiplicadorConsumo();
     }
     @Override
-    public void desequipar(Objeto ob) throws ObjetoNoDesequipableException {
+    public void desequipar(Objeto ob) throws ObjetoNoDesequipableException, ObjetoNoEncontradoException {
         super.desequipar(ob);
         actualizarMultiplicadorConsumo();
     }

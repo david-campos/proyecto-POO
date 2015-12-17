@@ -9,7 +9,7 @@ package Personajes;
  *
  * @author crist
  */
-public interface PConst {
+public interface ConstantesPersonajes {
     int GE_COGER = 1;
     int GE_ATACAR = 10;
     int GE_MOVER = 5;

@@ -53,8 +53,8 @@ public class Zapador extends Jugador {
         Objeto obj;
         if(mapa != null && (obj = ((Transitable)mapa.getCelda(getPos())).getObjeto(nombre)) != null) {
             if(obj instanceof Explosivo){
-                if(getEnergia() >= PConst.GE_COGER) {     
-                    setEnergia(getEnergia() - PConst.GE_COGER);
+                if(getEnergia() >= ConstantesPersonajes.GE_COGER) {     
+                    setEnergia(getEnergia() - ConstantesPersonajes.GE_COGER);
                     ((Transitable)mapa.getCelda(getPos())).remObjeto(obj);
                     getMochila().addObjeto(obj);
                     juego.log("Coges " + obj.getNombre());

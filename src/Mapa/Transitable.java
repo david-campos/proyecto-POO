@@ -18,8 +18,8 @@ public final class Transitable extends Celda {
         Random r = new Random();
         do
         {
-            tipo = (int)Math.round(r.nextInt(MConst.CE_REPR_TRANS.length));
-        }while(tipo == MConst.BOQUETE);
+            tipo = (int)Math.round(r.nextInt(ConstantesMapa.CE_REPR_TRANS.length));
+        }while(tipo == ConstantesMapa.BOQUETE);
     }
 
     /**

@@ -29,7 +29,7 @@ public final class Juego {
         consola = c;
     }
     public Juego (Mapa mapa) {
-        this(mapa, null, new ConsolaMapa2(new Punto(mapa.getAncho(), mapa.getAlto())));
+        this(mapa, null, new ConsolaGrafica(new Punto(mapa.getAncho(), mapa.getAlto())));
     }
     
     public Mapa getMapa() {

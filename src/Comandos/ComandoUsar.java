@@ -4,8 +4,12 @@
 package Comandos;
 
 import Excepciones.ComandoExcepcion;
+import Excepciones.ObjetoNoEncontradoException;
+import Excepciones.ObjetoNoUsableException;
 import Excepciones.PersonajeException;
 import Personajes.Jugador;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,10 +43,10 @@ public final class ComandoUsar implements Comando{
     public void ejecutar() throws ComandoExcepcion {
         if(jug!=null)
             if(nombre != null && !nombre.isEmpty()){
-                try{
+                try {
                     jug.usar(nombre);
-                }catch(PersonajeException e){
-                    throw new ComandoExcepcion(e.getMessage());
+                } catch (ObjetoNoUsableException | ObjetoNoEncontradoException ex) {
+                    throw new ComandoExcepcion(ex.getMessage());
                 }
             }else
                 throw new ComandoExcepcion("No se ha indicado el nombre del objeto a usar...");
