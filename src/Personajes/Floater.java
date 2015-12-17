@@ -41,18 +41,7 @@ public class Floater extends Enemigo{
             int vidaResultante = enemigo.getVida() - danoReal;
 
             enemigo.setVida(vidaResultante);
-            if(vidaResultante <= 0) {
-                if(enemigo instanceof Enemigo){
-                    ((Enemigo)enemigo).morir();
-                    juego.impMapa();
-                    juego.log("Enemigo eleminado...");
-                }
-            }else{
-                if(enemigo instanceof Enemigo)
-                    juego.log("Daño causado a " + enemigo.getNombre() + ": " + danoReal + ", vida restante: "+ enemigo.getVida());
-                else
-                    juego.log(getNombre() + " te ha causado " + danoReal + " de daño.");
-            }
+            juego.log(getNombre() + " te ha causado " + danoReal + " de daño.");
         }else{
             juego.log("Enemigo null!");    
             return false;

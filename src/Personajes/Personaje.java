@@ -535,7 +535,7 @@ public abstract class Personaje {
      * @param pt coordenadas de la celda
      * @return Si la celda está a la vista.
      */
-    public boolean enRango (Punto pt) {
+    public boolean enRango (Punto pt){
         return (posicion.dist(pt) <= rango);
     }
     /**

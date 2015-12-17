@@ -23,13 +23,13 @@ public final class Juego {
     private Consola consola;
     private String[] anteriorComando=null;
     
-    public Juego (Mapa mapa, Jugador jugador) {
+    public Juego (Mapa mapa, Jugador jugador, Consola c) {
         this.mapa = mapa;
         jug = jugador;
-        consola = new ConsolaMapa2(new Punto(mapa.getAncho(), mapa.getAlto()));
+        consola = c;
     }
     public Juego (Mapa mapa) {
-        this(mapa, null);
+        this(mapa, null, new ConsolaMapa2(new Punto(mapa.getAncho(), mapa.getAlto())));
     }
     
     public Mapa getMapa() {
@@ -59,7 +59,7 @@ public final class Juego {
      */
     public void iniciar() throws Exception {
         if(mapa == null || jug == null || consola == null){
-            throw new Exception("No se puede iniciar el juego :c"); //No se incia tt...
+            throw new Exception("No se puede iniciar el juego :c"); //No se inicia tt...
         }
         
         log(mapa.getNombre());
@@ -71,7 +71,7 @@ public final class Juego {
             int seguir = 2;
             //Imprimir mapa
             impMapa();
-            log("\t####### NUEVO TURNO #######");
+            log("\tNuevo turno", true);
             //Setear energia
             jug.setEnergia(jug.getEnergiaPorTurno());
             //Sólo dura un turno
@@ -87,12 +87,13 @@ public final class Juego {
                 //Leemos comando
                 try{
                     seguir = procesaComando(consola.leer().split(" "));
+                    consola.imprimirMapa(mapa);
                 }catch(ComandoExcepcion e){
-                    consola.imprimir(e.getMessage());
+                    log(e.getMessage(), true);
                 }
             }
             if(jug.getEnergia() == 0)
-                log("SIN ENERGÍA, cambio de turno.");
+                log("SIN ENERGÍA, cambio de turno.", true);
             if(seguir==0)
                 break;
             
@@ -130,17 +131,21 @@ public final class Juego {
     }
     
     private void imprimirPrompt(){
-        consola.imprimirSinSalto(jug.getNombre() + "[ "
+        consola.imprimirEstado(jug.getNombre() + "[ "
                 +(jug.tieneBinoculares()?"+"+jug.getBinoculares().getPlusRango()+"\u229A , ":"")
                 +(jug.tieneArmas()?"+"+jug.getEfectoArmas()+"A , ":"")
                 +(jug.getArmadura()!=null?"+"+jug.getArmadura().getDefensa()+"\u2666 , ":"")
                 +jug.getVida()+"\u2665 , "
                 +jug.getEnergia()+"E ] ");
     }
-    public void log(String mensaje) {
+    public void log(String mensaje, boolean limpiarPrimero) {
+        if(limpiarPrimero)
+            consola.limpiar();
         consola.imprimir(mensaje);
     }
-
+    public void log(String mensaje){
+        log(mensaje, false);
+    }
     public void impMapa() {
         if(mapa != null)
             consola.imprimirMapa(mapa);

@@ -24,6 +24,10 @@ public final class ConsolaNormal implements Consola{
             System.out.println(mensaje);    
     }
     @Override
+    public void limpiar(){
+        System.out.println();
+    }
+    @Override
     public void imprimirMapa(Mapa map) {
         if(map != null)
             System.out.println(map.visionJugador());
@@ -47,6 +51,10 @@ public final class ConsolaNormal implements Consola{
         else
             System.out.print("> ");
         return scnr.nextLine();
+    }
+    @Override
+    public void imprimirEstado(String mensaje){
+         imprimirSinSalto(mensaje);
     }
         /**
      * Pide datos al usario en la consola por defecto

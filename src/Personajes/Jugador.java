@@ -77,6 +77,7 @@ public abstract class Jugador extends Personaje {
         ArrayList<Objeto> list = ((Transitable)mapa.getCelda(getPos())).getObjetos();
         if(getEnergia() >= PConst.GE_MIRAR) {
             setEnergia(getEnergia() - PConst.GE_MIRAR);       //Gasto de energia
+            juego.getConsola().limpiar();
             if(list.size() > 0) {
                 int i = 1;
                 for(Objeto ob : list) {
@@ -106,7 +107,7 @@ public abstract class Jugador extends Personaje {
      * @throws Excepciones.PersonajeException
      */
     public void mirar(Transitable c) throws PersonajeException{
-        juego.log("Enemigos:");
+        juego.log("Enemigos:", true);
         if(c!=null)
             for(Enemigo e: c.getEnemigos())
                 juego.log("\t"+e.getNombre());
@@ -135,7 +136,7 @@ public abstract class Jugador extends Personaje {
      */
     public void mirarMochila() {
         Mochila mochila = getMochila();
-        juego.log("Capacidad: "+ mochila.getMaxObjetos());
+        juego.log("Capacidad: "+ mochila.getMaxObjetos(), true);
         juego.log("Ocupación: "+mochila.getNumObj());
         juego.log("Peso máximo: "+mochila.getMaxPeso());
         juego.log("Peso actual: "+mochila.pesoActual());

@@ -5,6 +5,7 @@ package proyecto2;
 
 import Excepciones.CargadorException;
 import Juego.*;
+import Mapa.Punto;
 
 /**
  * Proyecto de Programación Orientada a Objetos,
