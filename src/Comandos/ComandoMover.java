@@ -5,9 +5,14 @@
  */
 package Comandos;
 
+import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.ComandoExcepcion;
+import Excepciones.DireccionMoverIncorrecta;
+import Excepciones.EnergiaInsuficienteException;
 import Excepciones.PersonajeException;
 import Personajes.Jugador;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
@@ -39,16 +44,12 @@ public final class ComandoMover implements Comando{
     @Override
     public void ejecutar() throws ComandoExcepcion{
         if(jug!=null)
-            if(dir.matches("n|s|e|o"))
-                try{
-                    jug.mover(dir);
-                    jug.getJuego().impMapa();
-                }catch(PersonajeException e){
-                    throw new ComandoExcepcion(e.getMessage());
-                }
-            else
-                throw new ComandoExcepcion("Dirección de movimiento incorrecta");
-        //Si el jugador es null, es fallo de programación, no del usuario
+            try{
+                jug.mover(dir);
+                jug.getJuego().impMapa();
+            } catch (CeldaObjetivoNoValida | DireccionMoverIncorrecta | EnergiaInsuficienteException ex) {
+                throw new ComandoExcepcion(ex.getMessage());
+            }
     }
     
 }

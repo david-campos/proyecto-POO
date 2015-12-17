@@ -6,6 +6,7 @@
 package Comandos;
 
 import Excepciones.ComandoExcepcion;
+import Excepciones.ObjetoNoEncontradoException;
 import Personajes.Jugador;
 
 /**
@@ -39,11 +40,15 @@ public class ComandoMirarPorObjetos implements Comando{
     
     @Override
     public void ejecutar() throws ComandoExcepcion {
-        if(jug != null)
-            if(nombreObjeto != null)
-                jug.mirar(nombreObjeto);
-            else
-                jug.mirar();
+        try{
+            if(jug != null)
+                if(nombreObjeto != null)
+                    jug.mirar(nombreObjeto);
+                else
+                    jug.mirar();
+        }catch(ObjetoNoEncontradoException e){
+            throw new ComandoExcepcion(e.getMessage());
+        }
     }
     
 }

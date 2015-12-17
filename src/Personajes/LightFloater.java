@@ -5,6 +5,7 @@
  */
 package Personajes;
 
+import Excepciones.CeldaObjetivoNoValida;
 import Juego.Juego;
 
 /**
@@ -13,11 +14,11 @@ import Juego.Juego;
  */
 public final class LightFloater extends Floater{
 
-    public LightFloater(String nombre, int vida, int energiaPorTurno, int[] posicion, Juego juego) {
+    public LightFloater(String nombre, int vida, int energiaPorTurno, int[] posicion, Juego juego) throws CeldaObjetivoNoValida {
         super(nombre, vida, energiaPorTurno, posicion, juego);
     }
 
-    public LightFloater(String nombre, int[] posicion, Juego juego) {
+    public LightFloater(String nombre, int[] posicion, Juego juego) throws CeldaObjetivoNoValida {
         super(nombre, posicion, juego);
     }
 

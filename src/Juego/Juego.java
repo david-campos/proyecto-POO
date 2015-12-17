@@ -106,11 +106,7 @@ public final class Juego {
                     enemigo.setToreado(0);
                 }
 
-                try {
-                    enemigo.iaTurno();//Activa IA
-                } catch (PersonajeException ex) {
-                    //Obviar
-                }
+                enemigo.iaTurno();
                 
                 if(jug.getVida() <= 0)
                     break;

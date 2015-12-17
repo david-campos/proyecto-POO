@@ -1,5 +1,6 @@
 package Mapa;
 
+import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.MapaExcepcion;
 import java.util.Random;
 import Personajes.*;
@@ -64,7 +65,7 @@ public final class Transitable extends Celda {
      * Asocia al enemigo a esta celda. (Es llamado por Enemigo.setMapa y Enemigo.setPosicion).
      * @param enemigo El enemigo a asociar. Puede ser null si lo que se quiere es simplemente desligar el enemigo actual.
      */
-    public void addEnemigo(Enemigo enemigo) throws MapaExcepcion {
+    public void addEnemigo(Enemigo enemigo) throws CeldaObjetivoNoValida {
         if (enemigo != null && !enemigos.contains(enemigo) && !this.mapa.addEnemigo(enemigo)) {
             this.enemigos.add(enemigo);
         }
@@ -76,7 +77,7 @@ public final class Transitable extends Celda {
     public int getNumEnemigos() {
         return enemigos.size();
     }
-    public void remEnemigo(Enemigo ene) throws MapaExcepcion {
+    public void remEnemigo(Enemigo ene) throws CeldaObjetivoNoValida{
         if(ene != null){
             enemigos.remove(ene);
            // mapa.remEnemigo(ene);
@@ -86,7 +87,7 @@ public final class Transitable extends Celda {
      * Elimina al enemigo en esta celda.
      * @param nombre El nombre del enemigo a eliminar.
      */
-    public void remEnemigo(String nombre) throws MapaExcepcion {
+    public void remEnemigo(String nombre) throws CeldaObjetivoNoValida {
         Enemigo ene = getEnemigo(nombre);
         remEnemigo(ene);
     }

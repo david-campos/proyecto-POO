@@ -9,7 +9,7 @@ package Excepciones;
  *
  * @author crist
  */
-public class ObjetoException extends Exception {
+public abstract class ObjetoException extends Exception {
     
     public ObjetoException() {        
     }

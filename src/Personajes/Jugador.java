@@ -5,6 +5,15 @@
  */
 package Personajes;
 
+import Excepciones.CeldaObjetivoNoValida;
+import Excepciones.EnemigoNoEncontradoException;
+import Excepciones.EnergiaInsuficienteException;
+import Excepciones.ImposibleCogerExcepcion;
+import Excepciones.ObjetoException;
+import Excepciones.ObjetoNoDesequipableException;
+import Excepciones.ObjetoNoEncontradoException;
+import Excepciones.ObjetoNoEquipableException;
+import Excepciones.ObjetoNoUsableException;
 import Excepciones.PersonajeException;
 import Juego.*;
 import Mapa.*;
@@ -53,83 +62,66 @@ public abstract class Jugador extends Personaje {
     public Juego getJuego() {
         return juego;
     }
-
     public void setJuego(Juego juego) {
         this.juego = juego;
     }
-
-    @Override
-    public boolean setPos(Punto pos) {
-        if(!super.setPos(pos)){
-            juego.log("La dirección no es válida.\n");
-            return false;
-        }
-        return true;
-    }
-    
-    
-    
+        
     /**
      * Examina la celda en la que se encuentra el jugador en busca de objetos.
      */
-    public void mirar() {
+    public void mirar(){
         ArrayList<Objeto> list = ((Transitable)mapa.getCelda(getPos())).getObjetos();
-        if(getEnergia() >= PConst.GE_MIRAR) {
-            setEnergia(getEnergia() - PConst.GE_MIRAR);       //Gasto de energia
-            juego.getConsola().limpiar();
-            if(list.size() > 0) {
-                int i = 1;
-                for(Objeto ob : list) {
-                    juego.log(i + ". " + ob.getNombre());
-                    i++;
-                }
-            }else
-                juego.log("Aquí no hay nada que ver...");
+        juego.getConsola().limpiar();
+        if(list.size() > 0){
+            int i = 1;
+            for(Objeto ob : list) {
+                juego.log(i + ". " + ob.getNombre());
+                i++;
+            }
         }else
-            juego.log("No tienes suficiente energia para hacer esto");
-	}
+            juego.log("Aquí no hay nada que ver...");
+    }
     /**
      * Descripción detallada del objeto con el nombre dado dentro de la celda actual
      * @param nombre El nombre del objeto a buscar información detallada
      */
-    public void mirar(String nombre){
+    public void mirar(String nombre) throws ObjetoNoEncontradoException{
         for(Objeto obj: ((Transitable)mapa.getCelda(getPos())).getObjetos())
             if(obj.getNombre().equals(nombre)){
                 juego.log(obj.toString());
                 return;
             }
-        juego.log("No se ha encontrado ese objeto en esta celda.");
+        throw new ObjetoNoEncontradoException("No se ha encontrado ese objeto en esta celda.");
     }
     /**
      * Mira los enemigos en una celda
      * @param c La celda que mira
      * @throws Excepciones.PersonajeException
      */
-    public void mirar(Transitable c) throws PersonajeException{
-        juego.log("Enemigos:", true);
+    public void mirar(Transitable c) throws CeldaObjetivoNoValida{
         if(c!=null)
-            for(Enemigo e: c.getEnemigos())
-                juego.log("\t"+e.getNombre());
+            if(c.getNumEnemigos() > 0){
+                juego.log("Enemigos:", true);
+                for(Enemigo e: c.getEnemigos())
+                    juego.log("\t"+e.getNombre());
+            }else
+                juego.log("No hay enemigos por aquí, amigo.");
         else
-            throw new PersonajeException("Jugador.mirar(Mapa.Celda): Celda nula?");
+            throw new CeldaObjetivoNoValida("Jugador.mirar(Mapa.Celda): Celda nula?");
     }
     /**
      * Mira en una celda para dar los detalles de un enemigo concreto.
      * @param c La celda en la que buscar el enemigo
      * @param nombre El nombre del enemigo
      */
-    public void mirar(Transitable c, String nombre) throws PersonajeException{
+    public void mirar(Transitable c, String nombre) throws EnemigoNoEncontradoException{
         if(c.getEnemigo(nombre)!=null){
             juego.log(c.getEnemigo(nombre).toString());
         }else{
-            throw new PersonajeException("No existe ese enemigo en esta celda...");
+            throw new EnemigoNoEncontradoException("No existe ese enemigo en esta celda...");
         }
     }
-    public void atacar(Transitable c) throws PersonajeException {
-        for(Enemigo ene : c.getEnemigos())
-            if(atacar(ene, (int) Math.ceil(getEfectoArmas()/(double)c.getNumEnemigos())))
-                setEnergia(getEnergia()-10);
-    }   
+    
     /**
      * Examina la mochila y ofrece un resumen de sus valores y una lista de los objetos contenidos.
      */
@@ -143,8 +135,8 @@ public abstract class Jugador extends Personaje {
             juego.log((i+1)+". "+mochila.getObjeto(i));
     }
     @Override
-    public boolean coger(String nombre) throws PersonajeException {
-        if(getEnergia() >= PConst.GE_COGER) {     
+    public void coger(String nombre) throws EnergiaInsuficienteException, ObjetoNoEquipableException, ImposibleCogerExcepcion{
+        if(getEnergia() >= PConst.GE_COGER) { 
             Objeto obj;
             if((obj = ((Transitable)mapa.getCelda(getPos())).getObjeto(nombre)) != null) {
                 if(obj instanceof Binoculares && binoculares == null){
@@ -153,16 +145,14 @@ public abstract class Jugador extends Personaje {
                     getMochila().addObjeto(obj);
                     equipar(obj.getNombre());
                     juego.log("Coges " + obj.getNombre());
-                } else {
-                    return super.coger(nombre);
-                }
+                }else
+                    super.coger(nombre);
             }
         }else
-            throw new PersonajeException("No tienes suficiente energia.");
-        return false;
+            throw new EnergiaInsuficienteException("No tienes suficiente energia.");
     }
     @Override
-    public void equipar(Objeto ob) throws PersonajeException {
+    public void equipar(Objeto ob) throws ObjetoNoEquipableException{
         if(ob instanceof Binoculares) 
             equipar((Binoculares) ob);        
         else
@@ -175,14 +165,9 @@ public abstract class Jugador extends Personaje {
     }
 
     @Override
-    public void usar(Objeto obj) throws PersonajeException {
-        if(obj != null && getMochila().getObjetos().contains(obj)) {
-            if(obj.usar(this))
-                juego.log("Has usado " + obj.getNombre());
-            else
-                throw new PersonajeException("No se puede usar la cosa esa...");
-        }else
-            throw new PersonajeException("No se puede usar lo que no se tiene, pirata.");
+    public void usar(Objeto obj) throws ObjetoNoUsableException, ObjetoNoEncontradoException {
+        super.usar(obj);
+        juego.log("Has usado " + obj.getNombre());
     }
 
     @Override
@@ -195,7 +180,7 @@ public abstract class Jugador extends Personaje {
     }
     
     @Override
-    public void desequipar(Objeto ob) throws PersonajeException {
+    public void desequipar(Objeto ob) throws ObjetoNoDesequipableException{
         if(ob instanceof Binoculares)
             desequipar((Binoculares)ob);
         else 

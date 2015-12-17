@@ -9,12 +9,16 @@ import Mapa.*;
 import Objetos.*;
 import Personajes.*;
 import Excepciones.CargadorException;
+import Excepciones.CeldaObjetivoNoValida;
+import Excepciones.ObjetoNoEquipableException;
 import Excepciones.PersonajeException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -83,7 +87,11 @@ public class CargarJuegoDeFicheros implements CargadorJuego{
         Juego juego = new Juego(mapa);
         mapa.setJuego(juego);
         Jugador jugador = cargarNPCs(ficheroNPCs, mapa, juego);
-        mapa.setJugador(jugador);
+        try {
+            mapa.setJugador(jugador);
+        } catch (CeldaObjetivoNoValida ex) {
+            mapa.hacerTransitable(mapa.getPosicionInicial(), false);
+        }
         juego.setJugador(jugador);
         cargarObjetos(ficheroObjetos, mapa);
         return juego;
@@ -236,19 +244,27 @@ public class CargarJuegoDeFicheros implements CargadorJuego{
                                 else if(valor3 == 2)
                                     arma = new Arma(valor4, strnombre, strdescripcion, (int) valor2, valor1, Arma.ARMA_UNA_MANO);
                                 ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).getMochila().addObjeto(arma);
-                                ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).equipar(arma);
+                                try {
+                                    ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).equipar(arma);
+                                } catch (ObjetoNoEquipableException ex) {
+                                    /*Ignorar*/
+                                }
                                 break;
                             case "armadura":
                                 Armadura armadura = new Armadura(strnombre, strdescripcion, valor4, valor1, (int) valor2, valor3);
                                 ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).getMochila().addObjeto(armadura);
-                                ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).equipar(armadura);
+                                try {
+                                    ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).equipar(armadura);
+                                } catch (ObjetoNoEquipableException ex) {
+                                    /*Ignorar*/
+                                }
                                 break;
                         }
                     }
                 }
             }
             buf.close();
-        }catch(IOException | NumberFormatException | CargadorException | PersonajeException e) {
+        }catch(IOException | NumberFormatException | CargadorException e) {
             throw new CargadorException("No se pudieron cargar los objetos: (" + e.getClass().getSimpleName()+ ") " + e.getMessage() );
         }
     }

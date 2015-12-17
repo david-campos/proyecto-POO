@@ -3,6 +3,7 @@
  */
 package Mapa;
 
+import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.MapaExcepcion;
 import Juego.Juego;
 import Objetos.Arma;
@@ -201,7 +202,7 @@ public final class Mapa {
      * @see ElementosDeJuego.Jugador#setPos(int[])
      * @param jugador El jugador que se desea asignar.
      */
-    public void setJugador(Jugador jugador) {
+    public void setJugador(Jugador jugador) throws CeldaObjetivoNoValida {
         if(jugador != null)
         {
             this.jugador = jugador;
@@ -220,7 +221,7 @@ public final class Mapa {
      * de las Celdas y demás según su posición.
      * @param enemigo El enemigo a añadir.
      */
-    public boolean addEnemigo(Enemigo enemigo) throws MapaExcepcion {
+    public boolean addEnemigo(Enemigo enemigo) throws CeldaObjetivoNoValida {
         if(!enemigos.contains(enemigo))
             if(getCelda(enemigo.getPos()) != null){
                 if(((Transitable)getCelda(enemigo.getPos())).estaDisponible())
@@ -231,14 +232,14 @@ public final class Mapa {
                 }else
                     return false; //Celda no disponible
             }else
-                throw new MapaExcepcion("La posición para añadir el enemigo no existe (no hay celda)");
+                throw new CeldaObjetivoNoValida("La posición para añadir el enemigo no existe (no hay celda)");
         return false;
     }
     /**
      * Elimina un enemigo del mapa. Las referencias del enemigo y al enemigo se borran completamente.
      * @param enemigo El enemigo a eliminar.
      */
-    public void remEnemigo(Enemigo enemigo) throws MapaExcepcion {
+    public void remEnemigo(Enemigo enemigo) throws CeldaObjetivoNoValida{
         if(enemigos.contains(enemigo))
         {
             enemigos.remove(enemigo);
@@ -350,7 +351,7 @@ public final class Mapa {
     /**
      * Genera enemigos de forma aleatoria por el mapa.
      */
-    public void setEnemigosAleatorio() throws MapaExcepcion {
+    public void setEnemigosAleatorio() throws CeldaObjetivoNoValida{
         if(juego == null)
             return;
         int[] enePos = new int[2];
@@ -455,11 +456,11 @@ public final class Mapa {
         return salida;
     }
 
-    void hacerTransitable(Punto posDe) {
+    public void hacerTransitable(Punto posDe, boolean dejarEscombros) {
         if(posDe.en(getAncho(), getAlto()))
         {
             Transitable t = new Transitable();
-            if(getCelda(posDe).tipo == MConst.MURO)
+            if(dejarEscombros && getCelda(posDe).tipo == MConst.MURO)
                 t.addObjeto(new Escombros());
             celdas.get(posDe.y).set(posDe.x, t);
             t.setMapa(this);

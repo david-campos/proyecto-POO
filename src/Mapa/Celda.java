@@ -52,13 +52,13 @@ public abstract class Celda {
         if(map != null && mapa == null) //Comprobamos que mapa sea null porque solo se puede setear el mapa una vez
             mapa = map;
     }
-    public void detonar() throws PersonajeException{
+    public void detonar(){
         mapa.getJuego().log("¡Una bomba ha explotado!");
         detonar(0, null);
         setBomba(false);
         mapa.getJuego().impMapa();
     }
-    private void detonar(int lejania, String dir) throws PersonajeException {
+    private void detonar(int lejania, String dir){
         if(lejania >= 2)
             return;
         if(this instanceof Transitable) {
@@ -100,7 +100,7 @@ public abstract class Celda {
                     break;
             }
         }else{
-            mapa.hacerTransitable(mapa.getPosDe(this));
+            mapa.hacerTransitable(mapa.getPosDe(this), true);
         }
     }
 }

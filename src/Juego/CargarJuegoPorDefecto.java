@@ -5,12 +5,15 @@
  */
 package Juego;
 
+import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.MapaExcepcion;
 import Mapa.Mapa;
 import Personajes.Francotirador;
 import Personajes.Jugador;
 import Personajes.Marine;
 import Personajes.Zapador;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -60,11 +63,15 @@ public final class CargarJuegoPorDefecto implements CargadorJuego{
                 break;
         }
         map.setJuego(juego);
-        map.setJugador(jug);
+        try {
+            map.setJugador(jug);
+        } catch (CeldaObjetivoNoValida ex) {
+            map.hacerTransitable(map.getPosicionInicial(), false);
+        }
         try{
             map.setEnemigosAleatorio();
-        }catch(MapaExcepcion e){
-            juego.log(e.getMessage());
+        }catch(CeldaObjetivoNoValida ex){
+            juego.log("No se han podido cargar los enemigos... (" + ex.getMessage() + ")");
         }
         map.setObjetosAleatorio();
         juego.setJugador(jug);

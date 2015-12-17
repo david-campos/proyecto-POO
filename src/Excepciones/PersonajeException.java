@@ -9,7 +9,7 @@ package Excepciones;
  *
  * @author crist
  */
-public class PersonajeException extends Exception{
+public abstract class PersonajeException extends Exception{
 
     public PersonajeException() {
     }

@@ -5,11 +5,23 @@
  */
 package Personajes;
 
+import Excepciones.CeldaObjetivoNoValida;
+import Excepciones.DireccionMoverIncorrecta;
+import Excepciones.EnergiaInsuficienteException;
+import Excepciones.ImposibleCogerExcepcion;
+import Excepciones.ObjetoNoDesequipableException;
+import Excepciones.ObjetoNoEncontradoException;
+import Excepciones.ObjetoNoEquipableException;
+import Excepciones.ObjetoNoUsableException;
 import Excepciones.PersonajeException;
+import Excepciones.PosicionFueraDeAlcanceException;
+import Excepciones.PosicionFueraDeRangoException;
 import Juego.Juego;
 import Mapa.*;
 import Objetos.*;
-import java.util.Random;
+import static Personajes.Enemigo.r;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -30,8 +42,6 @@ public abstract class Personaje {
     private int rango;
     protected Juego juego;  //Para las clases hijas
     private int plusEnergia = 0;
-    
-    private static Random r = new Random();
 
     /**
      * Crea un jugador con los atributos indicados
@@ -253,7 +263,7 @@ public abstract class Personaje {
      * @param pos Posición nueva del jugador.
      * @return True si pudo moverse a la posición, false si no.
      */
-    public boolean setPos(Punto pos) {
+    public void setPos(Punto pos) throws CeldaObjetivoNoValida {
         if(mapa == null || (
                 mapa.getCelda(pos) != null &&
                 mapa.getCelda(pos) instanceof Transitable &&
@@ -261,9 +271,8 @@ public abstract class Personaje {
                 (this instanceof Enemigo || ((Transitable)mapa.getCelda(pos)).getEnemigos().isEmpty()))
         {
             posicion = pos.clone();
-            return true;
-        }else    
-            return false;
+        }else
+            throw new CeldaObjetivoNoValida("La celda a mover no es valida");
     }
     /**
      * Obtiene el rango de visión del jugador.
@@ -282,57 +291,59 @@ public abstract class Personaje {
     }
 
     //MÉTODOS
-
+    protected int obtenerConsumoEnergiaMover(){
+        return (int) (PConst.GE_MOVER + Math.round(mochila.pesoActual()/5));
+    }
+    protected int obtenerConsumoEnergiaAtacar(){
+        return (int) (PConst.GE_ATACAR);
+    }
     /**
      * Mueve al personaje en la dirección indicada una casilla.
      * La casilla debe estarDisponible para ello y la acción consume energía según el peso de la mochila.
      * @param c String con uno de los valores siguientes: "N","S","E" u "O".
      */
-    public boolean mover(String c) throws PersonajeException {   
+    public void mover(String c) throws CeldaObjetivoNoValida, DireccionMoverIncorrecta, EnergiaInsuficienteException {   
         c = c.toUpperCase();
         Punto pos = new Punto();
-        int energiaConsumida = (int) (PConst.GE_MOVER + Math.round(mochila.pesoActual()/5));  
+        int energiaConsumida = obtenerConsumoEnergiaMover();
         if(energiaConsumida <= getEnergia()) {
                 switch (c) {
                     case "O":
                         pos.x = posicion.x - 1;
                         pos.y = posicion.y;
-                        if( setPos(pos) ) setEnergia(getEnergia()-energiaConsumida);
-                        else return false;
+                        setPos(pos);
+                        setEnergia(getEnergia()-energiaConsumida);
                         break;
                     case "E":
                         pos.x = posicion.x + 1;
                         pos.y = posicion.y;
-                        if( setPos(pos) ) setEnergia(getEnergia()-energiaConsumida);
-                        else return false;
+                        setPos(pos);
+                        setEnergia(getEnergia()-energiaConsumida);
                         break;
                     case "S":
                         pos.x = posicion.x;
                         pos.y = posicion.y + 1;
-                        if( setPos(pos) ) setEnergia(getEnergia()-energiaConsumida);
-                        else return false;
+                        setPos(pos);
+                        setEnergia(getEnergia()-energiaConsumida);
                         break;
                     case "N":
                         pos.x = posicion.x;
                         pos.y = posicion.y - 1;
-                        if( setPos(pos) ) setEnergia(getEnergia()-energiaConsumida);
-                        else return false;
+                        setPos(pos);
+                        setEnergia(getEnergia()-energiaConsumida);
                         break;
                     default: 
-                        throw new PersonajeException("Opción incorrecta");
+                        throw new DireccionMoverIncorrecta("Opción incorrecta para la dirección de mover");
                 }
-        }else {
-            juego.log("No tienes suficiente energia para hacer esto");
-            return false;
-        }
-        return true;
+        }else
+            throw new EnergiaInsuficienteException("No tienes suficiente energia para hacer mover");
     }
     /**
      * Coge el objeto (indicado por el nombre) de la celda en la que se encuentra, este índice se conoce
      * llamando al método "mirar".
      * @param nombre El nombre del objeto a coger.
      */
-    public boolean coger(String nombre) throws PersonajeException {
+    public void coger(String nombre) throws ImposibleCogerExcepcion, ObjetoNoEquipableException, EnergiaInsuficienteException{
         if(getEnergia() >= PConst.GE_COGER) {     
             Objeto obj;
             if((obj = ((Transitable)mapa.getCelda(posicion)).getObjeto(nombre)) != null) {
@@ -357,10 +368,11 @@ public abstract class Personaje {
                     cogido = true;
                     mochila.addObjeto(obj);
                     equipar(obj);
+                    if(this instanceof Jugador) juego.log("Coges " + obj.getNombre() + " y lo equipas.");
                 }else if(! (obj instanceof Explosivo))
                     cogido = mochila.addObjeto(obj);
-                else if(this instanceof Jugador)
-                    juego.log("No puedes coger eso...");
+                else
+                    throw new ImposibleCogerExcepcion("No puedes coger esa cosa!");
                     
                 if(cogido)
                 {
@@ -370,45 +382,88 @@ public abstract class Personaje {
                     if(this instanceof Jugador) juego.log(obj.getNombre() + " cogido.");
                 }
             } 
-        } else //juego.log("No tienes suficiente energia para hacer esto");
-            return false;
-        return true;
+        } else throw new EnergiaInsuficienteException("No tienes energía suficiente para coger nada, unútil.");
     }       
     /**
      * Ataca la celda indicada. Si se le da un nombre, al enemigo indicado.
      * @param pj
      * @param personaje Personaje al que atacar
      */
-    public boolean atacar(Personaje pj) throws PersonajeException{
-        if(getEnergia() > PConst.GE_ATACAR)
-        {
+    
+    public final void atacar(Personaje pj) throws PosicionFueraDeRangoException, PosicionFueraDeAlcanceException, EnergiaInsuficienteException{
+        if(getEnergia() > obtenerConsumoEnergiaAtacar()){
             if(pj != null) {
                 Punto posAtaque = pj.getPos();
 
                 if(!enRango(posAtaque))
-                {
-                    juego.log("La posición a atacar no está en rango! Como osas... :c");
-                    return false;
-                }
+                    throw new PosicionFueraDeRangoException("La posición a atacar no está en rango! Como osas... :c");
+                
                 if(!enAlcance(posAtaque))
-                {
-                    juego.log("La posición a atacar está fuera del alcance del arma... :s");
-                    return false;
-                }
-                if(atacar(pj, getEfectoArmas(posAtaque))) {
-                    setEnergia(getEnergia()-PConst.GE_ATACAR);
-                    return true;
+                    throw new PosicionFueraDeAlcanceException("La posición a atacar está fuera del alcance del arma... :s");
+                
+                atacar(pj, getEfectoArmas(posAtaque));
+                setEnergia(getEnergia()-obtenerConsumoEnergiaAtacar());
+            }
+        }else
+            throw new EnergiaInsuficienteException("No tienes energía para atacar!");
+    }
+    public final void atacar(Transitable c) throws PosicionFueraDeRangoException, PosicionFueraDeAlcanceException, EnergiaInsuficienteException{
+        if(getEnergia() > obtenerConsumoEnergiaAtacar()){
+            if(c != null){
+                Punto posAtaque = c.getMapa().getPosDe(c);
+                if(!enRango(posAtaque))
+                    throw new PosicionFueraDeRangoException("La posición a atacar no está en rango! Como osas... :c");
+
+                if(!enAlcance(posAtaque))
+                    throw new PosicionFueraDeAlcanceException("La posición a atacar está fuera del alcance del arma... :s");
+
+                for(Enemigo ene : c.getEnemigos()){
+                    atacar(ene, (int) Math.ceil(getEfectoArmas()/(double)c.getNumEnemigos()));
+                    setEnergia(getEnergia()-obtenerConsumoEnergiaAtacar());
                 }
             }
-        }else {
-            if(pj instanceof Enemigo)
-                juego.log("No tienes energía para atacar!");    
-            return false;
-        }
-        return false;
+        }else
+            throw new EnergiaInsuficienteException("No tienes energía para atacar!");
     }
+    
+    public abstract int calculoDano(Personaje atacado, int danoBase);
+    
+    private void atacar(Personaje enemigo, int dano){
+        if(dano <= 0){
+            juego.log("Daño negativo? Güet?"); //Nunca debería salir, si se hace un buen uso  
+            return;
+        }
+        
+        if(enemigo != null)
+        {
+            if(r.nextFloat() < 0.25) {
+                dano*=2;    //Daño crítico
+                if(enemigo instanceof Enemigo) juego.log("¡Has causado un daño crítico!\t");
+                else juego.log(getNombre() + " te ha causado un daño crítico...");
+            }
 
-    protected abstract boolean atacar(Personaje enemigo, int dano) throws PersonajeException;
+            int danoReal;
+            //Daño según la armadura
+            if(enemigo.getArmadura() != null)
+                danoReal = (int) Math.round(dano * (1-enemigo.getArmadura().getDefensa()/200.0));
+            else
+                danoReal = (int) Math.round(dano);   
+
+            danoReal = calculoDano(enemigo, danoReal);
+            
+            int vidaResultante = enemigo.getVida() - danoReal;
+
+            enemigo.setVida(vidaResultante);
+            if(enemigo instanceof Enemigo)
+                    ((Enemigo)enemigo).morir();
+                
+            juego.log(getNombre() + " te ha causado " + danoReal + " de daño.");
+        }else{
+            juego.log("Enemigo null!");    
+        }
+    }
+  
+    
     /**
      * Tira el objeto indicado a la celda.
      * @param obj El objeto a tirar.
@@ -422,14 +477,14 @@ public abstract class Personaje {
         }
         return false;
     }
-    public void equipar(String nombre) throws PersonajeException {
+    public void equipar(String nombre) throws ObjetoNoEquipableException{
         equipar(mochila.getObjeto(nombre));
     }
     /**
      * Equipa el objeto
      * @param ob
      */
-    public void equipar(Objeto ob) throws PersonajeException {
+    public void equipar(Objeto ob) throws ObjetoNoEquipableException{
         if(mochila.getObjetos().contains(ob)) {
             if(ob instanceof Arma) {
                 mochila.remObjeto(ob);
@@ -437,14 +492,14 @@ public abstract class Personaje {
             } else if (ob instanceof Armadura) {
                 mochila.remObjeto(ob);
                 equipar((Armadura)ob);
-            } else throw new PersonajeException("Objeto no equipable");
-        }else throw new PersonajeException("El objeto no está en la mochila");
+            } else throw new ObjetoNoEquipableException("Objeto no equipable");
+        }else throw new ObjetoNoEquipableException("El objeto no está en la mochila");
     }
     /**
      * Equipa el arma indicada al jugador, retirando apropiadamente las armas previas y guardándolas en la mochila o tirándolas al suelo si en la mochila no caben.
      * @param arma El arma que se le asigna al jugador.
      */
-    private void equipar(Arma arma) {  
+    private void equipar(Arma arma){  
         if(arma != null && (this instanceof Marine || arma.getTipo() == Arma.ARMA_UNA_MANO))  
         {
             //Arma a una mano
@@ -457,7 +512,9 @@ public abstract class Personaje {
                 if(this.arma.equals(this.arma_izq)) //Si es un arma a dos manos
                     this.arma_izq = null;
                 
-                desequipar(this.arma);
+                try {
+                    desequipar(this.arma);
+                } catch (ObjetoNoEncontradoException ex) {/*No puede dar esta excepcion*/}
                 this.arma = arma;
             }
             arma.alEquipar(this);   
@@ -465,14 +522,17 @@ public abstract class Personaje {
             //Arma a dos manos
             if(this.arma != null && this.arma.getTipo() == Arma.ARMA_DOS_MANOS) {
                 this.arma_izq = null;
-                desequipar(this.arma);
+                try{
+                    desequipar(this.arma);
+                } catch (ObjetoNoEncontradoException ex) {/*No puede dar esta excepcion*/}
             }
             if(this.arma_izq != null)
-                desequipar(this.arma_izq);
+                try{
+                    desequipar(this.arma_izq);
+                } catch (ObjetoNoEncontradoException ex) {/*No puede dar esta excepcion*/}
             this.arma = this.arma_izq = arma;
             arma.alEquipar(this);
-        }else if(arma != null)
-            juego.log("No puedes equipar eso como arma, no es un arma!");  //Se usa la consola a través del juego
+        }
     }
     /**
      * Fija la armadura portada por el jugador, si ya llevaba una quita la anterior y la guarda en la mochila o la tira al suelo.
@@ -480,7 +540,9 @@ public abstract class Personaje {
      */
     private void equipar(Armadura armadura){ 
         if(armadura != null){
-            desequipar(this.armadura);
+            try {
+                desequipar(this.armadura);
+            } catch (ObjetoNoEncontradoException ex) { /*No puede pasar*/ }
             this.armadura = armadura;
             armadura.alEquipar(this);
         }
@@ -489,18 +551,18 @@ public abstract class Personaje {
      * Equipa el objeto
      * @param ob
      */
-    public void desequipar(Objeto ob) throws PersonajeException {
+    public void desequipar(Objeto ob) throws ObjetoNoDesequipableException, ObjetoNoEncontradoException{
         if(ob instanceof Arma) {
             desequipar((Arma)ob);
         } else if (ob instanceof Armadura) {
             desequipar((Armadura)ob);
-        } else throw new PersonajeException("Objeto no desequipable");
+        } else throw new ObjetoNoDesequipableException("Objeto no desequipable");
     }
     /**
     * Desequipa un arma, que pasará a la mochila si cabe y si no al suelo.
     * @param arma Arma a desequipar
     */
-    private void desequipar(Arma arma) {
+    private void desequipar(Arma arma) throws ObjetoNoEncontradoException {
         if(arma != null) {
             if(arma.equals(this.arma) || arma.equals(this.arma_izq)) {
                 arma.alDesequipar(this);
@@ -515,14 +577,14 @@ public abstract class Personaje {
                     this.arma_izq = null;
             }
             else 
-                juego.log("Intentas desequipar un arma que no tienes");
+                throw new ObjetoNoEncontradoException("Intentas desequipar un arma que no tienes");
         }
     }
     /**
     * Desequipa un armadura, que pasará a la mochila si cabe y si no al suelo.
     * @param armadura Armadura a desequipar
     */
-    private void desequipar(Armadura armadura) {
+    private void desequipar(Armadura armadura) throws ObjetoNoEncontradoException {
         if(armadura != null) {
             if(armadura.equals(this.armadura)) {
                 armadura.alDesequipar(this);
@@ -530,7 +592,7 @@ public abstract class Personaje {
                 this.armadura=null;
             }
             else 
-                juego.log("Intentas desequipar una armadura que no tienes");
+                throw new ObjetoNoEncontradoException("Intentas desequipar una armadura que no tienes");
         }
     }
     /**
@@ -556,19 +618,19 @@ public abstract class Personaje {
         rangoAtaque = Math.min(rangoAtaque, getRango());
         return (posicion.dist(pt) <= rangoAtaque);
     }
-    public void usar (String nombre) throws PersonajeException {
+    public void usar (String nombre) throws ObjetoNoUsableException, ObjetoNoEncontradoException {
         usar(mochila.getObjeto(nombre));
     }
     /**
      * Usa el objeto 
      * @param obj El objeto en la mochila.
      */
-    public void usar (Objeto obj) throws PersonajeException {
+    public void usar (Objeto obj) throws ObjetoNoUsableException, ObjetoNoEncontradoException {
         if(obj != null && mochila.getObjetos().contains(obj))
             if(!obj.usar(this))
-                throw new PersonajeException("Ouh... parece que esto no se usa.");
+                throw new ObjetoNoUsableException("Ouh... parece que esto no se usa.");
         else
-            throw new PersonajeException("No se puede usar lo que no se tiene, pirata.");
+            throw new ObjetoNoEncontradoException("No se puede usar lo que no se tiene, pirata.");
     }
 
     public int manosOcupadasConArmas(){
@@ -578,7 +640,7 @@ public abstract class Personaje {
         return manos;
     }
     
-    protected void intentarMeterMochila(Objeto obj) {
+    protected final void intentarMeterMochila(Objeto obj) {
         if(!mochila.addObjeto(obj)){
             //No cabe en la mochila, se tira al suelo.
             ((Transitable)mapa.getCelda(posicion)).addObjeto(obj);
