@@ -10,6 +10,8 @@ import Objetos.*;
 import Personajes.*;
 import Excepciones.CargadorException;
 import Excepciones.CeldaObjetivoNoValida;
+import Excepciones.MaximoObjetosException;
+import Excepciones.MaximoPesoException;
 import Excepciones.ObjetoNoEquipableException;
 import Excepciones.PersonajeException;
 import java.io.BufferedReader;
@@ -243,20 +245,19 @@ public class CargarJuegoDeFicheros implements CargadorJuego{
                                     arma = new Arma(valor4, strnombre, strdescripcion, (int) valor2, valor1, Arma.ARMA_UNA_MANO);
                                 else if(valor3 == 2)
                                     arma = new Arma(valor4, strnombre, strdescripcion, (int) valor2, valor1, Arma.ARMA_UNA_MANO);
-                                ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).getMochila().addObjeto(arma);
                                 try {
-                                    ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).equipar(arma);
-                                } catch (ObjetoNoEquipableException ex) {
-                                    /*Ignorar*/
+                                    ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).getMochila().addObjeto(arma);
+                                } catch (MaximoObjetosException | MaximoPesoException ex) {
+                                    //No hay nada que hacerle
                                 }
+                                
                                 break;
                             case "armadura":
                                 Armadura armadura = new Armadura(strnombre, strdescripcion, valor4, valor1, (int) valor2, valor3);
-                                ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).getMochila().addObjeto(armadura);
                                 try {
-                                    ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).equipar(armadura);
-                                } catch (ObjetoNoEquipableException ex) {
-                                    /*Ignorar*/
+                                    ((Transitable)mapa.getCelda(celda)).getEnemigo(portador).getMochila().addObjeto(armadura);
+                                } catch (MaximoObjetosException | MaximoPesoException ex) {
+                                    //No hay nada que hacerle
                                 }
                                 break;
                         }
