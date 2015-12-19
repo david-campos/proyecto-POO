@@ -49,7 +49,7 @@ public class Zapador extends Jugador {
     
     
     @Override
-    public void coger(String nombre) throws EnergiaInsuficienteException, ObjetoNoEquipableException, ImposibleCogerExcepcion {
+    public void coger(String nombre) throws EnergiaInsuficienteException, ObjetoNoEquipableException, ImposibleCogerExcepcion, MaximoObjetosException, MaximoPesoException {
         Objeto obj;
         if(mapa != null && (obj = ((Transitable)mapa.getCelda(getPos())).getObjeto(nombre)) != null) {
             if(obj instanceof Explosivo){

@@ -9,6 +9,8 @@ import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.EnemigoNoEncontradoException;
 import Excepciones.EnergiaInsuficienteException;
 import Excepciones.ImposibleCogerExcepcion;
+import Excepciones.MaximoObjetosException;
+import Excepciones.MaximoPesoException;
 import Excepciones.ObjetoNoDesequipableException;
 import Excepciones.ObjetoNoEncontradoException;
 import Excepciones.ObjetoNoEquipableException;
@@ -133,7 +135,7 @@ public abstract class Jugador extends Personaje {
             juego.log((i+1)+". "+mochila.getObjeto(i));
     }
     @Override
-    public void coger(String nombre) throws EnergiaInsuficienteException, ObjetoNoEquipableException, ImposibleCogerExcepcion{
+    public void coger(String nombre) throws EnergiaInsuficienteException, ObjetoNoEquipableException, ImposibleCogerExcepcion, MaximoObjetosException, MaximoPesoException{
         if(getEnergia() >= ConstantesPersonajes.GE_COGER) { 
             Objeto obj;
             if((obj = ((Transitable)mapa.getCelda(getPos())).getObjeto(nombre)) != null) {

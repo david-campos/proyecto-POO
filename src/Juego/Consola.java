@@ -16,7 +16,7 @@ public interface Consola {
      * Imprime de la forma que se requiera el mensaje
      * @param mensaje mensaje a mostrar
      */
-    public void imprimirMapa(Mapa map);
+    public void imprimirMapa();
     public void limpiar();
     public void imprimir (String mensaje);
     public void imprimirSinSalto(String mensaje);

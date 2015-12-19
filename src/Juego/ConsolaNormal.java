@@ -13,6 +13,11 @@ import java.util.Scanner;
  * @author crist
  */
 public final class ConsolaNormal implements Consola{
+    private final Mapa map;
+
+    public ConsolaNormal(Mapa map) {
+        this.map = map;
+    }
     
     /**
      * Imprime en la consola por defecto con System.out.println
@@ -28,7 +33,7 @@ public final class ConsolaNormal implements Consola{
         System.out.println();
     }
     @Override
-    public void imprimirMapa(Mapa map) {
+    public void imprimirMapa() {
         if(map != null)
             System.out.println(map.visionJugador());
     }

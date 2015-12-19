@@ -16,7 +16,6 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
-import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
 /**
  *
@@ -32,8 +31,11 @@ public class ConsolaGrafica extends JFrame implements Consola{
     private final JScrollPane scrollP;
     private final JPanel panelMapa;
     private final ArrayBlockingQueue<String> comandos;
+    private final Mapa map;
     
-    public ConsolaGrafica(Punto tamMapa){
+    public ConsolaGrafica(Mapa map){
+        Punto tamMapa = new Punto(map.getAncho(), map.getAlto());
+        this.map = map;
         comandos = new ArrayBlockingQueue(10);
         
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -133,11 +135,11 @@ public class ConsolaGrafica extends JFrame implements Consola{
         getContentPane().add(panelMapaDisp);
         getContentPane().add(panelConsola);
         setResizable(false);
-        setTitle("Consola...");
+        setTitle(map.getNombre());
+        toFront();
         pack();
         this.setLocationRelativeTo(null);
         setVisible(true);
-        toFront();
     }
     
     @Override
@@ -147,7 +149,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
     }
     
     @Override
-    public void imprimirMapa(Mapa map) {
+    public void imprimirMapa() {
         if(map == null || map.getCelda(0,0) == null || paneles == null)
             return;
         
@@ -217,7 +219,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
         imprimir(descripcion);
         return leer();
     }
-        /**
+    /**
      * Pide datos al usario en la consola por defecto
      * @return Entrada del usuario
      */

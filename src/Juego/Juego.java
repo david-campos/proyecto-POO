@@ -6,12 +6,10 @@
 package Juego;
 
 import Excepciones.ComandoExcepcion;
-import Excepciones.PersonajeException;
 import Personajes.Jugador;
 import Mapa.Mapa;
 import Personajes.Enemigo;
 import Comandos.*;
-import Mapa.Punto;
 
 /**
  * Clase que se encargará de gestionar el juego en general
@@ -29,7 +27,7 @@ public final class Juego {
         consola = c;
     }
     public Juego (Mapa mapa) {
-        this(mapa, null, new ConsolaGrafica(new Punto(mapa.getAncho(), mapa.getAlto())));
+        this(mapa, null, new ConsolaGrafica(mapa));
     }
     
     public Mapa getMapa() {
@@ -57,7 +55,7 @@ public final class Juego {
     /**
      * Inicia el juego.
      */
-    public void iniciar() throws Exception {
+    public void iniciar() throws Exception{
         if(mapa == null || jug == null || consola == null){
             throw new Exception("No se puede iniciar el juego :c"); //No se inicia tt...
         }
@@ -87,7 +85,7 @@ public final class Juego {
                 //Leemos comando
                 try{
                     seguir = procesaComando(consola.leer().split(" "));
-                    consola.imprimirMapa(mapa);
+                    consola.imprimirMapa();
                 }catch(ComandoExcepcion e){
                     log(e.getMessage(), true);
                 }
@@ -144,7 +142,7 @@ public final class Juego {
     }
     public void impMapa() {
         if(mapa != null)
-            consola.imprimirMapa(mapa);
+            consola.imprimirMapa();
     }
     
     /**

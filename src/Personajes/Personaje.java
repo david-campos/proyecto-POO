@@ -9,6 +9,8 @@ import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.DireccionMoverIncorrecta;
 import Excepciones.EnergiaInsuficienteException;
 import Excepciones.ImposibleCogerExcepcion;
+import Excepciones.MaximoObjetosException;
+import Excepciones.MaximoPesoException;
 import Excepciones.ObjetoNoDesequipableException;
 import Excepciones.ObjetoNoEncontradoException;
 import Excepciones.ObjetoNoEquipableException;
@@ -343,7 +345,7 @@ public abstract class Personaje {
      * llamando al método "mirar".
      * @param nombre El nombre del objeto a coger.
      */
-    public void coger(String nombre) throws ImposibleCogerExcepcion, ObjetoNoEquipableException, EnergiaInsuficienteException{
+    public void coger(String nombre) throws ImposibleCogerExcepcion, ObjetoNoEquipableException, EnergiaInsuficienteException, MaximoObjetosException, MaximoPesoException{
         if(getEnergia() >= ConstantesPersonajes.GE_COGER) {     
             Objeto obj;
             if((obj = ((Transitable)mapa.getCelda(posicion)).getObjeto(nombre)) != null) {
@@ -640,14 +642,15 @@ public abstract class Personaje {
         return manos;
     }
     
-    protected final void intentarMeterMochila(Objeto obj) {
-        if(!mochila.addObjeto(obj)){
+    protected final void intentarMeterMochila(Objeto obj){
+        try{
+            mochila.addObjeto(obj);
+            //Cabe en la mochila, lo metemos
+            juego.log("Metes " + obj.getNombre() + " en la mochila.");
+        }catch(MaximoPesoException | MaximoObjetosException e){
             //No cabe en la mochila, se tira al suelo.
             ((Transitable)mapa.getCelda(posicion)).addObjeto(obj);
             juego.log("Tiras " + obj.getNombre() + " al suelo (no cabía en la mochila).");
-        }else{
-            //Cabe en la mochila, lo metemos
-            juego.log("Metes " + obj.getNombre() + " en la mochila.");
         }
     }
     

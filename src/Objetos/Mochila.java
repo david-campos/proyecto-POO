@@ -1,5 +1,7 @@
 package Objetos;
 
+import Excepciones.MaximoObjetosException;
+import Excepciones.MaximoPesoException;
 import Excepciones.ObjetoException;
 import Juego.Consola;
 import Juego.ConsolaNormal;
@@ -13,7 +15,6 @@ public class Mochila {
     private double maxPeso;
     private double peso;
     private ArrayList<Objeto> contenido;
-    private Consola consola;
 
     public Mochila(int maxObjetos, int maxPeso, ArrayList<Objeto> contenido){
         if(maxObjetos > 0)
@@ -31,7 +32,6 @@ public class Mochila {
                 peso = 0;
                 this.contenido = new ArrayList();
             }
-            consola = new ConsolaNormal();
         }
     }
     public Mochila(int maxObjetos, int maxPeso){
@@ -61,16 +61,13 @@ public class Mochila {
      * @param obj El objeto a añadir
      * @return True si el objeto se pudo añadir, false si no se pudo.
      */
-    public boolean addObjeto(Objeto obj) {
+    public boolean addObjeto(Objeto obj) throws MaximoObjetosException, MaximoPesoException {
         if(obj == null) return false;
-        if(getNumObj() >= maxObjetos) {
-            consola.imprimir("No caben más objetos en la mochila...");
-            return false;
-        }
-        if(pesoActual() + obj.getPeso() > maxPeso) {
-            consola.imprimir("El objeto pesa demasiado, romperá la mochila.");
-            return false;
-        }
+        if(getNumObj() >= maxObjetos)
+            throw new MaximoObjetosException("No caben más objetos en la mochila...");
+        if(pesoActual() + obj.getPeso() > maxPeso) 
+            throw new MaximoPesoException("El objeto pesa demasiado, romperá la mochila.");
+        
         contenido.add(obj);
         peso+=obj.getPeso();
         return true;
