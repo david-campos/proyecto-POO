@@ -9,6 +9,8 @@ import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.DireccionMoverIncorrecta;
 import Excepciones.EnergiaInsuficienteException;
 import Excepciones.ImposibleCogerExcepcion;
+import Excepciones.MaximoObjetosException;
+import Excepciones.MaximoPesoException;
 import Excepciones.ObjetoNoDesequipableException;
 import Excepciones.ObjetoNoEncontradoException;
 import Excepciones.ObjetoNoEquipableException;
@@ -107,7 +109,7 @@ public abstract class Enemigo extends Personaje{
             return getEfectoArmas() < a.getDano();
         }
     }
-    protected boolean iaRecogerObjetos() throws ImposibleCogerExcepcion, ObjetoNoEquipableException, EnergiaInsuficienteException{
+    protected boolean iaRecogerObjetos() throws ImposibleCogerExcepcion, ObjetoNoEquipableException, EnergiaInsuficienteException, MaximoObjetosException, MaximoPesoException{
         ArrayList<Objeto> obs;
         Transitable c = (Transitable) mapa.getCelda(getPos());
         boolean cogioAlgo = false;
@@ -177,7 +179,7 @@ public abstract class Enemigo extends Personaje{
             } catch (CeldaObjetivoNoValida | DireccionMoverIncorrecta | EnergiaInsuficienteException ex) {/*No hace nada*/}
             try {
                 hizoAlgo = hizoAlgo || iaRecogerObjetos();
-            } catch (ImposibleCogerExcepcion | ObjetoNoEquipableException | EnergiaInsuficienteException ex) {/*No hace nada*/}
+            } catch (MaximoObjetosException | MaximoPesoException | ImposibleCogerExcepcion | ObjetoNoEquipableException | EnergiaInsuficienteException ex) {/*No hace nada*/}           
             if(!hizoAlgo)
                 break;
         }

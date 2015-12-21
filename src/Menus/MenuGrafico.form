@@ -7,7 +7,13 @@
     <Component class="javax.swing.JFileChooser" name="fchMapa">
       <Properties>
         <Property name="dialogTitle" type="java.lang.String" value="Abrir mapa"/>
+        <Property name="fileFilter" type="javax.swing.filechooser.FileFilter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new FiltroMapa()" type="code"/>
+        </Property>
         <Property name="fileSelectionMode" type="int" value="1"/>
+        <Property name="fileView" type="javax.swing.filechooser.FileView" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new FileViewMapa()" type="code"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
       <AuxValues>
