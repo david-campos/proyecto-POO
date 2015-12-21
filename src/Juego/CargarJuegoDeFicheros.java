@@ -31,6 +31,7 @@ public class CargarJuegoDeFicheros implements CargadorJuego{
     private String ficheroObjetos;
     private String ficheroNPCs;
     private String tipoJugador;
+    
     private static Random r = new Random();
 
     public String getFicheroMapa() {
@@ -84,9 +85,9 @@ public class CargarJuegoDeFicheros implements CargadorJuego{
     }
     
     @Override
-    public Juego cargarJuego() throws CargadorException {
+    public Juego cargarJuego(Consola c) throws CargadorException {
         Mapa mapa = cargarMapa();
-        Juego juego = new Juego(mapa);
+        Juego juego = new Juego(mapa, null, c);
         mapa.setJuego(juego);
         Jugador jugador = cargarNPCs(ficheroNPCs, mapa, juego);
         try {

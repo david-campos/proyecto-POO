@@ -8,8 +8,11 @@ package Menus;
 import Juego.CargadorJuego;
 import Juego.CargarJuegoDeFicheros;
 import Juego.CargarJuegoPorDefecto;
+import Juego.ConsolaGrafica;
 import Juego.Juego;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -223,7 +226,7 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
-        CargadorJuego cargante;
+        final CargadorJuego cargante;
         String tipo = "Marine";
         if(rbtTipoJugadorZapador.isSelected()) tipo = "Zapador";
         if(rbtFranco.isSelected()) tipo = "Francotirador";
@@ -236,12 +239,22 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
                 else
                     cargante = new CargarJuegoDeFicheros(tipo);
         }
-        try {
-            Juego j = cargante.cargarJuego();
-            j.iniciar();
-        } catch (Exception ex) {
-           JOptionPane.showConfirmDialog(this, "Hubo un errorcillo cargando el juego ^^' : " + ex.getMessage(), "Error cargando", JOptionPane.DEFAULT_OPTION);
-        }
+        //Hay que iniciar el juego en otro Thread
+        new Thread(){
+                @Override
+                public void run() {
+                    try {
+                        Juego j = cargante.cargarJuego(null);
+                        j.setConsola(new ConsolaGrafica(j, j.getMapa()));
+                        j.iniciar();
+                    } catch (Exception ex) {
+                        JOptionPane.showConfirmDialog(null, "Hubo un errorcillo cargando el juego ^^' : " + ex.getMessage(), "Error cargando", JOptionPane.DEFAULT_OPTION);
+                    }
+                }
+        }.start();
+        
+        setVisible(false);
+        dispose();
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     private void tipoJugadorCambiado(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_tipoJugadorCambiado
@@ -269,7 +282,12 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
     
     @Override
     public void lanzar() {
-        setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                MenuGrafico.this.setVisible(true);
+            }
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

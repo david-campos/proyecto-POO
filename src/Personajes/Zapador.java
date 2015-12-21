@@ -57,7 +57,7 @@ public class Zapador extends Jugador {
                     setEnergia(getEnergia() - ConstantesPersonajes.GE_COGER);
                     ((Transitable)mapa.getCelda(getPos())).remObjeto(obj);
                     getMochila().addObjeto(obj);
-                    juego.log("Coges " + obj.getNombre());
+                    juego.log("Coges " + obj.getNombre(), true);
                 }else
                     throw new EnergiaInsuficienteException("Insuficiente energía");
             } else 

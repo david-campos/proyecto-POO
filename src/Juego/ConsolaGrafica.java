@@ -9,20 +9,41 @@ import Mapa.Celda;
 import Mapa.Mapa;
 import Mapa.Punto;
 import Mapa.Transitable;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.text.BadLocationException;
+
 /**
  *
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public class ConsolaGrafica extends JFrame implements Consola{
-    private final int dim;
+    private final Mapa mapa;
+    private int dim;
+    private final Juego juego;
+    
     private final ArrayList<JLabel> paneles;
     private final HashMap<String, ImageIcon> imagenes;
     private final JTextArea areaConsola;
@@ -31,20 +52,35 @@ public class ConsolaGrafica extends JFrame implements Consola{
     private final JScrollPane scrollP;
     private final JPanel panelMapa;
     private final ArrayBlockingQueue<String> comandos;
-    private final Mapa map;
-    
-    public ConsolaGrafica(Mapa map){
-        Punto tamMapa = new Punto(map.getAncho(), map.getAlto());
-        this.map = map;
+
+    public ConsolaGrafica(Juego j, Mapa mapa) throws HeadlessException {
+        super();
+        juego = j;
+        this.mapa = mapa;
+        paneles = new ArrayList(mapa.getAlto()*mapa.getAncho());
+        panelMapa = new JPanel(new GridLayout(mapa.getAlto(), mapa.getAncho(),0,0));
+        imagenes = new HashMap();
+        areaEstado = new JTextArea(1,50);
+        areaConsola = new JTextArea(1, 50);
+        areaConsolaDisplay = new JTextArea(2, 50);
+        scrollP = new JScrollPane();
         comandos = new ArrayBlockingQueue(10);
-        
+        initComponents();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                ConsolaGrafica.this.setVisible(true);
+            } 
+        });
+    }
+    
+    private void initComponents(){
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         
         /*  LAYOUT DE LA VENTANA  */
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         
         /*  GENERAR LOS DOS PANELES GENERALES Y LA BARRA DE ESTADO*/
-        areaEstado = new JTextArea(1,50);
         areaEstado.setBackground(new Color(0,0,50));
         areaEstado.setForeground(new Color(100,100,200));
         areaEstado.setDisabledTextColor(areaEstado.getForeground());
@@ -53,18 +89,15 @@ public class ConsolaGrafica extends JFrame implements Consola{
         JPanel panelConsola = new JPanel();
         panelConsola.setLayout(new BoxLayout(panelConsola, BoxLayout.Y_AXIS));
         
-        imagenes = new HashMap();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Punto dim_total = new Punto((int)Math.round(screenSize.width * 0.7), (int) Math.round(screenSize.height * 0.7)); //Tamaño del mapa máximo
-        dim = (int) Math.floor(Math.min(dim_total.x/(double)tamMapa.x, dim_total.y/(double)tamMapa.y));
+        dim = (int) Math.floor(Math.min(dim_total.x/(double)mapa.getAncho(), dim_total.y/(double)mapa.getAlto()));
         
         JPanel panelMapaDisp = new JPanel();
         panelMapaDisp.setLayout(new BoxLayout(panelMapaDisp, BoxLayout.X_AXIS));
-        paneles = new ArrayList(tamMapa.x * tamMapa.y);
-        panelMapa = new JPanel(new GridLayout(tamMapa.y, tamMapa.x,0,0));
-        panelMapa.setSize(new Dimension(dim*tamMapa.x,dim*tamMapa.y));
+        panelMapa.setSize(new Dimension(dim*mapa.getAncho(), dim*mapa.getAlto()));
         panelMapa.setMinimumSize(panelMapa.getSize());
-        for(int i = 0; i < tamMapa.x * tamMapa.y; i++){
+        for(int i = 0; i < mapa.getAncho() * mapa.getAlto(); i++){
             JLabel jPanel1 = new JLabel();
             jPanel1.setBackground(Color.red);
             
@@ -82,7 +115,6 @@ public class ConsolaGrafica extends JFrame implements Consola{
         panelMapaDisp.add(panelMapa);
         
         //<editor-fold  defaultstate="collapsed" desc="GENERAR LA CONSOLA">
-        areaConsola = new JTextArea(1, 50);
         areaConsola.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
         areaConsola.setBackground(areaEstado.getBackground());
         areaConsola.setForeground(areaEstado.getForeground());
@@ -110,9 +142,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
             public void keyTyped(KeyEvent e) {
             }
         });
-        areaConsola.setEnabled(false);
         
-        areaConsolaDisplay = new JTextArea(2, 50);
         areaConsolaDisplay.setFont(areaConsola.getFont());
         areaConsolaDisplay.setBackground(new Color(50,0,0));
         areaConsolaDisplay.setForeground(new Color(200,0,0));
@@ -121,7 +151,6 @@ public class ConsolaGrafica extends JFrame implements Consola{
         areaConsolaDisplay.setLineWrap(true);
         areaConsolaDisplay.setEnabled(false);
         
-        scrollP = new JScrollPane();
         scrollP.setViewportView(areaConsolaDisplay);
         scrollP.setBorder(BorderFactory.createLineBorder(areaConsolaDisplay.getBackground(), 10));
         scrollP.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -135,34 +164,28 @@ public class ConsolaGrafica extends JFrame implements Consola{
         getContentPane().add(panelMapaDisp);
         getContentPane().add(panelConsola);
         setResizable(false);
-        setTitle(map.getNombre());
+        setTitle(mapa.getNombre());
         toFront();
         pack();
         this.setLocationRelativeTo(null);
-        setVisible(true);
     }
     
-    @Override
-    public final void setVisible(boolean b) {
-        super.setVisible(b);
-        areaConsola.requestFocusInWindow();
-    }
     
     @Override
     public void imprimirMapa() {
-        if(map == null || map.getCelda(0,0) == null || paneles == null)
+        if(mapa == null || mapa.getCelda(0,0) == null || paneles == null)
             return;
         
-        for(int y=0;y<map.getAlto();y++)
-            for(int x=0; x<map.getAncho();x++){
+        for(int y=0;y<mapa.getAlto();y++)
+            for(int x=0; x<mapa.getAncho();x++){
                 ImageIcon ico;
-                Celda c = map.getCelda(x,y);
+                Celda c = mapa.getCelda(x,y);
                 String img;
                 if(c == null)
                     img = "null";
-                else if(map.getJugador().getPos().equals(map.getPosDe(c)))
+                else if(mapa.getJugador().getPos().equals(mapa.getPosDe(c)))
                     img = "jugador";
-                else if(!map.getJugador().enRango(map.getPosDe(c)))
+                else if(!mapa.getJugador().enRango(mapa.getPosDe(c)))
                     img = "no";
                 else if(c instanceof Transitable){
                     Transitable transitable = (Transitable) c;
@@ -179,7 +202,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
                     ico = new ImageIcon(new ImageIcon("img/"+img+".png").getImage().getScaledInstance(dim, dim, Image.SCALE_SMOOTH));
                     imagenes.put(img, ico);
                 }
-                paneles.get(y*map.getAncho()+x).setIcon(ico);
+                paneles.get(y*mapa.getAncho()+x).setIcon(ico);
             }
     }
     @Override
@@ -207,8 +230,6 @@ public class ConsolaGrafica extends JFrame implements Consola{
         areaConsolaDisplay.setText("");
     }
     
-    
-    
     /**
      * Pide datos al usario en la consola por defecto
      * @param descripcion Texto a mostrar previo a que el usuario escriba
@@ -235,7 +256,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
     
     @Override
     public void cerrar(){
-        setVisible(false);
-        dispose();
+        System.exit(0);
     }
+
 }

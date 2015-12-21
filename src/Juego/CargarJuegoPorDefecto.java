@@ -6,14 +6,11 @@
 package Juego;
 
 import Excepciones.CeldaObjetivoNoValida;
-import Excepciones.MapaExcepcion;
 import Mapa.Mapa;
 import Personajes.Francotirador;
 import Personajes.Jugador;
 import Personajes.Marine;
 import Personajes.Zapador;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -45,11 +42,11 @@ public final class CargarJuegoPorDefecto implements CargadorJuego{
     }
     
     @Override
-    public Juego cargarJuego(){
+    public Juego cargarJuego(Consola c){
         boolean[] tipos = Mapa.getPlantillaAleatoria(40, 30);
         Mapa map = new Mapa("Mapa1", "Es un bonito mapa de prueba.", 40, 30, tipos, null);
         
-        Juego juego = new Juego(map);
+        Juego juego = new Juego(map, null, c);
         Jugador jug;
         switch (tipoJugador.toLowerCase()) {
             default:

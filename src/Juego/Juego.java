@@ -26,9 +26,6 @@ public final class Juego {
         jug = jugador;
         consola = c;
     }
-    public Juego (Mapa mapa) {
-        this(mapa, null, new ConsolaGrafica(mapa));
-    }
     
     public Mapa getMapa() {
         return mapa;
@@ -64,6 +61,7 @@ public final class Juego {
         log(mapa.getDescripcion());
         log("Pulsa enter para continuar...");
         consola.leer();
+        
         while(true)
         {
             int seguir = 2;

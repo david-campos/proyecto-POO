@@ -20,7 +20,7 @@ public class MenuConsola implements Menu{
 
     @Override
     public void lanzar() {
-        Consola c = new ConsolaNormal(null);
+        ConsolaNormal c = new ConsolaNormal(null);
         String tipo = c.leer("Qué tipo de tipo quieres ser, tipo (marine/francotirador/zapador)? ").toLowerCase();
         String cargadorPD = c.leer("Vale... le cargamos el juego por defecto (si/s/no/n)? ").toLowerCase();
         CargadorJuego cargante;
@@ -43,7 +43,8 @@ public class MenuConsola implements Menu{
                 return;
         }
         try {
-            Juego j = cargante.cargarJuego();
+            Juego j = cargante.cargarJuego(c);
+            c.setMap(j.getMapa());
             j.iniciar();
         } catch (Exception ex) {
             c.imprimir("Hubo un errorcillo cargando el juego ^^' : " + ex.getMessage());

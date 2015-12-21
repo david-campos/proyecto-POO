@@ -6,7 +6,6 @@ package proyecto2;
 import Menus.Menu;
 import Menus.MenuConsola;
 import Menus.MenuGrafico;
-import java.awt.EventQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;

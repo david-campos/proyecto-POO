@@ -5,8 +5,6 @@
  */
 package Juego;
 
-import Mapa.Mapa;
-
 /**
  * Interfaz para implementar la consola
  * @author crist

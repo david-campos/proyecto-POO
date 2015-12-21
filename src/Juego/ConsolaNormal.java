@@ -13,9 +13,17 @@ import java.util.Scanner;
  * @author crist
  */
 public final class ConsolaNormal implements Consola{
-    private final Mapa map;
+    private Mapa map;
 
     public ConsolaNormal(Mapa map) {
+        this.map = map;
+    }
+
+    public Mapa getMap() {
+        return map;
+    }
+
+    public void setMap(Mapa map) {
         this.map = map;
     }
     
@@ -75,5 +83,7 @@ public final class ConsolaNormal implements Consola{
     /**
      *
      */
+    @Override
     public void cerrar(){}
+
 }

@@ -144,7 +144,7 @@ public abstract class Jugador extends Personaje {
                     ((Transitable)mapa.getCelda(getPos())).remObjeto(obj);
                     getMochila().addObjeto(obj);
                     equipar(obj.getNombre());
-                    juego.log("Coges " + obj.getNombre());
+                    juego.log("Coges " + obj.getNombre(), true);
                 }else
                     super.coger(nombre);
             }
