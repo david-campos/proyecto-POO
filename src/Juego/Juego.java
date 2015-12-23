@@ -10,6 +10,15 @@ import Personajes.Jugador;
 import Mapa.Mapa;
 import Personajes.Enemigo;
 import Comandos.*;
+import Excepciones.CeldaObjetivoNoValida;
+import Excepciones.MaximoObjetosException;
+import Excepciones.MaximoPesoException;
+import Excepciones.ObjetoNoEquipableException;
+import Mapa.Punto;
+import Objetos.Arma;
+import Personajes.HeavyFloater;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Clase que se encargará de gestionar el juego en general
@@ -115,11 +124,23 @@ public final class Juego {
                         mapa.getCelda(j, i).detonar();
             
             if(jug.getVida() <= 0){
-                log("HAS MUERTO! :c");
+                if(consola instanceof ConsolaGrafica)
+                    ((ConsolaGrafica)consola).hasMuerto();
+                else
+                    log("HAS MUERTO! :c");
                 break;
             }
+            
+            boolean jefeFinal = false;
+            if(mapa.getEnemigos().isEmpty()) {
+                finJuego();
+                if(jefeFinal)
+                    break;  //Introducir aquí mensaje de felicitación o lo que sea
+                jefeFinal = true;                
+            }
+            
         }
-        log("Fin del juego.");
+        log("Fin del juego.");  //TODO: Mover arriba cuando funcione la imagen
     }
     
     private void imprimirPrompt(){
@@ -260,5 +281,24 @@ public final class Juego {
         }
         cc.ejecutar();
         return 2;
+    }
+    
+    private void finJuego() {
+        Punto pos = new Punto (mapa.getAlto()/2, mapa.getAncho()/2);
+        mapa.hacerTransitable(pos, false);
+        try {
+            Enemigo jefeFinal = new HeavyFloater("Jefe final", 300, 60, new int[]{pos.y, pos.x}, this);
+            Arma arma = new Arma(15, "Ragnarok", "Espada buena, mejor cogela", 2, 120, Arma.ARMA_UNA_MANO);
+            try {
+                jefeFinal.getMochila().addObjeto(arma);
+                jefeFinal.equipar(arma);
+            } catch (MaximoObjetosException | MaximoPesoException | ObjetoNoEquipableException ex) { //No se debería dar porque sólo tiene un objeto
+                Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            mapa.addEnemigo(jefeFinal);
+        } catch (CeldaObjetivoNoValida ex) {
+            Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 }

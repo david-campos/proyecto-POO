@@ -9,6 +9,7 @@ import Mapa.Celda;
 import Mapa.Mapa;
 import Mapa.Punto;
 import Mapa.Transitable;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -24,11 +25,13 @@ import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -257,6 +260,23 @@ public class ConsolaGrafica extends JFrame implements Consola{
     @Override
     public void cerrar(){
         System.exit(0);
+    }
+    
+    public void hasMuerto() {
+        areaConsola.setVisible(false);
+        areaConsolaDisplay.setVisible(false);
+        areaEstado.setVisible(false);
+        scrollP.setVisible(false);
+        panelMapa.setVisible(false);   
+        JLabel imgMuerte = new JLabel(new ImageIcon("img\\hasMuerto.png"));
+        add(imgMuerte, BorderLayout.CENTER, 0); 
+        pack();
+        this.setLocationRelativeTo(null);
+        int opc = JOptionPane.showConfirmDialog(null, "Desea reiniciar?", "", JOptionPane.YES_NO_OPTION);
+        if(opc == JOptionPane.YES_OPTION)
+            ;//TODO: Reiniciar juego
+        else
+            cerrar();
     }
 
 }

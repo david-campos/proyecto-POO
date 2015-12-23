@@ -362,7 +362,7 @@ public final class Mapa {
                 {
                     if(Math.abs(r.nextFloat()) < 0.001 && getCelda(new Punto(enePos[1], enePos[0])) instanceof Transitable)
                     {
-                        Enemigo ene = new Sectoid("Enemigo " + enemigoId++, enePos, juego);
+                        Enemigo ene = new Sectoid("Enemigo " + enemigoId++, enePos, juego); //TODO: Variedad hombre!
                         addEnemigo(ene);
                         enePos[1]++;
                     }
