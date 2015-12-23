@@ -10,23 +10,30 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 /**
  *
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public class Editor extends javax.swing.JFrame {
+    private static final Border borde2 = new LineBorder(Color.black);
+    
     private Mapa mapa;
     private File carpetaMapa;
     private JPanel panMapaEnEdicion;
@@ -464,6 +471,33 @@ public class Editor extends javax.swing.JFrame {
                         representacion = c.representacionGrafica(); //Obtiene la imagen
 
                     CeldaGrafica celda = new LabelCeldaGraficaEditor();
+                    celda.getComponente().addMouseListener(new MouseListener(){
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+
+                        }
+
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+
+                        }
+
+                        @Override
+                        public void mouseReleased(MouseEvent e) {
+
+                        }
+
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                            ((JComponent)e.getComponent()).setBorder(borde2);
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                            ((JComponent)e.getComponent()).setBorder(null);
+                        }
+
+                    });
                     Image img;
                     if(imagenes.get(representacion) == null){
                         img = new ImageIcon("img/"+representacion+".png").getImage().getScaledInstance(TAM_CELDA, TAM_CELDA, Image.SCALE_FAST);
