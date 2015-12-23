@@ -9,6 +9,8 @@ import Mapa.Celda;
 import Mapa.Mapa;
 import Mapa.Punto;
 import Mapa.Transitable;
+import Menus.Menu;
+import Menus.MenuGrafico;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,7 +27,6 @@ import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -36,6 +37,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -273,10 +276,33 @@ public class ConsolaGrafica extends JFrame implements Consola{
         pack();
         this.setLocationRelativeTo(null);
         int opc = JOptionPane.showConfirmDialog(null, "Desea reiniciar?", "", JOptionPane.YES_NO_OPTION);
-        if(opc == JOptionPane.YES_OPTION)
-            ;//TODO: Reiniciar juego
+        if(opc == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new Thread() {  //Se reinicia el juego en un nuevo hilo y se libera el actual
+                @Override
+                public void run() {
+                    try {
+                            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                            Logger.getLogger(MenuGrafico.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    Menu menuInicio = new MenuGrafico();
+                    menuInicio.lanzar();
+                }
+            }.start();
+        }
         else
             cerrar();
+    }
+    
+    private void reiniciar() {
+        try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                Logger.getLogger(MenuGrafico.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        Menu menuInicio = new MenuGrafico();
+        menuInicio.lanzar();
     }
 
 }
