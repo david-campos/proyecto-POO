@@ -5,10 +5,22 @@
  */
 package Mapa;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.TreeSet;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -16,13 +28,30 @@ import javax.swing.JFrame;
  */
 public class Editor extends javax.swing.JFrame {
     private Mapa mapa;
+    private File carpetaMapa;
+    private JPanel panMapaEnEdicion;
+    private final ArrayList<CeldaGrafica> celdas;
+    private final HashMap<String, Image> imagenes;
+    
+    private static final int TAM_CELDA = 40;
     
     /**
      * Creates new form Editor
      */
     public Editor() {
         mapa = null;
+        carpetaMapa = null;
+        imagenes = new HashMap();
+        celdas = new ArrayList();
         initComponents();
+    }
+
+    public File getCarpetaMapa() {
+        return carpetaMapa;
+    }
+
+    public void setCarpetaMapa(File carpetaMapa) {
+        this.carpetaMapa = carpetaMapa;
     }
 
     /**
@@ -56,6 +85,7 @@ public class Editor extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
+        jScrollPane2 = new javax.swing.JScrollPane();
         panMapa = new javax.swing.JPanel();
         tbrInferior = new javax.swing.JToolBar();
         lblInfo = new javax.swing.JLabel();
@@ -88,6 +118,12 @@ public class Editor extends javax.swing.JFrame {
 
         jLabel1.setText("Nombre del mapa:");
         panNombreMapa.add(jLabel1, java.awt.BorderLayout.LINE_START);
+
+        txtNombreMapa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                fijarFondoBlanco(evt);
+            }
+        });
         panNombreMapa.add(txtNombreMapa, java.awt.BorderLayout.CENTER);
 
         panGeneral.add(panNombreMapa, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 410, 20));
@@ -99,6 +135,11 @@ public class Editor extends javax.swing.JFrame {
 
         txtDescripcionMapa.setColumns(20);
         txtDescripcionMapa.setRows(2);
+        txtDescripcionMapa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                fijarFondoBlanco(evt);
+            }
+        });
         jScrollPane1.setViewportView(txtDescripcionMapa);
 
         panDescripcion.add(jScrollPane1, java.awt.BorderLayout.PAGE_END);
@@ -109,6 +150,12 @@ public class Editor extends javax.swing.JFrame {
 
         jLabel2.setText("Nombre del jugador:");
         panNombreJugador.add(jLabel2, java.awt.BorderLayout.LINE_START);
+
+        txtNombreJugador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                fijarFondoBlanco(evt);
+            }
+        });
         panNombreJugador.add(txtNombreJugador, java.awt.BorderLayout.CENTER);
 
         panGeneral.add(panNombreJugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 410, -1));
@@ -190,8 +237,10 @@ public class Editor extends javax.swing.JFrame {
 
         panMapa.setBackground(new java.awt.Color(51, 51, 51));
         panMapa.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
-        panMapa.setLayout(new java.awt.GridLayout(1, 0));
-        getContentPane().add(panMapa, java.awt.BorderLayout.CENTER);
+        panMapa.setLayout(null);
+        jScrollPane2.setViewportView(panMapa);
+
+        getContentPane().add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
         tbrInferior.setFloatable(false);
         tbrInferior.setMaximumSize(new java.awt.Dimension(13, 25));
@@ -252,14 +301,38 @@ public class Editor extends javax.swing.JFrame {
 
     //Diálogo de creación de mapa
     private void dlgNuevoMapa_btnAceptarClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dlgNuevoMapa_btnAceptarClick
-        if(!txtNombreMapa.getText().isEmpty() && !txtDescripcionMapa.getText().isEmpty())
-            mapa = new Mapa(txtNombreMapa.getText(),txtDescripcionMapa.getText(),(int)spnAncho.getValue(),(int)spnAlto.getValue(),null);
-        dlgNuevoMapa.setVisible(false);
+        //Nombres y descripción válidos
+        if(!txtNombreMapa.getText().isEmpty()){
+            if(!txtDescripcionMapa.getText().isEmpty()){
+                if(!txtNombreJugador.getText().isEmpty()){
+                    File nuevoMapa = new File(fchMapa.getSelectedFile(), txtNombreMapa.getText());
+                    if(!nuevoMapa.exists()){
+                        cerrarMapa();
+                        carpetaMapa = nuevoMapa;
+                        mapa = new Mapa(txtNombreMapa.getText(),txtDescripcionMapa.getText(),(int)spnAncho.getValue(),(int)spnAlto.getValue(),null);
+                        generarPanelMapa();
+                        JOptionPane.showMessageDialog(null,
+                                String.format("Creado mapa en '%s', recuerde pulsar 'Guardar mapa' para guardar.", carpetaMapa.getAbsolutePath()));
+                        info("Creado mapa '"+mapa.getNombre()+"'");
+                    }else
+                        info("El nombre de mapa ya existe!");
+                    dlgNuevoMapa.setVisible(false);
+                }else
+                    txtNombreJugador.setBackground(new Color(255, 200, 200));
+            }else
+                txtDescripcionMapa.setBackground(new Color(255, 200, 200));
+        }else
+            txtNombreMapa.setBackground(new Color(255, 200, 200));
+            
     }//GEN-LAST:event_dlgNuevoMapa_btnAceptarClick
     private void dlgNuevoMapa_btnCancelarClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dlgNuevoMapa_btnCancelarClick
         dlgNuevoMapa.setVisible(false);
         info("Cancelado nuevo mapa.");
     }//GEN-LAST:event_dlgNuevoMapa_btnCancelarClick
+
+    private void fijarFondoBlanco(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fijarFondoBlanco
+        ((Component)evt.getSource()).setBackground(Color.white);
+    }//GEN-LAST:event_fijarFondoBlanco
 
     /**
      * @param args the command line arguments
@@ -303,6 +376,7 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblInfo;
@@ -332,11 +406,19 @@ public class Editor extends javax.swing.JFrame {
         int returnVal = fchMapa.showDialog(this, "Crear aquí");
         if (returnVal == JFileChooser.APPROVE_OPTION && fchMapa.getSelectedFile().isDirectory()) {
             mapa = null;
+            txtNombreJugador.setText("Nombre");
+            txtNombreMapa.setText("Mapa");
+            txtDescripcionMapa.setText("Descripcion...");
             dlgNuevoMapa.setVisible(true);
         }else
             info("Directorio inválido o creación cancelada.");
     }
 
+    private void cerrarMapa(){
+        JOptionPane.showMessageDialog(null, "Ahora debería mostrarse lo de guardar mapa si hay un mapa abierto y tal.");
+        //Debe dejar panMapaEnEdicion a null
+    }
+    
     private void abrirMapa() {
         int returnVal = fchMapa.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -353,5 +435,48 @@ public class Editor extends javax.swing.JFrame {
     
     private void info(String texto){
         lblInfo.setText(texto.replace("\n", " - "));
+    }
+
+    private void generarPanelMapa() {
+        if(panMapaEnEdicion != null || !celdas.isEmpty()){
+            //Que panMapaEnEdicion no sea null indica algún fallo de programación, pues debería estar cerrado el mapa siempre que se llame aquí
+            JOptionPane.showMessageDialog(null, "Hay algún fallo de programación, el panel no es null o el array celdas no está vacío y debería serlo. Contacte con los autores, gracias.", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }else{
+            panMapaEnEdicion = new JPanel(new GridLayout(mapa.getAlto(), mapa.getAncho()));
+            panMapaEnEdicion.setBackground(Color.white);
+            panMapaEnEdicion.setSize(new Dimension(mapa.getAncho()*TAM_CELDA, mapa.getAlto()*TAM_CELDA));
+            for(int i=0; i <mapa.getAlto();i++)
+                for(int j=0; j<mapa.getAncho(); j++)
+                {
+                    Celda c = mapa.getCelda(j,i);
+                    String representacion;
+                    if(c == null)
+                        representacion = "null";
+                    else if(mapa.getPosicionInicial().equals(mapa.getPosDe(c)))
+                        representacion = "jugador";
+                    else if(c instanceof Transitable){
+                        Transitable transitable = (Transitable) c;
+                        if(transitable.getEnemigos().size() > 0)
+                            representacion = "enemigo";
+                        else
+                            representacion = c.representacionGrafica(); //Obtiene la imagen
+                    }else
+                        representacion = c.representacionGrafica(); //Obtiene la imagen
+
+                    CeldaGrafica celda = new LabelCeldaGraficaEditor();
+                    Image img;
+                    if(imagenes.get(representacion) == null){
+                        img = new ImageIcon("img/"+representacion+".png").getImage().getScaledInstance(TAM_CELDA, TAM_CELDA, Image.SCALE_FAST);
+                        imagenes.put(representacion, img);
+                    }else
+                        img = imagenes.get(representacion);
+                    celda.setImagen(img);
+                    celdas.add(celda);
+                    panMapaEnEdicion.add(celda.getComponente());
+                }
+            panMapa.add(panMapaEnEdicion);
+            panMapa.setPreferredSize(panMapaEnEdicion.getSize());
+            panMapa.revalidate();
+        }
     }
 }
