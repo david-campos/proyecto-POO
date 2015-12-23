@@ -84,7 +84,7 @@ public final class Mapa {
     */
     public Mapa(String nombre, String descripcion, Celda[][] celdas, Punto posicionInicial, Juego juego) {
         MapaBase(nombre, descripcion, juego);
-        if(celdas.length > 5 && celdas[0].length > 5) //25 celdas al menos
+        if(celdas.length >= 5 && celdas[0].length >= 5) //25 celdas al menos
         {
             for(Celda[] fila: celdas)
                 for(Celda c: fila)

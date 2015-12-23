@@ -10,9 +10,8 @@ import Juego.CargarJuegoDeFicheros;
 import Juego.CargarJuegoPorDefecto;
 import Juego.ConsolaGrafica;
 import Juego.Juego;
+import Mapa.Editor;
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -64,15 +63,20 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         panAceptar = new javax.swing.JPanel();
         btnIniciar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        mbrSuperior = new javax.swing.JMenuBar();
+        menArchivo = new javax.swing.JMenu();
+        mitEditor = new javax.swing.JMenuItem();
 
+        fchMapa.setAcceptAllFileFilterUsed(false);
         fchMapa.setDialogTitle("Abrir mapa");
-        fchMapa.setFileFilter(new FiltroMapa());
+        fchMapa.setFileFilter(new Utilidades.FiltroMapa());
         fchMapa.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        fchMapa.setFileView(new FileViewMapa());
+        fchMapa.setFileView(new Utilidades.FileViewMapa());
         fchMapa.setToolTipText("");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menú de inicio");
+        setResizable(false);
 
         panGeneral.setLayout(new javax.swing.BoxLayout(panGeneral, javax.swing.BoxLayout.Y_AXIS));
 
@@ -205,6 +209,21 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
 
         panGeneral.add(panAceptar);
 
+        menArchivo.setText("Archivo");
+
+        mitEditor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Menus/ico_map.png"))); // NOI18N
+        mitEditor.setText("Editor de mapas...");
+        mitEditor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitEditorActionPerformed(evt);
+            }
+        });
+        menArchivo.add(mitEditor);
+
+        mbrSuperior.add(menArchivo);
+
+        setJMenuBar(mbrSuperior);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -279,6 +298,12 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         panNombre.setVisible(cbxJuegoPorDefecto.isSelected());
         panElegirMapa.setVisible(!cbxJuegoPorDefecto.isSelected());
     }//GEN-LAST:event_cbxJuegoPorDefectoActionPerformed
+
+    private void mitEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitEditorActionPerformed
+        Editor.main(new String[0]);
+        setVisible(false);
+        dispose();
+    }//GEN-LAST:event_mitEditorActionPerformed
     
     @Override
     public void lanzar() {
@@ -302,6 +327,9 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
     private javax.swing.JLabel lblMapa;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblTipoJugador;
+    private javax.swing.JMenuBar mbrSuperior;
+    private javax.swing.JMenu menArchivo;
+    private javax.swing.JMenuItem mitEditor;
     private javax.swing.JPanel panAceptar;
     private javax.swing.JPanel panElegirMapa;
     private javax.swing.JPanel panGeneral;
@@ -314,53 +342,4 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
     private javax.swing.JTextField txtMapa;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
-
-    private static class FiltroMapa extends FileFilter {
-        @Override
-        public boolean accept(File f) {
-            if(!f.isDirectory()) return false;
-            int cuenta = 0;
-            //Si el padre era una carpeta de mapa, esta carpeta ya no se muestra.
-            if(f.getParentFile().list() != null){
-                for(String otroF : f.getParentFile().list())
-                    if(otroF.equals("objetos.csv") ||
-                       otroF.equals("npcs.csv")    ||
-                       otroF.equals("mapa.csv")
-                    )
-                        cuenta++;
-                return cuenta != 3;
-            }
-            return true;
-        }
-
-        @Override
-        public String getDescription() {
-            return "Carpetas de mapa y demás carpetas.";
-        }
-    }
-
-    private static class FileViewMapa extends FileView {
-        public FileViewMapa() {
-            super();
-        }
-
-        @Override
-        public Icon getIcon(File f) {
-            if(f.isDirectory())
-            {
-                int cuenta = 0;
-                if(f.list() != null){
-                    for(String otroF : f.list())
-                        if(otroF.equals("objetos.csv") ||
-                           otroF.equals("npcs.csv")    ||
-                           otroF.equals("mapa.csv")
-                          )
-                            cuenta++;
-                if(cuenta == 3)
-                    return new ImageIcon("img/ico_map.png");
-                }
-            }
-            return super.getIcon(f);
-        }
-    }
 }
