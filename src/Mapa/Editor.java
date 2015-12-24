@@ -220,8 +220,6 @@ public class Editor extends javax.swing.JFrame {
         dlgNuevoMapa.setResizable(false);
         dlgNuevoMapa.setSize(new java.awt.Dimension(434, 250));
 
-        panGeneral.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         panNombreMapa.setLayout(new java.awt.BorderLayout(5, 0));
 
         jLabel1.setText("Nombre del mapa:");
@@ -233,8 +231,6 @@ public class Editor extends javax.swing.JFrame {
             }
         });
         panNombreMapa.add(txtNombreMapa, java.awt.BorderLayout.CENTER);
-
-        panGeneral.add(panNombreMapa, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 410, 20));
 
         panDescripcion.setLayout(new java.awt.BorderLayout(0, 5));
 
@@ -252,8 +248,6 @@ public class Editor extends javax.swing.JFrame {
 
         panDescripcion.add(jScrollPane1, java.awt.BorderLayout.PAGE_END);
 
-        panGeneral.add(panDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 410, 60));
-
         panNombreJugador.setLayout(new java.awt.BorderLayout(5, 0));
 
         jLabel2.setText("Nombre del jugador:");
@@ -265,8 +259,6 @@ public class Editor extends javax.swing.JFrame {
             }
         });
         panNombreJugador.add(txtNombreJugador, java.awt.BorderLayout.CENTER);
-
-        panGeneral.add(panNombreJugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 410, -1));
 
         jLabel3.setText("Ancho:");
         panDimensiones.add(jLabel3);
@@ -282,8 +274,6 @@ public class Editor extends javax.swing.JFrame {
         spnAlto.setEditor(new javax.swing.JSpinner.NumberEditor(spnAlto, ""));
         spnAlto.setValue(30);
         panDimensiones.add(spnAlto);
-
-        panGeneral.add(panDimensiones, new org.netbeans.lib.awtextra.AbsoluteConstraints(3, 130, 400, -1));
 
         btnAceptar.setText("Aceptar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -318,7 +308,33 @@ public class Editor extends javax.swing.JFrame {
                     .addComponent(btnCancelar)))
         );
 
-        panGeneral.add(panAcceptCancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, -1, -1));
+        javax.swing.GroupLayout panGeneralLayout = new javax.swing.GroupLayout(panGeneral);
+        panGeneral.setLayout(panGeneralLayout);
+        panGeneralLayout.setHorizontalGroup(
+            panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panNombreMapa, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panNombreJugador, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panAcceptCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(panGeneralLayout.createSequentialGroup()
+                .addGap(3, 3, 3)
+                .addComponent(panDimensiones, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        panGeneralLayout.setVerticalGroup(
+            panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panGeneralLayout.createSequentialGroup()
+                .addComponent(panNombreMapa, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(panDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(panNombreJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addGroup(panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panGeneralLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(panAcceptCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panDimensiones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
 
         javax.swing.GroupLayout dlgNuevoMapaLayout = new javax.swing.GroupLayout(dlgNuevoMapa.getContentPane());
         dlgNuevoMapa.getContentPane().setLayout(dlgNuevoMapaLayout);
