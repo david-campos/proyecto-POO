@@ -13,6 +13,13 @@ public abstract class Celda {
         this.bomba = false;
     }
 
+    public Celda() {
+        tipo = 0;
+        mapa = null;
+        bomba = false;
+    }
+    
+
     public boolean isBomba() {
         return bomba;
     }

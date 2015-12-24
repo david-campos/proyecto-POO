@@ -5,6 +5,10 @@
  */
 package Mapa;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -13,10 +17,17 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -215,8 +226,9 @@ public class Editor extends javax.swing.JFrame {
         dlgNuevoMapa.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         dlgNuevoMapa.setTitle("Nuevo mapa");
         dlgNuevoMapa.setAlwaysOnTop(true);
-        dlgNuevoMapa.setMinimumSize(new java.awt.Dimension(434, 230));
+        dlgNuevoMapa.setMinimumSize(new java.awt.Dimension(434, 250));
         dlgNuevoMapa.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        dlgNuevoMapa.setPreferredSize(new java.awt.Dimension(434, 250));
         dlgNuevoMapa.setResizable(false);
         dlgNuevoMapa.setSize(new java.awt.Dimension(434, 250));
 
@@ -539,7 +551,6 @@ public class Editor extends javax.swing.JFrame {
         fchMapa.setCurrentDirectory(null);
         int returnVal = fchMapa.showDialog(this, "Crear aquí");
         if (returnVal == JFileChooser.APPROVE_OPTION && fchMapa.getSelectedFile().isDirectory()) {
-            mapa = null;
             txtNombreJugador.setText("Nombre");
             txtNombreMapa.setText("Mapa");
             txtDescripcionMapa.setText("Descripcion...");
@@ -550,20 +561,42 @@ public class Editor extends javax.swing.JFrame {
 
     private void cerrarMapa(){
         JOptionPane.showMessageDialog(null, "Ahora debería mostrarse lo de guardar mapa si hay un mapa abierto y tal.");
-        //Debe dejar panMapaEnEdicion a null
+        //Debe dejar panMapaEnEdicion a null y el array de celdas vacío, poner mapa a null...
     }
     
     private void abrirMapa() {
         int returnVal = fchMapa.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            lblInfo.setText("ABRIMOS UN MAPA :D \n" + fchMapa.getSelectedFile().getAbsolutePath());
+            cerrarMapa();
+            try {
+                BufferedReader lector = new BufferedReader(
+                        new FileReader(new File(fchMapa.getSelectedFile(), "mapa.json"))
+                );
+                mapa = new GsonBuilder()
+                        .registerTypeAdapter(Celda.class, new Adaptador<Celda>())
+                        .create().fromJson(lector, Mapa.class);
+                generarPanelMapa();
+                info("Mapa abierto: " + fchMapa.getSelectedFile().getAbsolutePath());
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
         }
     }
 
     private void guardarMapa() {
         int returnVal = fchMapa.showSaveDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            lblInfo.setText("GUARDAMOS UN MAPA :D \n" + fchMapa.getSelectedFile().getAbsolutePath());
+            try {
+                BufferedWriter escritor = new BufferedWriter(new FileWriter(new File(fchMapa.getSelectedFile(), "mapa.json")));
+                new GsonBuilder()
+                    .addSerializationExclusionStrategy(new EstrategiaGuardado())
+                    .registerTypeAdapter(Celda.class, new Adaptador<Celda>())
+                    .create().toJson(mapa, escritor);
+                escritor.close();
+                info("Mapa guardado: " + fchMapa.getSelectedFile().getAbsolutePath());
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
         }
     }
     
