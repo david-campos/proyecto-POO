@@ -311,6 +311,19 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Editar"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="mitEditarMapa">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Mapa..."/>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mitEditarCelda">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Celda..."/>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
         </Menu>
       </SubComponents>
     </Menu>

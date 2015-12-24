@@ -5,8 +5,8 @@
  */
 package Mapa;
 
-import java.awt.Component;
 import java.awt.Image;
+import javax.swing.JComponent;
 
 /**
  *
@@ -14,5 +14,7 @@ import java.awt.Image;
  */
 public interface CeldaGrafica{
     public void setImagen(Image imagen);
-    public Component getComponente();
+    public JComponent getComponente();
+    public void setId(Punto pt);
+    public Punto getId();
 }

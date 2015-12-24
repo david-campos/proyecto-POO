@@ -18,8 +18,11 @@ import javax.swing.border.LineBorder;
 
 
 public class LabelCeldaGraficaEditor extends JLabel implements CeldaGrafica{
-    public LabelCeldaGraficaEditor() {
+    private Punto id;
+    
+    public LabelCeldaGraficaEditor(Punto pt) {
         super();
+        id = pt;
     }
     
     @Override
@@ -30,6 +33,16 @@ public class LabelCeldaGraficaEditor extends JLabel implements CeldaGrafica{
     @Override
     public JComponent getComponente() {
         return this;
+    }
+
+    @Override
+    public void setId(Punto pt) {
+        id = pt;
+    }
+
+    @Override
+    public Punto getId() {
+        return id;
     }
     
 }

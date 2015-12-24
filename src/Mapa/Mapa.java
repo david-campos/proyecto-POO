@@ -183,6 +183,18 @@ public final class Mapa {
     }
     
     /**
+     * Precaución, esto cambia la celda y borra lo que contiene de la existencia!!!
+     * @param pt Punto de la celda a cambiar
+     * @param c Celda nueva
+     */
+    public void setCelda(Punto pt, Celda c){
+        if(getCelda(pt) instanceof Transitable){
+            enemigos.removeAll(((Transitable)getCelda(pt)).getEnemigos());
+        }
+        celdas.get(pt.y).set(pt.x, c);
+    }
+    
+    /**
      * Obtiene el alto del mapa en número de celdas
      * @return El número de filas de celdas del mapa.
      */

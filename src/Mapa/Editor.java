@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -32,7 +33,106 @@ import javax.swing.border.LineBorder;
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public class Editor extends javax.swing.JFrame {
+    private static final Border borde1 = new LineBorder(Color.white);
     private static final Border borde2 = new LineBorder(Color.black);
+    
+    private class celdasML extends MouseAdapter{
+                        private int botonPulsado = 0;
+                        @Override
+                        public void mouseReleased(MouseEvent e) {
+                            super.mouseReleased(e);
+                            botonPulsado = MouseEvent.NOBUTTON;
+                        }
+
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                            botonPulsado = e.getButton();
+                            if(e.getButton() == MouseEvent.BUTTON1){
+                                Celda c=null;
+                                CeldaGrafica celdaGrafica = null;
+                                for(CeldaGrafica cg : celdas)
+                                    if(cg.getComponente().equals(e.getComponent())){
+                                        c = Editor.this.mapa.getCelda(cg.getId());
+                                        celdaGrafica = cg;
+                                        break;
+                                    }
+                                if(c==null)
+                                    return;
+
+                                if(c instanceof Transitable)
+                                    c.tipo=(c.tipo+1)%ConstantesMapa.CE_REPR_TRANS.length;
+                                else
+                                    c.tipo=(c.tipo+1)%ConstantesMapa.CE_REPR_NOTRANS.length;
+                                Editor.this.repintarCelda(celdaGrafica);
+                            }else if(e.getButton() == MouseEvent.BUTTON3){
+                                Celda c=null;
+                                CeldaGrafica celdaGrafica = null;
+                                for(CeldaGrafica cg : celdas)
+                                    if(cg.getComponente().equals(e.getComponent())){
+                                        c = Editor.this.mapa.getCelda(cg.getId());
+                                        celdaGrafica = cg;
+                                        break;
+                                    }
+                                if(c==null)
+                                    return;
+
+                                if(c instanceof Transitable)
+                                    mapa.setCelda(celdaGrafica.getId(), new NoTransitable());
+                                else
+                                    mapa.setCelda(celdaGrafica.getId(), new Transitable());
+                                
+                                Editor.this.repintarCelda(celdaGrafica);
+                            }
+                        }
+                        
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                            ((JComponent)e.getComponent()).setBorder(borde2);
+                            
+                            if(botonPulsado == MouseEvent.BUTTON1){
+                                Celda c=null;
+                                CeldaGrafica celdaGrafica = null;
+                                for(CeldaGrafica cg : celdas)
+                                    if(cg.getComponente().equals(e.getComponent())){
+                                        c = Editor.this.mapa.getCelda(cg.getId());
+                                        celdaGrafica = cg;
+                                        break;
+                                    }
+                                if(c==null)
+                                    return;
+
+                                if(c instanceof Transitable)
+                                    c.tipo=(c.tipo+1)%ConstantesMapa.CE_REPR_TRANS.length;
+                                else
+                                    c.tipo=(c.tipo+1)%ConstantesMapa.CE_REPR_NOTRANS.length;
+                                Editor.this.repintarCelda(celdaGrafica);
+                            }else if(botonPulsado == MouseEvent.BUTTON3){
+                                Celda c=null;
+                                CeldaGrafica celdaGrafica = null;
+                                for(CeldaGrafica cg : celdas)
+                                    if(cg.getComponente().equals(e.getComponent())){
+                                        c = Editor.this.mapa.getCelda(cg.getId());
+                                        celdaGrafica = cg;
+                                        break;
+                                    }
+                                if(c==null)
+                                    return;
+
+                                if(c instanceof Transitable)
+                                    mapa.setCelda(celdaGrafica.getId(), new NoTransitable());
+                                else
+                                    mapa.setCelda(celdaGrafica.getId(), new Transitable());
+                                
+                                Editor.this.repintarCelda(celdaGrafica);
+                            }
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                            ((JComponent)e.getComponent()).setBorder(borde1);
+                        }
+    }
+    private final MouseListener mouseListenerCeldas = new celdasML();
     
     private Mapa mapa;
     private File carpetaMapa;
@@ -102,6 +202,8 @@ public class Editor extends javax.swing.JFrame {
         mitAbrir = new javax.swing.JMenuItem();
         mitGuardar = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        mitEditarMapa = new javax.swing.JMenuItem();
+        mitEditarCelda = new javax.swing.JMenuItem();
 
         fchMapa.setAcceptAllFileFilterUsed(false);
         fchMapa.setDialogTitle("Abrir mapa");
@@ -115,7 +217,6 @@ public class Editor extends javax.swing.JFrame {
         dlgNuevoMapa.setAlwaysOnTop(true);
         dlgNuevoMapa.setMinimumSize(new java.awt.Dimension(434, 230));
         dlgNuevoMapa.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
-        dlgNuevoMapa.setPreferredSize(new java.awt.Dimension(434, 230));
         dlgNuevoMapa.setResizable(false);
         dlgNuevoMapa.setSize(new java.awt.Dimension(434, 250));
 
@@ -287,6 +388,14 @@ public class Editor extends javax.swing.JFrame {
         mbrSuperior.add(jMenu1);
 
         jMenu2.setText("Editar");
+
+        mitEditarMapa.setText("Mapa...");
+        mitEditarMapa.setToolTipText("");
+        jMenu2.add(mitEditarMapa);
+
+        mitEditarCelda.setText("Celda...");
+        jMenu2.add(mitEditarCelda);
+
         mbrSuperior.add(jMenu2);
 
         setJMenuBar(mbrSuperior);
@@ -389,6 +498,8 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JLabel lblInfo;
     private javax.swing.JMenuBar mbrSuperior;
     private javax.swing.JMenuItem mitAbrir;
+    private javax.swing.JMenuItem mitEditarCelda;
+    private javax.swing.JMenuItem mitEditarMapa;
     private javax.swing.JMenuItem mitGuardar;
     private javax.swing.JMenuItem mitNuevo;
     private javax.swing.JPanel panAcceptCancel;
@@ -455,55 +566,11 @@ public class Editor extends javax.swing.JFrame {
             for(int i=0; i <mapa.getAlto();i++)
                 for(int j=0; j<mapa.getAncho(); j++)
                 {
-                    Celda c = mapa.getCelda(j,i);
-                    String representacion;
-                    if(c == null)
-                        representacion = "null";
-                    else if(mapa.getPosicionInicial().equals(mapa.getPosDe(c)))
-                        representacion = "jugador";
-                    else if(c instanceof Transitable){
-                        Transitable transitable = (Transitable) c;
-                        if(transitable.getEnemigos().size() > 0)
-                            representacion = "enemigo";
-                        else
-                            representacion = c.representacionGrafica(); //Obtiene la imagen
-                    }else
-                        representacion = c.representacionGrafica(); //Obtiene la imagen
-
-                    CeldaGrafica celda = new LabelCeldaGraficaEditor();
-                    celda.getComponente().addMouseListener(new MouseListener(){
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-
-                        }
-
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-
-                        }
-
-                        @Override
-                        public void mouseReleased(MouseEvent e) {
-
-                        }
-
-                        @Override
-                        public void mouseEntered(MouseEvent e) {
-                            ((JComponent)e.getComponent()).setBorder(borde2);
-                        }
-
-                        @Override
-                        public void mouseExited(MouseEvent e) {
-                            ((JComponent)e.getComponent()).setBorder(null);
-                        }
-
-                    });
-                    Image img;
-                    if(imagenes.get(representacion) == null){
-                        img = new ImageIcon("img/"+representacion+".png").getImage().getScaledInstance(TAM_CELDA, TAM_CELDA, Image.SCALE_FAST);
-                        imagenes.put(representacion, img);
-                    }else
-                        img = imagenes.get(representacion);
+                    
+                    CeldaGrafica celda = new LabelCeldaGraficaEditor(new Punto(j,i));
+                    celda.getComponente().setBorder(borde1);
+                    celda.getComponente().addMouseListener(mouseListenerCeldas);
+                    Image img = imagenRepresentante(celda);
                     celda.setImagen(img);
                     celdas.add(celda);
                     panMapaEnEdicion.add(celda.getComponente());
@@ -512,5 +579,40 @@ public class Editor extends javax.swing.JFrame {
             panMapa.setPreferredSize(panMapaEnEdicion.getSize());
             panMapa.revalidate();
         }
+    }
+    
+    private void repintarCeldas(){
+        for(CeldaGrafica cg: celdas)
+            repintarCelda(cg);
+    }
+    
+    private void repintarCelda(CeldaGrafica c){
+        Image img = imagenRepresentante(c);
+        c.setImagen(img);
+        c.getComponente().repaint();
+    }
+        
+    private Image imagenRepresentante(CeldaGrafica cg){
+        Celda c = mapa.getCelda(cg.getId());
+        String representacion;
+        if(c == null)
+            representacion = "null";
+        else if(mapa.getPosicionInicial().equals(mapa.getPosDe(c)))
+            representacion = "jugador";
+        else if(c instanceof Transitable){
+            Transitable transitable = (Transitable) c;
+            if(transitable.getEnemigos().size() > 0)
+                representacion = "enemigo";
+            else
+                representacion = c.representacionGrafica(); //Obtiene la imagen
+        }else
+            representacion = c.representacionGrafica(); //Obtiene la imagen
+        Image img;
+        if(imagenes.get(representacion) == null){
+            img = new ImageIcon("img/"+representacion+".png").getImage().getScaledInstance(TAM_CELDA, TAM_CELDA, Image.SCALE_FAST);
+            imagenes.put(representacion, img);
+        }else
+            img = imagenes.get(representacion);
+        return img;  
     }
 }
