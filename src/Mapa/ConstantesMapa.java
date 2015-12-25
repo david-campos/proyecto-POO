@@ -29,4 +29,10 @@ public interface ConstantesMapa {
     
     /*EXPLOSIVO*/
     public int EXPLOSION_MAX_RAD = 3;
+    
+    /*PARÁMETROS*/
+    public double P_OBJETOS_ALEATORIOS = 0.8; 
+    public int DANO_MIN_ARMA = 5;
+    public int DEFENSA_MIN_ARMADURA = 15;
+    public double P_ENEMIGOS = 0.005;
 }

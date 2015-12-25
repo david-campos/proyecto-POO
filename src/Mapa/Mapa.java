@@ -292,7 +292,7 @@ public final class Mapa {
         int i=0;
         for(ArrayList<Celda> fila: celdas)
             for(Celda ce: fila)
-                if(ce instanceof Transitable && Math.abs(r.nextFloat()) < 0.8){    //TODO: Modificar valor?
+                if(ce instanceof Transitable && Math.abs(r.nextFloat()) < ConstantesMapa.P_OBJETOS_ALEATORIOS){    //TODO: Modificar valor?
                     Transitable c = (Transitable) ce;
                     do{
                         int rand = Math.abs(r.nextInt()) % 6;  //Añadimos objetos aleatoriamente
@@ -304,7 +304,7 @@ public final class Mapa {
                                                 "arma_"+(i++),
                                                 "Es un arma, y mata.",
                                                 r.nextInt(5)+4,
-                                                r.nextInt(16)+5,
+                                                r.nextInt(16)+ConstantesMapa.DANO_MIN_ARMA,
                                                 r.nextBoolean()
                                         )
                                 );
@@ -315,7 +315,7 @@ public final class Mapa {
                                                 "armadura_"+(i++),
                                                 "Es una armadura, y así te matan menos.",
                                                 Math.round(r.nextDouble() * 1000)/100.0,
-                                                r.nextInt(6)+15,
+                                                r.nextInt(6)+ConstantesMapa.DEFENSA_MIN_ARMADURA,
                                                 r.nextInt(21)+5,
                                                 r.nextInt(21)+5
                                         )
@@ -372,7 +372,7 @@ public final class Mapa {
             for(enePos[0]=0; enePos[0] < getAlto(); enePos[0]++)
                 for(enePos[1]=0; enePos[1] < getAncho(); enePos[1]++)
                 {
-                    if(Math.abs(r.nextFloat()) < 0.001 && getCelda(new Punto(enePos[1], enePos[0])) instanceof Transitable)
+                    if(Math.abs(r.nextFloat()) < ConstantesMapa.P_ENEMIGOS && getCelda(new Punto(enePos[1], enePos[0])) instanceof Transitable)
                     {
                         Enemigo ene = new Sectoid("Enemigo " + enemigoId++, enePos, juego); //TODO: Variedad hombre!
                         addEnemigo(ene);

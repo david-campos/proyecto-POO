@@ -40,7 +40,11 @@ public abstract class Enemigo extends Personaje{
             setPos(new Punto(posicion[1], posicion[0]));
     }
     public Enemigo(String nombre, int[] posicion, Juego juego) throws CeldaObjetivoNoValida {
-        this(nombre, Math.abs(r.nextInt())%51+50,Math.abs(r.nextInt())%70+31,posicion, juego);
+        this(nombre, Math.abs(r.nextInt())% 
+                    (ConstantesPersonajes.ENE_MAX_VIDAPORDEFECTO - ConstantesPersonajes.ENE_MIN_VIDAPORDEFECTO)
+                    +ConstantesPersonajes.ENE_MIN_VIDAPORDEFECTO,Math.abs(r.nextInt())%
+                    (ConstantesPersonajes.ENE_MAX_ENERGIAPT - ConstantesPersonajes.ENE_MIN_ENERGIAPT)
+                    +ConstantesPersonajes.ENE_MIN_ENERGIAPT,posicion, juego);
     }
     public void setMapa(Mapa mapa) throws CeldaObjetivoNoValida{
         if(mapa != null) {
@@ -151,20 +155,29 @@ public abstract class Enemigo extends Personaje{
         else
             return vector.y>0?"S":"N";
     }
-    protected void iaMover() throws CeldaObjetivoNoValida, DireccionMoverIncorrecta, EnergiaInsuficienteException{
+    protected void iaMover() throws DireccionMoverIncorrecta, EnergiaInsuficienteException, CeldaObjetivoNoValida{
         String dir="N";
         //Se mueve aleatoriamente si no ve al jugador
         if(!enRango(mapa.getJugador().getPos()))
         {
-            switch(r.nextInt(4)){
+            dir = direccionAleatoria();
+        }else if(!enAlcance(mapa.getJugador().getPos()))
+            dir = iaDirJugador();
+        try {
+            mover(dir);
+        } catch (CeldaObjetivoNoValida ex) {
+            mover(direccionAleatoria());    //Vuelve a intentarlo hasta que salga vaya a una celda transitable.
+        }
+    }
+    private String direccionAleatoria() {
+        String dir = "";
+        switch(r.nextInt(4)){
                 case 0: dir = "S"; break;
                 case 1: dir = "E"; break;
                 case 2: dir = "O"; break;
-            }
-        }else if(!enAlcance(mapa.getJugador().getPos()))
-            dir = iaDirJugador();
-        
-        mover(dir);
+                case 3: dir = "N"; break;
+        }
+        return dir;
     }
     public void iaTurno(){
         while(getEnergia() > 0){
