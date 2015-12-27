@@ -21,19 +21,11 @@ public class FileViewMapa extends FileView {
 
     @Override
     public Icon getIcon(File f) {
-        if(f.isDirectory())
+        if(!f.isDirectory())
         {
-            int cuenta = 0;
-            if(f.list() != null){
-                for(String otroF : f.list())
-                    if(otroF.equals("objetos.csv") ||
-                       otroF.equals("npcs.csv")    ||
-                       otroF.equals("mapa.csv")
-                      )
-                        cuenta++;
-            if(cuenta == 3)
+            String nombre = f.getName();
+            if(nombre.lastIndexOf(".") != -1 && nombre.substring(nombre.lastIndexOf(".")+1).equals(ConstantesGenerales.EXTENSION_MAPA))
                 return new ImageIcon("img/ico_map.png");
-            }
         }
         return super.getIcon(f);
     }

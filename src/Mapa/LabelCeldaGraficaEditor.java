@@ -5,16 +5,10 @@
  */
 package Mapa;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Image;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 
 
 public class LabelCeldaGraficaEditor extends JLabel implements CeldaGrafica{

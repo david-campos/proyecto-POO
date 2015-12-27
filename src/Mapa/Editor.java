@@ -5,9 +5,6 @@
  */
 package Mapa;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.awt.Color;
 import java.awt.Component;
@@ -25,15 +22,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -146,7 +138,7 @@ public class Editor extends javax.swing.JFrame {
     private final MouseListener mouseListenerCeldas = new celdasML();
     
     private Mapa mapa;
-    private File carpetaMapa;
+    private File archivoMapa;
     private JPanel panMapaEnEdicion;
     private final ArrayList<CeldaGrafica> celdas;
     private final HashMap<String, Image> imagenes;
@@ -158,18 +150,18 @@ public class Editor extends javax.swing.JFrame {
      */
     public Editor() {
         mapa = null;
-        carpetaMapa = null;
+        archivoMapa = null;
         imagenes = new HashMap();
         celdas = new ArrayList();
         initComponents();
     }
 
-    public File getCarpetaMapa() {
-        return carpetaMapa;
+    public File getArchivoMapa() {
+        return archivoMapa;
     }
 
-    public void setCarpetaMapa(File carpetaMapa) {
-        this.carpetaMapa = carpetaMapa;
+    public void setArchivoMapa(File carpetaMapa) {
+        this.archivoMapa = carpetaMapa;
     }
 
     /**
@@ -212,6 +204,7 @@ public class Editor extends javax.swing.JFrame {
         mitNuevo = new javax.swing.JMenuItem();
         mitAbrir = new javax.swing.JMenuItem();
         mitGuardar = new javax.swing.JMenuItem();
+        mitGuardarComo = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         mitEditarMapa = new javax.swing.JMenuItem();
         mitEditarCelda = new javax.swing.JMenuItem();
@@ -219,7 +212,6 @@ public class Editor extends javax.swing.JFrame {
         fchMapa.setAcceptAllFileFilterUsed(false);
         fchMapa.setDialogTitle("Abrir mapa");
         fchMapa.setFileFilter(new Utilidades.FiltroMapa());
-        fchMapa.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         fchMapa.setFileView(new Utilidades.FileViewMapa());
         fchMapa.setToolTipText("");
 
@@ -413,6 +405,15 @@ public class Editor extends javax.swing.JFrame {
         });
         jMenu1.add(mitGuardar);
 
+        mitGuardarComo.setText("Guardar como...");
+        mitGuardarComo.setToolTipText("");
+        mitGuardarComo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitGuardarComoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mitGuardarComo);
+
         mbrSuperior.add(jMenu1);
 
         jMenu2.setText("Editar");
@@ -449,17 +450,13 @@ public class Editor extends javax.swing.JFrame {
         if(!txtNombreMapa.getText().isEmpty()){
             if(!txtDescripcionMapa.getText().isEmpty()){
                 if(!txtNombreJugador.getText().isEmpty()){
-                    File nuevoMapa = new File(fchMapa.getSelectedFile(), txtNombreMapa.getText());
-                    if(!nuevoMapa.exists()){
                         cerrarMapa();
-                        carpetaMapa = nuevoMapa;
+                        archivoMapa = null;
                         mapa = new Mapa(txtNombreMapa.getText(),txtDescripcionMapa.getText(),(int)spnAncho.getValue(),(int)spnAlto.getValue(),null);
                         generarPanelMapa();
                         JOptionPane.showMessageDialog(null,
-                                String.format("Creado mapa en '%s', recuerde pulsar 'Guardar mapa' para guardar.", carpetaMapa.getAbsolutePath()));
+                                String.format("Creado mapa, recuerde pulsar 'Guardar mapa' para guardar."));
                         info("Creado mapa '"+mapa.getNombre()+"'");
-                    }else
-                        info("El nombre de mapa ya existe!");
                     dlgNuevoMapa.setVisible(false);
                 }else
                     txtNombreJugador.setBackground(new Color(255, 200, 200));
@@ -477,6 +474,10 @@ public class Editor extends javax.swing.JFrame {
     private void fijarFondoBlanco(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fijarFondoBlanco
         ((Component)evt.getSource()).setBackground(Color.white);
     }//GEN-LAST:event_fijarFondoBlanco
+
+    private void mitGuardarComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitGuardarComoActionPerformed
+        guardarMapaComo();
+    }//GEN-LAST:event_mitGuardarComoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -529,6 +530,7 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenuItem mitEditarCelda;
     private javax.swing.JMenuItem mitEditarMapa;
     private javax.swing.JMenuItem mitGuardar;
+    private javax.swing.JMenuItem mitGuardarComo;
     private javax.swing.JMenuItem mitNuevo;
     private javax.swing.JPanel panAcceptCancel;
     private javax.swing.JPanel panDescripcion;
@@ -549,45 +551,46 @@ public class Editor extends javax.swing.JFrame {
     //Métodos de funcionamiento
     private void nuevoMapa() {
         fchMapa.setCurrentDirectory(null);
-        int returnVal = fchMapa.showDialog(this, "Crear aquí");
-        if (returnVal == JFileChooser.APPROVE_OPTION && fchMapa.getSelectedFile().isDirectory()) {
-            txtNombreJugador.setText("Nombre");
-            txtNombreMapa.setText("Mapa");
-            txtDescripcionMapa.setText("Descripcion...");
-            dlgNuevoMapa.setVisible(true);
-        }else
-            info("Directorio inválido o creación cancelada.");
+        txtNombreJugador.setText("Nombre");
+        txtNombreMapa.setText("Mapa");
+        txtDescripcionMapa.setText("Descripcion...");
+        dlgNuevoMapa.setVisible(true);
     }
 
     private void cerrarMapa(){
         JOptionPane.showMessageDialog(null, "Ahora debería mostrarse lo de guardar mapa si hay un mapa abierto y tal.");
-        //Debe dejar panMapaEnEdicion a null y el array de celdas vacío, poner mapa a null...
+        //Debe dejar panMapaEnEdicion a null y el array de celdas vacío, poner mapa a null..., ficheroMapa a null...
     }
     
     private void abrirMapa() {
         int returnVal = fchMapa.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
+            String n = fchMapa.getSelectedFile().getName();
+            if(n.lastIndexOf(".") != -1 && n.substring(n.lastIndexOf(".")+1).equals(Utilidades.ConstantesGenerales.EXTENSION_MAPA)){
             cerrarMapa();
             try {
                 BufferedReader lector = new BufferedReader(
-                        new FileReader(new File(fchMapa.getSelectedFile(), "mapa.json"))
+                        new FileReader(fchMapa.getSelectedFile())
                 );
                 mapa = new GsonBuilder()
                         .registerTypeAdapter(Celda.class, new Adaptador<Celda>())
                         .create().fromJson(lector, Mapa.class);
+                archivoMapa = fchMapa.getSelectedFile();
                 generarPanelMapa();
                 info("Mapa abierto: " + fchMapa.getSelectedFile().getAbsolutePath());
             } catch (IOException ex) {
                 System.out.println(ex);
             }
+            }else
+                JOptionPane.showMessageDialog(null, "Archivo no válido", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void guardarMapa() {
-        int returnVal = fchMapa.showSaveDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
+    private void guardarMapa(){
+        if(archivoMapa != null)
+        {
             try {
-                BufferedWriter escritor = new BufferedWriter(new FileWriter(new File(fchMapa.getSelectedFile(), "mapa.json")));
+                BufferedWriter escritor = new BufferedWriter(new FileWriter(archivoMapa));
                 new GsonBuilder()
                     .addSerializationExclusionStrategy(new EstrategiaGuardado())
                     .registerTypeAdapter(Celda.class, new Adaptador<Celda>())
@@ -597,6 +600,20 @@ public class Editor extends javax.swing.JFrame {
             } catch (IOException ex) {
                 System.out.println(ex);
             }
+        }else
+            guardarMapaComo();
+    }
+    
+    private void guardarMapaComo() {
+        int returnVal = fchMapa.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            String n = fchMapa.getSelectedFile().getName();
+            if(n.lastIndexOf(".") != -1 && n.substring(n.lastIndexOf(".")+1).equals(Utilidades.ConstantesGenerales.EXTENSION_MAPA)){
+                archivoMapa = fchMapa.getSelectedFile();
+            }else{
+                archivoMapa = new File(fchMapa.getSelectedFile().getAbsolutePath() + "." + Utilidades.ConstantesGenerales.EXTENSION_MAPA);
+            }
+            guardarMapa();
         }
     }
     

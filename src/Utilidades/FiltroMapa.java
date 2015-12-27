@@ -15,11 +15,15 @@ import javax.swing.filechooser.FileFilter;
 public class FiltroMapa extends FileFilter {
     @Override
     public boolean accept(File f) {
-        return f.isDirectory();
+        if(f.isFile()){
+            String nombre = f.getName();
+            return (nombre.lastIndexOf(".") != -1 && nombre.substring(nombre.lastIndexOf(".")+1).equals(ConstantesGenerales.EXTENSION_MAPA));
+        }
+        return true;
     }
 
     @Override
     public String getDescription() {
-        return "Carpetas de mapa y demás carpetas.";
+        return "Mapas";
     }
 }
