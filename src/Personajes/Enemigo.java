@@ -40,9 +40,11 @@ public abstract class Enemigo extends Personaje{
             setPos(new Punto(posicion[1], posicion[0]));
     }
     public Enemigo(String nombre, int[] posicion, Juego juego) throws CeldaObjetivoNoValida {
-        this(nombre, Math.abs(r.nextInt())% 
+        this(nombre,
+                Math.abs(r.nextInt())% 
                     (ConstantesPersonajes.ENE_MAX_VIDAPORDEFECTO - ConstantesPersonajes.ENE_MIN_VIDAPORDEFECTO)
-                    +ConstantesPersonajes.ENE_MIN_VIDAPORDEFECTO,Math.abs(r.nextInt())%
+                    +ConstantesPersonajes.ENE_MIN_VIDAPORDEFECTO,
+                Math.abs(r.nextInt())%
                     (ConstantesPersonajes.ENE_MAX_ENERGIAPT - ConstantesPersonajes.ENE_MIN_ENERGIAPT)
                     +ConstantesPersonajes.ENE_MIN_ENERGIAPT,posicion, juego);
     }

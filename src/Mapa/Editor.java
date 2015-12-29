@@ -5,15 +5,18 @@
  */
 package Mapa;
 
+import Excepciones.CeldaObjetivoNoValida;
 import com.google.gson.GsonBuilder;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,6 +25,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -36,110 +41,48 @@ import javax.swing.border.LineBorder;
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public class Editor extends javax.swing.JFrame {
-    private static final Border borde1 = new LineBorder(Color.white);
-    private static final Border borde2 = new LineBorder(Color.black);
+    public static final Border BORDE_DEF = new LineBorder(Color.white);
+    public static final Border BORDE_HOVER = new LineBorder(Color.blue);
+    public static final Border BORDE_SELEC = new LineBorder(Color.black);
     
-    private class celdasML extends MouseAdapter{
-                        private int botonPulsado = 0;
-                        @Override
-                        public void mouseReleased(MouseEvent e) {
-                            super.mouseReleased(e);
-                            botonPulsado = MouseEvent.NOBUTTON;
-                        }
+    private final MouseListener mouseListenerCeldas = new CeldasML(this);
 
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-                            botonPulsado = e.getButton();
-                            if(e.getButton() == MouseEvent.BUTTON1){
-                                Celda c=null;
-                                CeldaGrafica celdaGrafica = null;
-                                for(CeldaGrafica cg : celdas)
-                                    if(cg.getComponente().equals(e.getComponent())){
-                                        c = Editor.this.mapa.getCelda(cg.getId());
-                                        celdaGrafica = cg;
-                                        break;
-                                    }
-                                if(c==null)
-                                    return;
-
-                                if(c instanceof Transitable)
-                                    c.tipo=(c.tipo+1)%ConstantesMapa.CE_REPR_TRANS.length;
-                                else
-                                    c.tipo=(c.tipo+1)%ConstantesMapa.CE_REPR_NOTRANS.length;
-                                Editor.this.repintarCelda(celdaGrafica);
-                            }else if(e.getButton() == MouseEvent.BUTTON3){
-                                Celda c=null;
-                                CeldaGrafica celdaGrafica = null;
-                                for(CeldaGrafica cg : celdas)
-                                    if(cg.getComponente().equals(e.getComponent())){
-                                        c = Editor.this.mapa.getCelda(cg.getId());
-                                        celdaGrafica = cg;
-                                        break;
-                                    }
-                                if(c==null)
-                                    return;
-
-                                if(c instanceof Transitable)
-                                    mapa.setCelda(celdaGrafica.getId(), new NoTransitable());
-                                else
-                                    mapa.setCelda(celdaGrafica.getId(), new Transitable());
-                                
-                                Editor.this.repintarCelda(celdaGrafica);
-                            }
-                        }
-                        
-                        @Override
-                        public void mouseEntered(MouseEvent e) {
-                            ((JComponent)e.getComponent()).setBorder(borde2);
-                            
-                            if(botonPulsado == MouseEvent.BUTTON1){
-                                Celda c=null;
-                                CeldaGrafica celdaGrafica = null;
-                                for(CeldaGrafica cg : celdas)
-                                    if(cg.getComponente().equals(e.getComponent())){
-                                        c = Editor.this.mapa.getCelda(cg.getId());
-                                        celdaGrafica = cg;
-                                        break;
-                                    }
-                                if(c==null)
-                                    return;
-
-                                if(c instanceof Transitable)
-                                    c.tipo=(c.tipo+1)%ConstantesMapa.CE_REPR_TRANS.length;
-                                else
-                                    c.tipo=(c.tipo+1)%ConstantesMapa.CE_REPR_NOTRANS.length;
-                                Editor.this.repintarCelda(celdaGrafica);
-                            }else if(botonPulsado == MouseEvent.BUTTON3){
-                                Celda c=null;
-                                CeldaGrafica celdaGrafica = null;
-                                for(CeldaGrafica cg : celdas)
-                                    if(cg.getComponente().equals(e.getComponent())){
-                                        c = Editor.this.mapa.getCelda(cg.getId());
-                                        celdaGrafica = cg;
-                                        break;
-                                    }
-                                if(c==null)
-                                    return;
-
-                                if(c instanceof Transitable)
-                                    mapa.setCelda(celdaGrafica.getId(), new NoTransitable());
-                                else
-                                    mapa.setCelda(celdaGrafica.getId(), new Transitable());
-                                
-                                Editor.this.repintarCelda(celdaGrafica);
-                            }
-                        }
-
-                        @Override
-                        public void mouseExited(MouseEvent e) {
-                            ((JComponent)e.getComponent()).setBorder(borde1);
-                        }
+    public Mapa getMapa() {
+        return mapa;
     }
-    private final MouseListener mouseListenerCeldas = new celdasML();
+
+    public void setMapa(Mapa mapa) {
+        this.mapa = mapa;
+    }
+
+    public CeldaGrafica getSeleccionada() {
+        return seleccionada;
+    }
+
+    public void toggleSeleccionada(CeldaGrafica cg){
+        if(cg != null && cg.equals(seleccionada))
+            setSeleccionada(null);
+        else
+            setSeleccionada(cg);
+    }
+    public void setSeleccionada(CeldaGrafica seleccionada) {
+        if(this.seleccionada != null)
+            this.seleccionada.getComponente().setBorder(BORDE_DEF);
+        
+        this.seleccionada = seleccionada;
+        
+        if(seleccionada != null)
+            seleccionada.getComponente().setBorder(BORDE_SELEC);
+    }
+
+    public ArrayList<CeldaGrafica> getCeldas() {
+        return celdas;
+    }
     
     private Mapa mapa;
     private File archivoMapa;
     private JPanel panMapaEnEdicion;
+    private CeldaGrafica seleccionada;
     private final ArrayList<CeldaGrafica> celdas;
     private final HashMap<String, Image> imagenes;
     
@@ -151,6 +94,7 @@ public class Editor extends javax.swing.JFrame {
     public Editor() {
         mapa = null;
         archivoMapa = null;
+        seleccionada = null;
         imagenes = new HashMap();
         celdas = new ArrayList();
         initComponents();
@@ -191,6 +135,8 @@ public class Editor extends javax.swing.JFrame {
         spnAncho = new javax.swing.JSpinner();
         jLabel4 = new javax.swing.JLabel();
         spnAlto = new javax.swing.JSpinner();
+        panAleatorio = new javax.swing.JPanel();
+        cbxAleatorio = new javax.swing.JCheckBox();
         panAcceptCancel = new javax.swing.JPanel();
         btnAceptar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -208,6 +154,8 @@ public class Editor extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         mitEditarMapa = new javax.swing.JMenuItem();
         mitEditarCelda = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        mitMapaRepintar = new javax.swing.JMenuItem();
 
         fchMapa.setAcceptAllFileFilterUsed(false);
         fchMapa.setDialogTitle("Abrir mapa");
@@ -218,11 +166,11 @@ public class Editor extends javax.swing.JFrame {
         dlgNuevoMapa.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         dlgNuevoMapa.setTitle("Nuevo mapa");
         dlgNuevoMapa.setAlwaysOnTop(true);
-        dlgNuevoMapa.setMinimumSize(new java.awt.Dimension(434, 250));
+        dlgNuevoMapa.setMinimumSize(new java.awt.Dimension(446, 280));
         dlgNuevoMapa.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
-        dlgNuevoMapa.setPreferredSize(new java.awt.Dimension(434, 250));
+        dlgNuevoMapa.setPreferredSize(new java.awt.Dimension(446, 280));
         dlgNuevoMapa.setResizable(false);
-        dlgNuevoMapa.setSize(new java.awt.Dimension(434, 250));
+        dlgNuevoMapa.setSize(new java.awt.Dimension(446, 280));
 
         panNombreMapa.setLayout(new java.awt.BorderLayout(5, 0));
 
@@ -279,6 +227,21 @@ public class Editor extends javax.swing.JFrame {
         spnAlto.setValue(30);
         panDimensiones.add(spnAlto);
 
+        cbxAleatorio.setSelected(true);
+        cbxAleatorio.setText("Generar aleatorio");
+        cbxAleatorio.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        javax.swing.GroupLayout panAleatorioLayout = new javax.swing.GroupLayout(panAleatorio);
+        panAleatorio.setLayout(panAleatorioLayout);
+        panAleatorioLayout.setHorizontalGroup(
+            panAleatorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(cbxAleatorio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panAleatorioLayout.setVerticalGroup(
+            panAleatorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(cbxAleatorio)
+        );
+
         btnAceptar.setText("Aceptar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -316,13 +279,19 @@ public class Editor extends javax.swing.JFrame {
         panGeneral.setLayout(panGeneralLayout);
         panGeneralLayout.setHorizontalGroup(
             panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panNombreMapa, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(panDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(panNombreJugador, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(panAcceptCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panAleatorio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panGeneralLayout.createSequentialGroup()
-                .addGap(3, 3, 3)
-                .addComponent(panDimensiones, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panNombreMapa, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panNombreJugador, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panGeneralLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(panDimensiones, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 12, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panGeneralLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(panAcceptCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panGeneralLayout.setVerticalGroup(
             panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -333,11 +302,12 @@ public class Editor extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addComponent(panNombreJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
-                .addGroup(panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panGeneralLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(panAcceptCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(panDimensiones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(panDimensiones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panAleatorio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panAcceptCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11))
         );
 
         javax.swing.GroupLayout dlgNuevoMapaLayout = new javax.swing.GroupLayout(dlgNuevoMapa.getContentPane());
@@ -347,21 +317,23 @@ public class Editor extends javax.swing.JFrame {
             .addGroup(dlgNuevoMapaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         dlgNuevoMapaLayout.setVerticalGroup(
             dlgNuevoMapaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dlgNuevoMapaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Editor de mapas");
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Menus/ico_map.png")).getImage());
+        setMinimumSize(new java.awt.Dimension(440, 417));
         setName("editor"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(440, 417));
 
         panMapa.setBackground(new java.awt.Color(51, 51, 51));
         panMapa.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
@@ -423,7 +395,21 @@ public class Editor extends javax.swing.JFrame {
         jMenu2.add(mitEditarMapa);
 
         mitEditarCelda.setText("Celda...");
+        mitEditarCelda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitEditarCeldaActionPerformed(evt);
+            }
+        });
         jMenu2.add(mitEditarCelda);
+        jMenu2.add(jSeparator1);
+
+        mitMapaRepintar.setText("Repintar mapa");
+        mitMapaRepintar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitMapaRepintarActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mitMapaRepintar);
 
         mbrSuperior.add(jMenu2);
 
@@ -452,7 +438,19 @@ public class Editor extends javax.swing.JFrame {
                 if(!txtNombreJugador.getText().isEmpty()){
                         cerrarMapa();
                         archivoMapa = null;
-                        mapa = new Mapa(txtNombreMapa.getText(),txtDescripcionMapa.getText(),(int)spnAncho.getValue(),(int)spnAlto.getValue(),null);
+                        if(cbxAleatorio.isSelected())
+                        {
+                            mapa = new Mapa(
+                                    txtNombreMapa.getText(),
+                                    txtDescripcionMapa.getText(),
+                                    (int)spnAncho.getValue(),
+                                    (int)spnAlto.getValue(),
+                                    Mapa.getPlantillaAleatoria((int)spnAncho.getValue(), (int)spnAlto.getValue()),
+                                    null);
+                            mapa.setEnemigosAleatorio();
+                            mapa.setObjetosAleatorio();
+                        }else
+                            mapa = new Mapa(txtNombreMapa.getText(),txtDescripcionMapa.getText(),(int)spnAncho.getValue(),(int)spnAlto.getValue(),null);
                         generarPanelMapa();
                         JOptionPane.showMessageDialog(null,
                                 String.format("Creado mapa, recuerde pulsar 'Guardar mapa' para guardar."));
@@ -478,6 +476,18 @@ public class Editor extends javax.swing.JFrame {
     private void mitGuardarComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitGuardarComoActionPerformed
         guardarMapaComo();
     }//GEN-LAST:event_mitGuardarComoActionPerformed
+
+    private void mitEditarCeldaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitEditarCeldaActionPerformed
+        if(mapa != null && seleccionada != null){
+            new PropiedadesCelda(mapa.getCelda(seleccionada.getId())).main();
+            repintarCelda(seleccionada);
+        }else
+            JOptionPane.showMessageDialog(null, "Ninguna celda seleccionada", "Error", JOptionPane.ERROR_MESSAGE);
+    }//GEN-LAST:event_mitEditarCeldaActionPerformed
+
+    private void mitMapaRepintarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitMapaRepintarActionPerformed
+        repintarCeldas();
+    }//GEN-LAST:event_mitMapaRepintarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -512,6 +522,7 @@ public class Editor extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JCheckBox cbxAleatorio;
     private javax.swing.JDialog dlgNuevoMapa;
     private javax.swing.JFileChooser fchMapa;
     private javax.swing.JLabel jLabel1;
@@ -522,6 +533,7 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblInfo;
@@ -531,8 +543,10 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenuItem mitEditarMapa;
     private javax.swing.JMenuItem mitGuardar;
     private javax.swing.JMenuItem mitGuardarComo;
+    private javax.swing.JMenuItem mitMapaRepintar;
     private javax.swing.JMenuItem mitNuevo;
     private javax.swing.JPanel panAcceptCancel;
+    private javax.swing.JPanel panAleatorio;
     private javax.swing.JPanel panDescripcion;
     private javax.swing.JPanel panDimensiones;
     private javax.swing.JPanel panGeneral;
@@ -549,7 +563,7 @@ public class Editor extends javax.swing.JFrame {
 
     
     //Métodos de funcionamiento
-    private void nuevoMapa() {
+    public void nuevoMapa() {
         fchMapa.setCurrentDirectory(null);
         txtNombreJugador.setText("Nombre");
         txtNombreMapa.setText("Mapa");
@@ -559,7 +573,7 @@ public class Editor extends javax.swing.JFrame {
 
     private void cerrarMapa(){
         JOptionPane.showMessageDialog(null, "Ahora debería mostrarse lo de guardar mapa si hay un mapa abierto y tal.");
-        //Debe dejar panMapaEnEdicion a null y el array de celdas vacío, poner mapa a null..., ficheroMapa a null...
+        //Debe dejar panMapaEnEdicion a null y el array de celdas vacío, poner mapa a null..., ficheroMapa a null..., seleccionada a null
     }
     
     private void abrirMapa() {
@@ -575,6 +589,8 @@ public class Editor extends javax.swing.JFrame {
                 mapa = new GsonBuilder()
                         .registerTypeAdapter(Celda.class, new Adaptador<Celda>())
                         .create().fromJson(lector, Mapa.class);
+                for(Celda c: mapa.getCeldas())
+                    c.setMapa(mapa);
                 archivoMapa = fchMapa.getSelectedFile();
                 generarPanelMapa();
                 info("Mapa abierto: " + fchMapa.getSelectedFile().getAbsolutePath());
@@ -586,7 +602,7 @@ public class Editor extends javax.swing.JFrame {
         }
     }
 
-    private void guardarMapa(){
+    public void guardarMapa(){
         if(archivoMapa != null)
         {
             try {
@@ -617,7 +633,7 @@ public class Editor extends javax.swing.JFrame {
         }
     }
     
-    private void info(String texto){
+    public void info(String texto){
         lblInfo.setText(texto.replace("\n", " - "));
     }
 
@@ -634,10 +650,9 @@ public class Editor extends javax.swing.JFrame {
                 {
                     
                     CeldaGrafica celda = new LabelCeldaGraficaEditor(new Punto(j,i));
-                    celda.getComponente().setBorder(borde1);
+                    celda.getComponente().setBorder(BORDE_DEF);
                     celda.getComponente().addMouseListener(mouseListenerCeldas);
-                    Image img = imagenRepresentante(celda);
-                    celda.setImagen(img);
+                    repintarCelda(celda);
                     celdas.add(celda);
                     panMapaEnEdicion.add(celda.getComponente());
                 }
@@ -647,18 +662,24 @@ public class Editor extends javax.swing.JFrame {
         }
     }
     
-    private void repintarCeldas(){
+    public void repintarCeldas(){
         for(CeldaGrafica cg: celdas)
             repintarCelda(cg);
     }
     
-    private void repintarCelda(CeldaGrafica c){
+    public void repintarCelda(CeldaGrafica c){
         Image img = imagenRepresentante(c);
         c.setImagen(img);
+        c.getComponente().setCursor(null);
+        if(mapa.getCelda(c.getId()) instanceof Transitable){
+            Transitable transitable = (Transitable) mapa.getCelda(c.getId());
+                if(transitable.getEnemigos().size() > 0)
+                    c.getComponente().setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+        }
         c.getComponente().repaint();
     }
         
-    private Image imagenRepresentante(CeldaGrafica cg){
+    public Image imagenRepresentante(CeldaGrafica cg){
         Celda c = mapa.getCelda(cg.getId());
         String representacion;
         if(c == null)
@@ -673,12 +694,16 @@ public class Editor extends javax.swing.JFrame {
                 representacion = c.representacionGrafica(); //Obtiene la imagen
         }else
             representacion = c.representacionGrafica(); //Obtiene la imagen
-        Image img;
+        return obtenerImagen(representacion);  
+    }
+
+    public Image obtenerImagen(String representacion) {
         if(imagenes.get(representacion) == null){
+            Image img;
             img = new ImageIcon("img/"+representacion+".png").getImage().getScaledInstance(TAM_CELDA, TAM_CELDA, Image.SCALE_FAST);
             imagenes.put(representacion, img);
+            return img;
         }else
-            img = imagenes.get(representacion);
-        return img;  
+            return imagenes.get(representacion);
     }
 }

@@ -60,7 +60,10 @@ public final class Transitable extends Celda {
             if(ene.getNombre().equals(nombre))
                 return ene;
         return null;
-    }   
+    }
+    public Enemigo getEnemigo(int i){
+        return enemigos.get(i);
+    }
     /**
      * Asocia al enemigo a esta celda. (Es llamado por Enemigo.setMapa y Enemigo.setPosicion).
      * @param enemigo El enemigo a asociar. Puede ser null si lo que se quiere es simplemente desligar el enemigo actual.

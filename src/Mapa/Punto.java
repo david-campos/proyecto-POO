@@ -68,5 +68,10 @@ public final class Punto {
         }
         return this.y == other.y;
     }
+
+    @Override
+    public String toString() {
+        return "Punto(" + x + ", " + y + ')';
+    }
     
 }
