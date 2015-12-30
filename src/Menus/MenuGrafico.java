@@ -51,6 +51,9 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         jSeparator1 = new javax.swing.JSeparator();
         javax.swing.JPanel panJuegoPorDefecto = new javax.swing.JPanel();
         cbxJuegoPorDefecto = new javax.swing.JCheckBox();
+        panDificultad = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        cbbDificultad = new javax.swing.JComboBox();
         jSeparator2 = new javax.swing.JSeparator();
         panLosQueIntercambian = new javax.swing.JPanel();
         panNombre = new javax.swing.JPanel();
@@ -133,6 +136,16 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
             }
         });
         panJuegoPorDefecto.add(cbxJuegoPorDefecto, java.awt.BorderLayout.CENTER);
+
+        panDificultad.setLayout(new javax.swing.BoxLayout(panDificultad, javax.swing.BoxLayout.X_AXIS));
+
+        jLabel1.setText("Dificultad:   ");
+        panDificultad.add(jLabel1);
+
+        cbbDificultad.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Fácil", "Normal", "Difícil" }));
+        panDificultad.add(cbbDificultad);
+
+        panJuegoPorDefecto.add(panDificultad, java.awt.BorderLayout.LINE_END);
 
         panGeneral.add(panJuegoPorDefecto);
         panGeneral.add(jSeparator2);
@@ -268,8 +281,14 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         if(rbtFranco.isSelected()) tipo = "Francotirador";
         
         if(cbxJuegoPorDefecto.isSelected()){
-                //TODO: Poner botones para modificar el valor de dificultad: 0.75 fácil, 1.0 normal, 1.25 difícil.
-                cargante = (CargadorJuego) new CargarJuegoPorDefecto(txtNombre.getText(), tipo, 1.0);
+                double dificultad = 0.75;
+                switch((String)cbbDificultad.getSelectedItem()){
+                    case "Difícil":
+                        dificultad+=.25;
+                    case "Normal":
+                        dificultad+=.25;
+                }
+                cargante = (CargadorJuego) new CargarJuegoPorDefecto(txtNombre.getText(), tipo, dificultad);
         }else{
                 if(!txtMapa.getText().isEmpty())
                     cargante = new CargarJuegoDeFicheros(txtMapa.getText() + "mapa.csv", txtMapa.getText()+"objetos.csv", txtMapa.getText()+"npcs.csv", tipo);
@@ -314,6 +333,7 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
 
     private void cbxJuegoPorDefectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxJuegoPorDefectoActionPerformed
         panNombre.setVisible(cbxJuegoPorDefecto.isSelected());
+        panDificultad.setVisible(cbxJuegoPorDefecto.isSelected());
         panElegirMapa.setVisible(!cbxJuegoPorDefecto.isSelected());
     }//GEN-LAST:event_cbxJuegoPorDefectoActionPerformed
 
@@ -338,8 +358,10 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
     private javax.swing.JButton btnIniciar;
     private javax.swing.JButton btnMapa;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JComboBox cbbDificultad;
     private javax.swing.JCheckBox cbxJuegoPorDefecto;
     private javax.swing.JFileChooser fchMapa;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblMapa;
@@ -349,6 +371,7 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
     private javax.swing.JMenu menArchivo;
     private javax.swing.JMenuItem mitEditor;
     private javax.swing.JPanel panAceptar;
+    private javax.swing.JPanel panDificultad;
     private javax.swing.JPanel panElegirMapa;
     private javax.swing.JPanel panGeneral;
     private javax.swing.JPanel panLosQueIntercambian;
