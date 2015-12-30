@@ -28,7 +28,7 @@ public class MenuConsola implements Menu{
             case "si":
             case "s":
                 String nombre = c.leer("Oye... dime tu nombre premoh: ");
-                cargante = (CargadorJuego) new CargarJuegoPorDefecto(nombre, tipo);
+                cargante = (CargadorJuego) new CargarJuegoPorDefecto(nombre, tipo, 1.0);
                 break;
             case "no":
             case "n":
