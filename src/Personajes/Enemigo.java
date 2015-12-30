@@ -23,8 +23,6 @@ import Mapa.Transitable;
 import Objetos.*;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -89,11 +87,7 @@ public abstract class Enemigo extends Personaje{
             if(getArmadura() != null) tirar(getArmadura());
             for(Objeto ob: this.getMochila().getObjetos())
                 this.tirar(ob);
-            try{
-                this.getMapa().remEnemigo(this);
-            }catch(CeldaObjetivoNoValida e){
-                juego.log(e.getMessage());
-            }
+            this.getMapa().remEnemigo(this);
         }
     }
     

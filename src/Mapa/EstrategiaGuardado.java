@@ -15,7 +15,8 @@ import com.google.gson.FieldAttributes;
 public class EstrategiaGuardado implements ExclusionStrategy{
     @Override
     public boolean shouldSkipField(FieldAttributes fa) {
-        return fa.getName().equals("mapa");
+        return fa.getName().equals("mapa") //Para celdas y enemigos
+                || fa.getName().equals("juego"); //Para todos
     }
     @Override
     public boolean shouldSkipClass(Class<?> type) {

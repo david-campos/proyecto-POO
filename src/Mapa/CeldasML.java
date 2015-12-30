@@ -39,20 +39,30 @@ public class CeldasML extends MouseAdapter{
                         @Override
                         public void mouseReleased(MouseEvent e) {
                             super.mouseReleased(e);
+                            CeldaGrafica cg = celdaGrafica(e);
+                            switch(botonPulsado){
+                                //Si es el derecho, desplegamos menu de celda
+                                case MouseEvent.BUTTON3:
+                                    new MenuCelda(cg, ed).show(e.getComponent(), e.getX(), e.getY());
+                                    break;
+                            }
                             botonPulsado = MouseEvent.NOBUTTON;
                             //Si la celda inicial no era nula, movemos los enemigos
                             if(inicial != null && objetivo != null && !inicial.equals(objetivo)){
-                                Transitable c = (Transitable) ed.getMapa().getCelda(inicial.getId());
-                                for(Enemigo en : c.getEnemigos()){
-                                    try {
-                                        en.setPos(objetivo.getId());
-                                        ed.setSeleccionada(objetivo);
-                                        ed.repintarCelda(objetivo);
-                                        ed.repintarCelda(inicial);
-                                    } catch (CeldaObjetivoNoValida ex) {
-                                        ed.info("Celda objetivo no válida.");
+                                if(!objetivo.getId().equals(ed.getMapa().getPosicionInicial())){
+                                    Transitable c = (Transitable) ed.getMapa().getCelda(inicial.getId());
+                                    for(Enemigo en : c.getEnemigos()){
+                                        try {
+                                            en.setPos(objetivo.getId());
+                                        } catch (CeldaObjetivoNoValida ex) {
+                                            ed.info("Celda objetivo no válida.");
+                                        }
                                     }
-                                }
+                                    ed.setSeleccionada(objetivo);
+                                    ed.repintarCelda(inicial);
+                                }else
+                                    ed.info("La celda objetivo es la posición inicial del jugador!");
+                                ed.repintarCelda(objetivo);    
                             }
                             inicial = null;
                         }
@@ -83,35 +93,27 @@ public class CeldasML extends MouseAdapter{
                         public void mousePressed(MouseEvent e) {
                             botonPulsado = e.getButton();
                             CeldaGrafica cg = celdaGrafica(e);
-                            if(botonPulsado == MouseEvent.BUTTON1){
-                                ed.toggleSeleccionada(cg);
-                                
-                                //Si tiene enemigos... podría ser inicial para arrastrar
-                                if(ed.getMapa().getCelda(cg.getId()) instanceof Transitable){
-                                        Transitable transitable = (Transitable) ed.getMapa().getCelda(cg.getId());
-                                        if(transitable.getNumEnemigos() > 0){
-                                            objetivo = null;
-                                            inicial = cg;
-                                        }
-                                    }
-                            //Si es el derecho, intercambiar transitables/no transitables
-                            }else if(e.getButton() == MouseEvent.BUTTON3){
-                                Celda c = ed.getMapa().getCelda(cg.getId());
-                                if(c==null)
-                                    return;
+                            switch(botonPulsado)
+                            {
+                                case MouseEvent.BUTTON1:
+                                    ed.toggleSeleccionada(cg);
 
-                                if(c instanceof Transitable)
-                                    ed.getMapa().setCelda(cg.getId(), new NoTransitable());
-                                else
-                                    ed.getMapa().setCelda(cg.getId(), new Transitable());
-                                
-                                ed.repintarCelda(cg);
+                                    //Si tiene enemigos... podría ser inicial para arrastrar
+                                    if(ed.getMapa().getCelda(cg.getId()) instanceof Transitable){
+                                            Transitable transitable = (Transitable) ed.getMapa().getCelda(cg.getId());
+                                            if(transitable.getNumEnemigos() > 0){
+                                                objetivo = null;
+                                                inicial = cg;
+                                            }
+                                        }
+                                    break;
                             }
                         }
                         
                         @Override
                         public void mouseEntered(MouseEvent e) {
                             CeldaGrafica cg = celdaGrafica(e);
+                            ed.infoCoordenadas(cg.getId());
                             if(ed.getSeleccionada() == null || !e.getComponent().equals(ed.getSeleccionada().getComponente()))
                                 ((JComponent)e.getComponent()).setBorder(Editor.BORDE_HOVER);
                             //Si el pulsado es el botón izquierdo, e inicial no es null, simulamos movimiento aquí
@@ -143,5 +145,6 @@ public class CeldasML extends MouseAdapter{
                             ed.repintarCelda(cg); //Siempre repintamos la celda al salir de ella.
                             if(ed.getSeleccionada() == null || !e.getComponent().equals(ed.getSeleccionada().getComponente()))
                                 ((JComponent)e.getComponent()).setBorder(Editor.BORDE_DEF);
+                            ed.infoCoordenadas(null);
                         }
     }

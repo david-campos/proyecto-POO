@@ -22,6 +22,7 @@ import Juego.Juego;
 import Mapa.*;
 import Objetos.*;
 import static Personajes.Enemigo.r;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -660,6 +661,30 @@ public abstract class Personaje {
     public int getToreado() {
         return plusEnergia;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.nombre);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Personaje other = (Personaje) obj;
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
     
     @Override
     public String toString() {

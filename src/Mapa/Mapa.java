@@ -19,6 +19,8 @@ import Personajes.Sectoid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -258,11 +260,15 @@ public final class Mapa {
      * Elimina un enemigo del mapa. Las referencias del enemigo y al enemigo se borran completamente.
      * @param enemigo El enemigo a eliminar.
      */
-    public void remEnemigo(Enemigo enemigo) throws CeldaObjetivoNoValida{
+    public void remEnemigo(Enemigo enemigo){
         if(enemigos.contains(enemigo))
         {
             enemigos.remove(enemigo);
-            enemigo.setMapa(null);
+            try {
+                enemigo.setMapa(null);
+            } catch (CeldaObjetivoNoValida ex) {
+                //No puede darse, siendo null
+            }
             ((Transitable)getCelda(enemigo.getPos())).remEnemigo(enemigo);
         }
     }  

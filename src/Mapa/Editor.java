@@ -6,6 +6,8 @@
 package Mapa;
 
 import Excepciones.CeldaObjetivoNoValida;
+import Objetos.Objeto;
+import Personajes.Enemigo;
 import com.google.gson.GsonBuilder;
 import java.awt.Color;
 import java.awt.Component;
@@ -44,6 +46,7 @@ public class Editor extends javax.swing.JFrame {
     public static final Border BORDE_DEF = new LineBorder(Color.white);
     public static final Border BORDE_HOVER = new LineBorder(Color.blue);
     public static final Border BORDE_SELEC = new LineBorder(Color.black);
+    public static final Border BORDE_PROP = new LineBorder(Color.red);
     
     private final MouseListener mouseListenerCeldas = new CeldasML(this);
 
@@ -145,6 +148,8 @@ public class Editor extends javax.swing.JFrame {
         panMapa = new javax.swing.JPanel();
         tbrInferior = new javax.swing.JToolBar();
         lblInfo = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        lblCoordenadas = new javax.swing.JLabel();
         mbrSuperior = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         mitNuevo = new javax.swing.JMenuItem();
@@ -168,7 +173,6 @@ public class Editor extends javax.swing.JFrame {
         dlgNuevoMapa.setAlwaysOnTop(true);
         dlgNuevoMapa.setMinimumSize(new java.awt.Dimension(446, 280));
         dlgNuevoMapa.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
-        dlgNuevoMapa.setPreferredSize(new java.awt.Dimension(446, 280));
         dlgNuevoMapa.setResizable(false);
         dlgNuevoMapa.setSize(new java.awt.Dimension(446, 280));
 
@@ -334,6 +338,11 @@ public class Editor extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(440, 417));
         setName("editor"); // NOI18N
         setPreferredSize(new java.awt.Dimension(440, 417));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         panMapa.setBackground(new java.awt.Color(51, 51, 51));
         panMapa.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
@@ -348,6 +357,10 @@ public class Editor extends javax.swing.JFrame {
 
         lblInfo.setText("Ningún mapa seleccionado");
         tbrInferior.add(lblInfo);
+        tbrInferior.add(jSeparator3);
+
+        lblCoordenadas.setText("Coordenadas de la celda");
+        tbrInferior.add(lblCoordenadas);
 
         getContentPane().add(tbrInferior, java.awt.BorderLayout.SOUTH);
 
@@ -436,6 +449,7 @@ public class Editor extends javax.swing.JFrame {
         if(!txtNombreMapa.getText().isEmpty()){
             if(!txtDescripcionMapa.getText().isEmpty()){
                 if(!txtNombreJugador.getText().isEmpty()){
+                        dlgNuevoMapa.setVisible(false);
                         cerrarMapa();
                         archivoMapa = null;
                         if(cbxAleatorio.isSelected())
@@ -452,10 +466,7 @@ public class Editor extends javax.swing.JFrame {
                         }else
                             mapa = new Mapa(txtNombreMapa.getText(),txtDescripcionMapa.getText(),(int)spnAncho.getValue(),(int)spnAlto.getValue(),null);
                         generarPanelMapa();
-                        JOptionPane.showMessageDialog(null,
-                                String.format("Creado mapa, recuerde pulsar 'Guardar mapa' para guardar."));
                         info("Creado mapa '"+mapa.getNombre()+"'");
-                    dlgNuevoMapa.setVisible(false);
                 }else
                     txtNombreJugador.setBackground(new Color(255, 200, 200));
             }else
@@ -478,16 +489,17 @@ public class Editor extends javax.swing.JFrame {
     }//GEN-LAST:event_mitGuardarComoActionPerformed
 
     private void mitEditarCeldaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitEditarCeldaActionPerformed
-        if(mapa != null && seleccionada != null){
-            new PropiedadesCelda(mapa.getCelda(seleccionada.getId())).main();
-            repintarCelda(seleccionada);
-        }else
-            JOptionPane.showMessageDialog(null, "Ninguna celda seleccionada", "Error", JOptionPane.ERROR_MESSAGE);
+        editarCelda(seleccionada);
     }//GEN-LAST:event_mitEditarCeldaActionPerformed
 
     private void mitMapaRepintarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitMapaRepintarActionPerformed
         repintarCeldas();
     }//GEN-LAST:event_mitMapaRepintarActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        cerrarMapa();
+        System.exit(0);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -535,6 +547,8 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JLabel lblCoordenadas;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblInfo;
     private javax.swing.JMenuBar mbrSuperior;
@@ -572,11 +586,25 @@ public class Editor extends javax.swing.JFrame {
     }
 
     private void cerrarMapa(){
-        JOptionPane.showMessageDialog(null, "Ahora debería mostrarse lo de guardar mapa si hay un mapa abierto y tal.");
+        if(mapa != null){
+            if(JOptionPane.showConfirmDialog(null,
+                    "¿Desea guardar el mapa primero?",
+                    "Guardar mapa...",
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+                guardarMapa();
+            
+            celdas.clear();
+            mapa = null;
+            archivoMapa = null;
+            seleccionada = null;
+            panMapa.remove(panMapaEnEdicion);
+            panMapaEnEdicion = null;
+        }
         //Debe dejar panMapaEnEdicion a null y el array de celdas vacío, poner mapa a null..., ficheroMapa a null..., seleccionada a null
     }
     
     private void abrirMapa() {
+        fchMapa.setDialogTitle("Abrir mapa...");
         int returnVal = fchMapa.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             String n = fchMapa.getSelectedFile().getName();
@@ -588,9 +616,19 @@ public class Editor extends javax.swing.JFrame {
                 );
                 mapa = new GsonBuilder()
                         .registerTypeAdapter(Celda.class, new Adaptador<Celda>())
+                        .registerTypeAdapter(Objeto.class, new Adaptador<Objeto>())
+                        .registerTypeAdapter(Enemigo.class, new Adaptador<Enemigo>())
                         .create().fromJson(lector, Mapa.class);
                 for(Celda c: mapa.getCeldas())
                     c.setMapa(mapa);
+                for(Enemigo e: mapa.getEnemigos()){
+                    try {
+                        e.setMapa(mapa);
+                    } catch (CeldaObjetivoNoValida ex) {
+                       //No debería ser no válida, fue guardado ahí.
+                    }
+                    
+                }
                 archivoMapa = fchMapa.getSelectedFile();
                 generarPanelMapa();
                 info("Mapa abierto: " + fchMapa.getSelectedFile().getAbsolutePath());
@@ -603,40 +641,70 @@ public class Editor extends javax.swing.JFrame {
     }
 
     public void guardarMapa(){
-        if(archivoMapa != null)
-        {
-            try {
-                BufferedWriter escritor = new BufferedWriter(new FileWriter(archivoMapa));
-                new GsonBuilder()
-                    .addSerializationExclusionStrategy(new EstrategiaGuardado())
-                    .registerTypeAdapter(Celda.class, new Adaptador<Celda>())
-                    .create().toJson(mapa, escritor);
-                escritor.close();
-                info("Mapa guardado: " + fchMapa.getSelectedFile().getAbsolutePath());
-            } catch (IOException ex) {
-                System.out.println(ex);
-            }
+        if(mapa!=null){
+            if(archivoMapa != null)
+            {
+                File copiaSeguridad = new File(archivoMapa.getName() + ".saving");
+                if(archivoMapa.exists())
+                    archivoMapa.renameTo(copiaSeguridad);
+                try {
+                    BufferedWriter escritor = new BufferedWriter(new FileWriter(archivoMapa));
+                    new GsonBuilder()
+                        .addSerializationExclusionStrategy(new EstrategiaGuardado())
+                        .registerTypeAdapter(Celda.class, new Adaptador<Celda>())
+                        .registerTypeAdapter(Objeto.class, new Adaptador<Objeto>())
+                        .registerTypeAdapter(Enemigo.class, new Adaptador<Enemigo>())
+                        .create().toJson(mapa, escritor);
+                    escritor.close();
+
+                    if(copiaSeguridad.exists())
+                        copiaSeguridad.delete();
+
+                    info("Mapa guardado: " + fchMapa.getSelectedFile().getAbsolutePath());
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                    copiaSeguridad.renameTo(archivoMapa);
+                }
+            }else
+                guardarMapaComo();
         }else
-            guardarMapaComo();
+            info("Ningún mapa abierto para guardar.");
     }
     
     private void guardarMapaComo() {
-        int returnVal = fchMapa.showSaveDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            String n = fchMapa.getSelectedFile().getName();
-            if(n.lastIndexOf(".") != -1 && n.substring(n.lastIndexOf(".")+1).equals(Utilidades.ConstantesGenerales.EXTENSION_MAPA)){
-                archivoMapa = fchMapa.getSelectedFile();
-            }else{
-                archivoMapa = new File(fchMapa.getSelectedFile().getAbsolutePath() + "." + Utilidades.ConstantesGenerales.EXTENSION_MAPA);
+        if(mapa != null){
+            fchMapa.setDialogTitle("Guardar como...");
+            int returnVal = fchMapa.showSaveDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                String n = fchMapa.getSelectedFile().getName();
+                File posibleArchivoMapa;
+                if(n.lastIndexOf(".") != -1 && n.substring(n.lastIndexOf(".")+1).equals(Utilidades.ConstantesGenerales.EXTENSION_MAPA)){
+                    posibleArchivoMapa = fchMapa.getSelectedFile();
+                }else{
+                    posibleArchivoMapa = new File(fchMapa.getSelectedFile().getAbsolutePath() + "." + Utilidades.ConstantesGenerales.EXTENSION_MAPA);
+                }
+                if(posibleArchivoMapa.exists())
+                    if(JOptionPane.showConfirmDialog(null, "¿Sobreescribir mapa?", "Mapa ya existente", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION)
+                        return;
+
+                archivoMapa = posibleArchivoMapa;
+                guardarMapa();
             }
-            guardarMapa();
-        }
+        }else
+            info("Ningún mapa abierto que guardar.");
     }
     
     public void info(String texto){
         lblInfo.setText(texto.replace("\n", " - "));
     }
 
+    public void infoCoordenadas(Punto pt){
+        if(pt != null)
+            lblCoordenadas.setText(String.format("Coordenadas de la celda: (%d, %d)", pt.x, pt.y));
+        else
+            lblCoordenadas.setText("Coordenadas de la celda");
+    }
+    
     private void generarPanelMapa() {
         if(panMapaEnEdicion != null || !celdas.isEmpty()){
             //Que panMapaEnEdicion no sea null indica algún fallo de programación, pues debería estar cerrado el mapa siempre que se llame aquí
@@ -660,6 +728,33 @@ public class Editor extends javax.swing.JFrame {
             panMapa.setPreferredSize(panMapaEnEdicion.getSize());
             panMapa.revalidate();
         }
+    }
+    public Celda toggleTransitable(Celda c){
+        if(c==null)
+            return null;
+        
+        Punto pt = mapa.getPosDe(c);
+        if(c instanceof Transitable){
+            for(Enemigo e: ((Transitable)c).getEnemigos())
+                mapa.remEnemigo(e);
+            mapa.setCelda(pt, (c = new NoTransitable()));
+        }else
+            mapa.setCelda(pt, (c = new Transitable()));
+        return c;
+    }
+    public void toggleTransitable(CeldaGrafica cg){
+        Celda c = mapa.getCelda(cg.getId());
+        if(c==null)
+            return;
+
+        if(c instanceof Transitable){
+            for(Enemigo e: ((Transitable)c).getEnemigos())
+                mapa.remEnemigo(e);
+            mapa.setCelda(cg.getId(), new NoTransitable());
+        }else
+            mapa.setCelda(cg.getId(), new Transitable());
+
+        repintarCelda(cg);
     }
     
     public void repintarCeldas(){
@@ -705,5 +800,29 @@ public class Editor extends javax.swing.JFrame {
             return img;
         }else
             return imagenes.get(representacion);
+    }
+
+    public void eliminarEnemigo(Enemigo e) {
+        CeldaGrafica cg = grafica(e.getPos());
+        mapa.remEnemigo(e);
+        if(cg!=null)
+            repintarCelda(cg);
+    }
+
+    public CeldaGrafica grafica(Punto pos) {
+        for(CeldaGrafica cg : celdas)
+            if(cg.getId().equals(pos))
+                return cg;
+        return null;
+    }
+
+    public void editarCelda(CeldaGrafica cg) {
+        if(mapa != null && cg != null){
+            cg.getComponente().setBorder(BORDE_PROP);
+            new PropiedadesCelda(mapa.getCelda(cg.getId()), this).setVisible(true);
+            cg.getComponente().setBorder(BORDE_DEF);
+            repintarCelda(cg);
+        }else
+            JOptionPane.showMessageDialog(null, "Ninguna celda seleccionada", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

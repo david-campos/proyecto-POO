@@ -6,15 +6,13 @@
 package Mapa;
 
 import Personajes.Enemigo;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import javax.swing.AbstractListModel;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
@@ -24,13 +22,15 @@ import javax.swing.event.ChangeEvent;
  *
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
-public class PropiedadesCelda extends javax.swing.JFrame {
-    private final Celda celda;
+public class PropiedadesCelda extends javax.swing.JDialog {
+    private Celda celda;
+    private final Editor editor;
     /**
      * Creates new form PropiedadesCelda
      */
-    public PropiedadesCelda(Celda celda) {
+    public PropiedadesCelda(Celda celda, Editor contexto) {
         this.celda = celda;
+        editor = contexto;
         initComponents();
     }
 
@@ -55,12 +55,11 @@ public class PropiedadesCelda extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         panAceptarCancelar = new javax.swing.JPanel();
         btnAceptar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Propiedades de la celda");
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Menus/ico_map.png")).getImage());
-        setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         setResizable(false);
         setType(java.awt.Window.Type.POPUP);
 
@@ -88,16 +87,33 @@ public class PropiedadesCelda extends javax.swing.JFrame {
         lblIconoCelda.setIcon(new ImageIcon(new ImageIcon("img/"+celda.representacionGrafica()+".png").getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH)));
         lblIconoCelda.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.white, java.awt.Color.darkGray, java.awt.Color.black));
 
+        lstEnemigos.setBackground(celda instanceof Transitable?Color.white:Color.gray);
         lstEnemigos.setModel(new ModeloListaEnemigos(celda));
         lstEnemigos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         lstEnemigos.setCellRenderer(new RenderizadorListaEnemigos());
+        lstEnemigos.setEnabled(celda instanceof Transitable);
+        lstEnemigos.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstEnemigosValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(lstEnemigos);
 
         btnEngadir.setText("+");
         btnEngadir.setEnabled(celda instanceof Transitable);
+        btnEngadir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEngadirActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setText("-");
         btnEliminar.setEnabled(false);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panGeneralLayout = new javax.swing.GroupLayout(panGeneral);
         panGeneral.setLayout(panGeneralLayout);
@@ -154,30 +170,19 @@ public class PropiedadesCelda extends javax.swing.JFrame {
             }
         });
 
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panAceptarCancelarLayout = new javax.swing.GroupLayout(panAceptarCancelar);
         panAceptarCancelar.setLayout(panAceptarCancelarLayout);
         panAceptarCancelarLayout.setHorizontalGroup(
             panAceptarCancelarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panAceptarCancelarLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAceptar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCancelar))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panAceptarCancelarLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnAceptar))
         );
         panAceptarCancelarLayout.setVerticalGroup(
             panAceptarCancelarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panAceptarCancelarLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(panAceptarCancelarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancelar)
-                    .addComponent(btnAceptar)))
+                .addComponent(btnAceptar))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -208,44 +213,47 @@ public class PropiedadesCelda extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btnAceptarActionPerformed
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        this.setVisible(false);
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
     private void tbtTransitableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtTransitableActionPerformed
         JToggleButton btn = (JToggleButton) evt.getSource();
         btn.setText(btn.isSelected()?"Transitable":"No transitable");
+        celda = editor.toggleTransitable(celda);
         spnTipo.setModel(new javax.swing.SpinnerNumberModel(0, 0, btn.isSelected()?ConstantesMapa.CE_REPG_TRANS.length-1:ConstantesMapa.CE_REPG_NOTRANS.length-1, 1));
         spnTipoStateChanged(new ChangeEvent(spnTipo));
+        lstEnemigos.setEnabled(btn.isSelected());
+        lstEnemigos.setBackground(btn.isSelected()?Color.white:Color.gray);
         btnEngadir.setEnabled(btn.isSelected());
     }//GEN-LAST:event_tbtTransitableActionPerformed
 
     private void spnTipoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spnTipoStateChanged
         int i = ((SpinnerNumberModel)spnTipo.getModel()).getNumber().intValue();
         if(i<0) return;
-        String representacion;
         if(tbtTransitable.isSelected()){
             if(i >= ConstantesMapa.CE_REPG_TRANS.length) return;
-            representacion = ConstantesMapa.CE_REPG_TRANS[i];
+            celda.tipo = i;
         }else{
             if(i >= ConstantesMapa.CE_REPG_NOTRANS.length) return;
-            representacion = ConstantesMapa.CE_REPG_NOTRANS[i];
+            celda.tipo = i;
         }
-        lblIconoCelda.setIcon(new ImageIcon(new ImageIcon("img/"+representacion+".png").getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH)));
+        lblIconoCelda.setIcon(new ImageIcon(new ImageIcon("img/"+celda.representacionGrafica()+".png").getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH)));
     }//GEN-LAST:event_spnTipoStateChanged
 
-    public void main() {
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PropiedadesCelda.this.setVisible(true);
-            }
-        });
-    }
+    private void btnEngadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEngadirActionPerformed
+        
+    }//GEN-LAST:event_btnEngadirActionPerformed
+
+    private void lstEnemigosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstEnemigosValueChanged
+        btnEliminar.setEnabled(!lstEnemigos.isSelectionEmpty());
+        
+    }//GEN-LAST:event_lstEnemigosValueChanged
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        System.out.println(((Enemigo)lstEnemigos.getSelectedValue()).toString());
+        editor.eliminarEnemigo((Enemigo)lstEnemigos.getSelectedValue());
+        ((ModeloListaEnemigos)lstEnemigos.getModel()).actualizar();
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
-    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnEngadir;
     private javax.swing.JLabel jLabel1;
@@ -284,6 +292,12 @@ class ModeloListaEnemigos extends AbstractListModel<Enemigo>{
             return null;
     }
     
+    public void actualizar(){
+        if(getSize() > 0)
+            this.fireContentsChanged(this, 0, getSize()-1);
+        else
+            this.fireContentsChanged(this, 0, 0);
+    }
 }
 
 class RenderizadorListaEnemigos extends JLabel implements ListCellRenderer<Enemigo> {

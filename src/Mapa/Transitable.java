@@ -80,10 +80,9 @@ public final class Transitable extends Celda {
     public int getNumEnemigos() {
         return enemigos.size();
     }
-    public void remEnemigo(Enemigo ene) throws CeldaObjetivoNoValida{
+    public void remEnemigo(Enemigo ene){
         if(ene != null){
             enemigos.remove(ene);
-           // mapa.remEnemigo(ene);
         }
     }
     /**
