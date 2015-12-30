@@ -52,13 +52,14 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         javax.swing.JPanel panJuegoPorDefecto = new javax.swing.JPanel();
         cbxJuegoPorDefecto = new javax.swing.JCheckBox();
         jSeparator2 = new javax.swing.JSeparator();
+        panLosQueIntercambian = new javax.swing.JPanel();
+        panNombre = new javax.swing.JPanel();
+        lblNombre = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
         panElegirMapa = new javax.swing.JPanel();
         lblMapa = new javax.swing.JLabel();
         txtMapa = new javax.swing.JTextField();
         btnMapa = new javax.swing.JButton();
-        panNombre = new javax.swing.JPanel();
-        lblNombre = new javax.swing.JLabel();
-        txtNombre = new javax.swing.JTextField();
         panSeparacion = new javax.swing.JPanel();
         panAceptar = new javax.swing.JPanel();
         btnIniciar = new javax.swing.JButton();
@@ -136,6 +137,19 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         panGeneral.add(panJuegoPorDefecto);
         panGeneral.add(jSeparator2);
 
+        panNombre.setMinimumSize(new java.awt.Dimension(102, 41));
+        panNombre.setPreferredSize(new java.awt.Dimension(235, 41));
+        panNombre.setLayout(new java.awt.BorderLayout());
+
+        lblNombre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblNombre.setText("Nombre");
+        panNombre.add(lblNombre, java.awt.BorderLayout.PAGE_START);
+
+        txtNombre.setText("Marine");
+        txtNombre.setMaximumSize(new java.awt.Dimension(45, 22));
+        txtNombre.setPreferredSize(new java.awt.Dimension(6, 22));
+        panNombre.add(txtNombre, java.awt.BorderLayout.CENTER);
+
         panElegirMapa.setVisible(false);
         panElegirMapa.setLayout(new java.awt.BorderLayout());
 
@@ -157,20 +171,23 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         });
         panElegirMapa.add(btnMapa, java.awt.BorderLayout.EAST);
 
-        panGeneral.add(panElegirMapa);
+        javax.swing.GroupLayout panLosQueIntercambianLayout = new javax.swing.GroupLayout(panLosQueIntercambian);
+        panLosQueIntercambian.setLayout(panLosQueIntercambianLayout);
+        panLosQueIntercambianLayout.setHorizontalGroup(
+            panLosQueIntercambianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panElegirMapa, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        panLosQueIntercambianLayout.setVerticalGroup(
+            panLosQueIntercambianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panLosQueIntercambianLayout.createSequentialGroup()
+                .addComponent(panNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panElegirMapa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
+        );
 
-        panNombre.setMinimumSize(new java.awt.Dimension(6, 0));
-        panNombre.setLayout(new java.awt.BorderLayout());
-
-        lblNombre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblNombre.setText("Nombre");
-        panNombre.add(lblNombre, java.awt.BorderLayout.PAGE_START);
-
-        txtNombre.setText("Marine");
-        txtNombre.setMaximumSize(new java.awt.Dimension(45, 22));
-        panNombre.add(txtNombre, java.awt.BorderLayout.PAGE_END);
-
-        panGeneral.add(panNombre);
+        panGeneral.add(panLosQueIntercambian);
 
         panSeparacion.setMinimumSize(new java.awt.Dimension(0, 20));
 
@@ -237,7 +254,7 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                .addComponent(panGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -334,6 +351,7 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
     private javax.swing.JPanel panAceptar;
     private javax.swing.JPanel panElegirMapa;
     private javax.swing.JPanel panGeneral;
+    private javax.swing.JPanel panLosQueIntercambian;
     private javax.swing.JPanel panNombre;
     private javax.swing.JPanel panSeparacion;
     private javax.swing.JPanel panTipoJugador;
