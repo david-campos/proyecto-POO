@@ -146,6 +146,13 @@ public final class Mapa {
     public void setJuego(Juego juego) {
         this.juego = juego;
     }
+
+    public ArrayList<Celda> getCeldas() {
+        ArrayList<Celda> lista = new ArrayList(celdas.size() * celdas.get(0).size());
+        for(ArrayList<Celda> fila : celdas)
+            lista.addAll(fila);
+        return lista;
+    }
     
     /**
      * Permite obtener el nombre del mapa.
@@ -365,9 +372,7 @@ public final class Mapa {
      * Genera enemigos de forma aleatoria por el mapa.
      * @throws Excepciones.CeldaObjetivoNoValida
      */
-    public void setEnemigosAleatorio() throws CeldaObjetivoNoValida{
-        if(juego == null)
-            return;
+    public void setEnemigosAleatorio(){
         int[] enePos = new int[2];
         int enemigoId=0;
         for(int pasada=0; pasada < 10; pasada++)
@@ -377,8 +382,13 @@ public final class Mapa {
                     if(Math.abs(r.nextFloat()) < ConstantesMapa.P_ENEMIGOS*juego.getModDificultad()
                                 && getCelda(new Punto(enePos[1], enePos[0])) instanceof Transitable)
                     {
-                        Enemigo ene = new Sectoid("Enemigo " + enemigoId++, enePos, juego); //TODO: Variedad hombre!
-                        addEnemigo(ene);
+                        try
+                        {
+                            Enemigo ene = new Sectoid("Enemigo " + enemigoId++, enePos, juego); //TODO: Variedad hombre!
+                            addEnemigo(ene);
+                        }catch(CeldaObjetivoNoValida e){
+                            //Béh, no pasará, ignorar.
+                        }
                         enePos[1]++;
                     }
                 }

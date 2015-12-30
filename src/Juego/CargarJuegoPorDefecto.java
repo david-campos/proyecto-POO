@@ -68,11 +68,8 @@ public final class CargarJuegoPorDefecto implements CargadorJuego{
         } catch (CeldaObjetivoNoValida ex) {
             map.hacerTransitable(map.getPosicionInicial(), false);
         }
-        try{
-            map.setEnemigosAleatorio();
-        }catch(CeldaObjetivoNoValida ex){
-            juego.log("No se han podido cargar los enemigos... (" + ex.getMessage() + ")");
-        }
+        
+        map.setEnemigosAleatorio();
         map.setObjetosAleatorio();
         juego.setJugador(jug);
         return juego;
