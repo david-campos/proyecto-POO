@@ -439,7 +439,7 @@ public abstract class Personaje {
         
         if(enemigo != null)
         {
-            if(r.nextFloat() < 0.25) {
+            if(r.nextFloat() < 0.25*(1/juego.getModDificultad())) { //Es más difícil hacer daño crítico con mayor dificultad
                 dano*=2;    //Daño crítico
                 if(enemigo instanceof Enemigo) juego.log("¡Has causado un daño crítico!\t");
                 else juego.log(getNombre() + " te ha causado un daño crítico...");
@@ -458,7 +458,7 @@ public abstract class Personaje {
 
             enemigo.setVida(vidaResultante);
             if(enemigo instanceof Enemigo)
-                    ((Enemigo)enemigo).morir();
+                ((Enemigo)enemigo).morir();
                 
             juego.log(getNombre() + " te ha causado " + danoReal + " de daño.");
         }else{

@@ -19,10 +19,12 @@ import Personajes.Zapador;
 public final class CargarJuegoPorDefecto implements CargadorJuego{
     private String tipoJugador;
     private String nombre;
+    private double modDificultad;
     
-    public CargarJuegoPorDefecto(String nombre, String tipoJugador) {
+    public CargarJuegoPorDefecto(String nombre, String tipoJugador, double dificultad) {
         this.nombre = nombre;
         this.tipoJugador = tipoJugador;
+        modDificultad = dificultad;
     }
 
     public String getTipoJugador() {
@@ -47,6 +49,7 @@ public final class CargarJuegoPorDefecto implements CargadorJuego{
         Mapa map = new Mapa("Mapa1", "Es un bonito mapa de prueba.", 40, 30, tipos, null);
         
         Juego juego = new Juego(map, null, c);
+        juego.setModDificultad(modDificultad);
         Jugador jug;
         switch (tipoJugador.toLowerCase()) {
             default:

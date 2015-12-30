@@ -29,11 +29,13 @@ public final class Juego {
     private Jugador jug;
     private Consola consola;
     private String[] anteriorComando=null;
+    private double modDificultad;
     
     public Juego (Mapa mapa, Jugador jugador, Consola c) {
         this.mapa = mapa;
         jug = jugador;
         consola = c;
+        modDificultad = 1.0;
     }
     
     public Mapa getMapa() {
@@ -57,7 +59,12 @@ public final class Juego {
     public Consola getConsola() {
         return consola;
     }
-    
+    public double getModDificultad() {
+        return modDificultad;
+    }
+    public void setModDificultad(double md) {
+        modDificultad = md;
+    }
     /**
      * Inicia el juego.
      */

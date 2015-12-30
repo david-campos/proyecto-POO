@@ -237,7 +237,7 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                .addComponent(panGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -251,7 +251,8 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         if(rbtFranco.isSelected()) tipo = "Francotirador";
         
         if(cbxJuegoPorDefecto.isSelected()){
-                cargante = (CargadorJuego) new CargarJuegoPorDefecto(txtNombre.getText(), tipo);
+                //TODO: Poner botones para modificar el valor de dificultad: 0.75 fácil, 1.0 normal, 1.25 difícil.
+                cargante = (CargadorJuego) new CargarJuegoPorDefecto(txtNombre.getText(), tipo, 1.0);
         }else{
                 if(!txtMapa.getText().isEmpty())
                     cargante = new CargarJuegoDeFicheros(txtMapa.getText() + "mapa.csv", txtMapa.getText()+"objetos.csv", txtMapa.getText()+"npcs.csv", tipo);
