@@ -15,6 +15,8 @@ import Objetos.Explosivo;
 import Objetos.ToritoRojo;
 import Personajes.Jugador;
 import Personajes.Enemigo;
+import Personajes.HeavyFloater;
+import Personajes.LightFloater;
 import Personajes.Sectoid;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -405,7 +407,13 @@ public final class Mapa {
                     {
                         try
                         {
-                            Enemigo ene = new Sectoid("Enemigo " + enemigoId++, enePos, juego); //TODO: Variedad hombre!
+                            Enemigo ene;
+                            if(r.nextFloat() > 0.5)
+                                ene = new Sectoid("Enemigo " + enemigoId++, enePos, juego);
+                            else if(r.nextFloat() > 0.25)
+                                ene = new LightFloater("Enemigo " + enemigoId++, enePos, juego);
+                            else
+                                ene = new HeavyFloater("Enemigo " + enemigoId++, enePos, juego);
                             addEnemigo(ene);
                         }catch(CeldaObjetivoNoValida e){
                             //Béh, no pasará, ignorar.
