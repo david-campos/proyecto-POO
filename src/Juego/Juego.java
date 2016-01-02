@@ -83,7 +83,7 @@ public final class Juego {
             int seguir = 2;
             //Imprimir mapa
             impMapa();
-            log("\tNuevo turno", true);
+            log("\tNuevo turno", false);
             //Setear energia
             jug.setEnergia(jug.getEnergiaPorTurno());
             //Sólo dura un turno
@@ -105,7 +105,9 @@ public final class Juego {
                 }
             }
             if(jug.getEnergia() == 0)
-                log("SIN ENERGÍA, cambio de turno.", true);
+                log("SIN ENERGÍA, cambio de turno.", false);
+            else
+                log("", true); //Has pasado, esto se borra.
             if(seguir==0)
                 break;
             
