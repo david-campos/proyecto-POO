@@ -149,6 +149,7 @@ public final class Juego {
             }
             
         }
+        Thread.sleep(1000);
         log("Fin del juego.");  //TODO: Mover arriba cuando funcione la imagen
     }
     
