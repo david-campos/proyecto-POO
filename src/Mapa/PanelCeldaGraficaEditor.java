@@ -9,22 +9,35 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.OverlayLayout;
 
 
-public class LabelCeldaGraficaEditor extends JLabel implements CeldaGrafica{
+public class PanelCeldaGraficaEditor extends JPanel implements CeldaGrafica{
     private Punto id;
+    private final JLabel fondo;
+    private final JLabel delante;
     
-    public LabelCeldaGraficaEditor(Punto pt) {
+    public PanelCeldaGraficaEditor(Punto pt) {
         super();
         id = pt;
+        setLayout(new OverlayLayout(this));
+        fondo = new JLabel();
+        delante = new JLabel();
+        add(delante);
+        add(fondo);
     }
     
     @Override
     public void setImagen(ImagenCelda imagen) {
-        if(imagen.getDelante() != null)
-            setDelante(imagen.getDelante());
+        if(imagen.getFondo() != null)
+            fondo.setIcon(new ImageIcon(imagen.getFondo()));
         else
-            setDelante(imagen.getFondo());
+            fondo.setIcon(null);
+        if(imagen.getDelante() != null)
+            delante.setIcon(new ImageIcon(imagen.getDelante()));
+        else
+            delante.setIcon(null);
     }
 
     @Override
@@ -44,7 +57,7 @@ public class LabelCeldaGraficaEditor extends JLabel implements CeldaGrafica{
 
     @Override
     public void setDelante(Image imagen) {
-        setIcon(new ImageIcon(imagen));
+        delante.setIcon(new ImageIcon(imagen));
     }
     
 }

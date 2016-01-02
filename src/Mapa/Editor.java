@@ -755,7 +755,7 @@ public class Editor extends javax.swing.JFrame {
                     
                     CeldaGrafica celda;
                     if(crearCeldas){
-                        celda = new LabelCeldaGraficaEditor(new Punto(j,i));
+                        celda = new PanelCeldaGraficaEditor(new Punto(j,i));
                         celda.getComponente().setBorder(BORDE_DEF);
                         celda.getComponente().addMouseListener(mouseListenerCeldas);
                     }else
@@ -807,7 +807,7 @@ public class Editor extends javax.swing.JFrame {
     }
     
     public void repintarCelda(CeldaGrafica c){
-        Image img = imagenRepresentante(c);
+        ImagenCelda img = imagenRepresentante(c);
         c.setImagen(img);
         c.getComponente().setCursor(null);
         if(mapa.getCelda(c.getId()) instanceof Transitable){
@@ -818,22 +818,26 @@ public class Editor extends javax.swing.JFrame {
         c.getComponente().repaint();
     }
         
-    public Image imagenRepresentante(CeldaGrafica cg){
+    public ImagenCelda imagenRepresentante(CeldaGrafica cg){
         Celda c = mapa.getCelda(cg.getId());
-        String representacion;
+        String representacionF = null, representacionD = null;
+        
         if(c == null)
-            representacion = "null";
-        else if(mapa.getPosicionInicial().equals(mapa.getPosDe(c)))
-            representacion = "jugador";
-        else if(c instanceof Transitable){
-            Transitable transitable = (Transitable) c;
-            if(transitable.getEnemigos().size() > 0)
-                representacion = "enemigo";
-            else
-                representacion = c.representacionGrafica(); //Obtiene la imagen
-        }else
-            representacion = c.representacionGrafica(); //Obtiene la imagen
-        return obtenerImagen(representacion);  
+            representacionF = "null";
+        else
+            representacionF = c.representacionGrafica(); //Obtiene la imagen
+        if(c != null)
+            if(mapa.getPosicionInicial().equals(mapa.getPosDe(c)))
+                representacionD = "jugador";
+            else if(c instanceof Transitable){
+                Transitable transitable = (Transitable) c;
+                if(transitable.getEnemigos().size() > 0)
+                    representacionD = "enemigo";
+            }  
+        ImagenCelda ret =  new ImagenCelda(obtenerImagen(representacionF));
+        if(representacionD != null)
+            ret.setDelante(obtenerImagen(representacionD));
+        return ret;
     }
 
     public void flushImagenes(){

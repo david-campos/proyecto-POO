@@ -13,7 +13,8 @@ import javax.swing.JComponent;
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public interface CeldaGrafica{
-    public void setImagen(Image imagen);
+    public void setImagen(ImagenCelda imagen);
+    public void setDelante(Image imagen);
     public JComponent getComponente();
     public void setId(Punto pt);
     public Punto getId();

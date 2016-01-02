@@ -119,7 +119,7 @@ public class CeldasML extends MouseAdapter{
                             //Si el pulsado es el botón izquierdo, e inicial no es null, simulamos movimiento aquí
                             if(botonPulsado == MouseEvent.BUTTON1 && inicial != null){
                                 cg.getComponente().setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                                cg.setImagen(ed.obtenerImagen("ed_mover_enemigo"));
+                                cg.setDelante(ed.obtenerImagen("ed_mover_enemigo"));
                                 objetivo = cg;
                             }
                             
