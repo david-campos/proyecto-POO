@@ -89,7 +89,7 @@ public class Editor extends javax.swing.JFrame {
     private final ArrayList<CeldaGrafica> celdas;
     private final HashMap<String, Image> imagenes;
     
-    private static final int TAM_CELDA = 40;
+    private static final int TAM_CELDA = 80;
     
     /**
      * Creates new form Editor
@@ -795,7 +795,7 @@ public class Editor extends javax.swing.JFrame {
     public Image obtenerImagen(String representacion) {
         if(imagenes.get(representacion) == null){
             Image img;
-            img = new ImageIcon("img/"+representacion+".png").getImage().getScaledInstance(TAM_CELDA, TAM_CELDA, Image.SCALE_FAST);
+            img = new ImageIcon("img/"+representacion+".png").getImage().getScaledInstance(TAM_CELDA, TAM_CELDA, Image.SCALE_SMOOTH);
             imagenes.put(representacion, img);
             return img;
         }else

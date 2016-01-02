@@ -24,8 +24,10 @@ import javax.swing.event.DocumentListener;
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public class PropiedadesEnemigo extends javax.swing.JDialog{
-    Enemigo enemigo;
-    Editor editor;
+    //TODO todo lo respectivo a la mochila
+
+    private final Enemigo enemigo;
+    private final Editor editor;
     /**
      * Creates new form PropiedadesEnemigo
      */
@@ -45,7 +47,9 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panGeneral = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        panGeneral = new javax.swing.JTabbedPane();
+        panPest1 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         txtNombre = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -56,8 +60,17 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         jLabel3 = new javax.swing.JLabel();
         sldVida = new javax.swing.JSlider();
         lblVida = new javax.swing.JLabel();
+        panEnergia = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtEnergia = new javax.swing.JFormattedTextField();
+        panArmasYArmadura = new javax.swing.JPanel();
+        lblArmadura = new javax.swing.JLabel();
+        lblArmaDer = new javax.swing.JLabel();
+        lblArmaIzq = new javax.swing.JLabel();
+        lblFondo = new javax.swing.JLabel();
+        panMochila = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lstMochila = new javax.swing.JList();
         panAceptarCancelar = new javax.swing.JPanel();
         btnAceptar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -65,6 +78,11 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         setResizable(false);
+        getContentPane().setLayout(new java.awt.BorderLayout(0, 5));
+
+        panPest1.setMaximumSize(new java.awt.Dimension(219, 32767));
+        panPest1.setMinimumSize(new java.awt.Dimension(219, 265));
+        panPest1.setPreferredSize(new java.awt.Dimension(219, 100));
 
         jPanel1.setPreferredSize(new java.awt.Dimension(363, 20));
 
@@ -112,22 +130,22 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 4, Short.MAX_VALUE))
         );
 
-        panGeneral.add(jPanel1);
+        panPest1.add(jPanel1);
 
         jLabel1.setText("Tipo:");
-        panGeneral.add(jLabel1);
+        panPest1.add(jLabel1);
 
         cbxTipo.setModel(new ModeloCbxTipoEnemigo());
         cbxTipo.setSelectedItem(enemigo.getClass()
         );
         cbxTipo.setRenderer(new RenderizadorClases());
-        panGeneral.add(cbxTipo);
+        panPest1.add(cbxTipo);
 
         jLabel2.setText("Vida máx:");
-        panGeneral.add(jLabel2);
+        panPest1.add(jLabel2);
 
         txtVidaMax.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         txtVidaMax.setText(String.valueOf(enemigo.getMaxVida()));
@@ -141,7 +159,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
                 txtVidaMaxActionPerformed(evt);
             }
         });
-        panGeneral.add(txtVidaMax);
+        panPest1.add(txtVidaMax);
 
         panVida.setLayout(new java.awt.BorderLayout());
 
@@ -165,10 +183,12 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         panVida.add(lblVida, java.awt.BorderLayout.LINE_END);
         lblVida.getAccessibleContext().setAccessibleDescription("");
 
-        panGeneral.add(panVida);
+        panPest1.add(panVida);
+
+        panEnergia.setLayout(new java.awt.BorderLayout(5, 0));
 
         jLabel4.setText("Energía por turno:");
-        panGeneral.add(jLabel4);
+        panEnergia.add(jLabel4, java.awt.BorderLayout.LINE_START);
 
         txtEnergia.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txtEnergia.setText(String.valueOf(enemigo.getEnergiaPorTurno()));
@@ -177,10 +197,62 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
                 txtEnergiaActionPerformed(evt);
             }
         });
-        panGeneral.add(txtEnergia);
+        panEnergia.add(txtEnergia, java.awt.BorderLayout.CENTER);
+
+        panPest1.add(panEnergia);
+
+        panArmasYArmadura.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblArmadura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblArmadura.setText(textoArmadura());
+        lblArmadura.setToolTipText("Armadura...");
+        lblArmadura.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        panArmasYArmadura.add(lblArmadura, new org.netbeans.lib.awtextra.AbsoluteConstraints(103, 40, 90, 150));
+
+        lblArmaDer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblArmaDer.setText(textoArmaDer());
+        lblArmaDer.setToolTipText("Arma derecha...");
+        lblArmaDer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        panArmasYArmadura.add(lblArmaDer, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 50, 50));
+
+        lblArmaIzq.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblArmaIzq.setText(textoArmaIzq());
+        lblArmaIzq.setToolTipText("Arma izquierda...");
+        lblArmaIzq.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        panArmasYArmadura.add(lblArmaIzq, new org.netbeans.lib.awtextra.AbsoluteConstraints(237, 180, 50, 50));
+
+        lblFondo.setIcon(new javax.swing.ImageIcon("C:\\NetBeansProjects\\proyecto-poo\\img\\cuerpo.png")); // NOI18N
+        panArmasYArmadura.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        panPest1.add(panArmasYArmadura);
+
+        panGeneral.addTab("General", null, panPest1, "");
+
+        panMochila.setMaximumSize(new java.awt.Dimension(219, 32767));
+        panMochila.setMinimumSize(new java.awt.Dimension(219, 27));
+        panMochila.setPreferredSize(new java.awt.Dimension(219, 386));
+        panMochila.setLayout(new javax.swing.BoxLayout(panMochila, javax.swing.BoxLayout.LINE_AXIS));
+
+        lstMochila.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(lstMochila);
+
+        panMochila.add(jScrollPane1);
+
+        panGeneral.addTab("Mochila", panMochila);
+
+        getContentPane().add(panGeneral, java.awt.BorderLayout.CENTER);
 
         btnAceptar.setText("Aceptar");
         btnAceptar.setToolTipText("");
+        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAceptarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -194,7 +266,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         panAceptarCancelarLayout.setHorizontalGroup(
             panAceptarCancelarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panAceptarCancelarLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 198, Short.MAX_VALUE)
                 .addComponent(btnCancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAceptar))
@@ -208,28 +280,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
                     .addComponent(btnCancelar)))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panAceptarCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(panGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panAceptarCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        getContentPane().add(panAceptarCancelar, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -283,6 +334,12 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
             txtEnergia.setText("1");
     }//GEN-LAST:event_txtEnergiaActionPerformed
 
+    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+        // TODO al aceptar, poner las propiedades del enemigo (o si se cambió la clase, crear un enemigo nuevo de la clase adecuada)
+        // puede que haya que hacer un "setEnemigo" en celda o así, para que esté en la misma posición
+        // aunque lo veo un poco innecesario.
+    }//GEN-LAST:event_btnAceptarActionPerformed
+
     private void txtNombreTextoCambiado(){
         //Recalculamos el ancho del cuadro de texto
         AffineTransform affinetransform = new AffineTransform();     
@@ -301,15 +358,47 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lblArmaDer;
+    private javax.swing.JLabel lblArmaIzq;
+    private javax.swing.JLabel lblArmadura;
+    private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblVida;
+    private javax.swing.JList lstMochila;
     private javax.swing.JPanel panAceptarCancelar;
-    private javax.swing.JPanel panGeneral;
+    private javax.swing.JPanel panArmasYArmadura;
+    private javax.swing.JPanel panEnergia;
+    private javax.swing.JTabbedPane panGeneral;
+    private javax.swing.JPanel panMochila;
+    private javax.swing.JPanel panPest1;
     private javax.swing.JPanel panVida;
     private javax.swing.JSlider sldVida;
     private javax.swing.JFormattedTextField txtEnergia;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JFormattedTextField txtVidaMax;
     // End of variables declaration//GEN-END:variables
+
+    private String textoArmadura() {
+        if(enemigo.getArmadura() != null)
+            return enemigo.getArmadura().toString();
+        else
+            return "<html>Sin<br>armadura</html>";
+    }
+
+    private String textoArmaDer() {
+        if(enemigo.getArma() != null)
+            return "Editar";
+        else
+            return "No";
+    }
+
+    private String textoArmaIzq() {
+        if(enemigo.getArma_izq()!= null)
+            return "Editar";
+        else
+            return "No";        
+    }
 
     private static class ModeloCbxTipoEnemigo extends AbstractListModel<Class> implements ComboBoxModel<Class> {
         ArrayList<Class> tipos;

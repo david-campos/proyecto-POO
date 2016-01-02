@@ -49,6 +49,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        panPestanhas = new javax.swing.JTabbedPane();
         panGeneral = new javax.swing.JPanel();
         tbtTransitable = new javax.swing.JToggleButton();
         lblCoordenadas = new javax.swing.JLabel();
@@ -59,6 +60,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
         lstEnemigos = new javax.swing.JList();
         btnEngadir = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
+        panObjetos = new javax.swing.JPanel();
         panAceptarCancelar = new javax.swing.JPanel();
         btnAceptar = new javax.swing.JButton();
 
@@ -95,6 +97,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
         lstEnemigos.setBackground(celda instanceof Transitable?Color.white:Color.gray);
         lstEnemigos.setModel(new ModeloListaEnemigos(celda));
         lstEnemigos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstEnemigos.setToolTipText("Enemigos");
         lstEnemigos.setCellRenderer(new RenderizadorListaEnemigos());
         lstEnemigos.setEnabled(celda instanceof Transitable);
         lstEnemigos.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -139,7 +142,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
                     .addGroup(panGeneralLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1)
                             .addGroup(panGeneralLayout.createSequentialGroup()
                                 .addComponent(tbtTransitable, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -170,8 +173,25 @@ public class PropiedadesCelda extends javax.swing.JDialog {
                 .addGroup(panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEliminar)
                     .addComponent(btnEngadir))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        panPestanhas.addTab("General", panGeneral);
+
+        javax.swing.GroupLayout panObjetosLayout = new javax.swing.GroupLayout(panObjetos);
+        panObjetos.setLayout(panObjetosLayout);
+        panObjetosLayout.setHorizontalGroup(
+            panObjetosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 634, Short.MAX_VALUE)
+        );
+        panObjetosLayout.setVerticalGroup(
+            panObjetosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 306, Short.MAX_VALUE)
+        );
+
+        panPestanhas.addTab("Objetos", panObjetos);
+
+        getContentPane().add(panPestanhas, java.awt.BorderLayout.CENTER);
 
         btnAceptar.setText("Aceptar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -195,26 +215,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
                 .addComponent(btnAceptar))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panAceptarCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(panAceptarCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        getContentPane().add(panAceptarCancelar, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -308,6 +309,8 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     private javax.swing.JList lstEnemigos;
     private javax.swing.JPanel panAceptarCancelar;
     private javax.swing.JPanel panGeneral;
+    private javax.swing.JPanel panObjetos;
+    private javax.swing.JTabbedPane panPestanhas;
     private javax.swing.JSpinner spnTipo;
     private javax.swing.JToggleButton tbtTransitable;
     // End of variables declaration//GEN-END:variables

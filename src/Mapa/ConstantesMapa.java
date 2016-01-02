@@ -11,7 +11,7 @@ package Mapa;
  */
 public interface ConstantesMapa {
     /*CELDAS*/
-    public String[] CE_REPR_TRANS={" ", " ", "\u001B[32mx\u001B[0m","\u001B[33mx\u001B[0m", "\u001B[35mO\u001B[0m"};
+    public String[] CE_REPR_TRANS={" ", " ", "\u001B[32mx\u001B[0m","\u001B[33mx\u001B[0m", "\u001B[35mO\u001B[0m", " "};
     public String[] CE_REPR_NOTRANS={"\u001B[34m\u00A7\u001B[0m", "\u001B[30mM\u001B[0m"};
     
     public int HIERBA1 = 0;
@@ -19,12 +19,13 @@ public interface ConstantesMapa {
     public int ARBUSTO1 = 2;
     public int ARBUSTO2 = 3;
     public int BOQUETE = 4;
+    public int CAMINO = 5;
     
     public int AGUA = 0;
     public int MURO = 1;
     
     /*IMAGENES*/
-    public String[] CE_REPG_TRANS={"hierba","hierba","arbusto","arbusto2","boquete"};
+    public String[] CE_REPG_TRANS={"hierba","hierba2","arbusto","arbusto2","boquete", "camino"};
     public String[] CE_REPG_NOTRANS={"agua", "muro"};
     
     /*EXPLOSIVO*/
