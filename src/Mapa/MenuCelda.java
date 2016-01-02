@@ -19,7 +19,7 @@ import javax.swing.JSeparator;
  *
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
-class MenuCelda extends JPopupMenu{
+class MenuCelda extends javax.swing.JPopupMenu{
     private static final String MENU_ENEMIGO_EDITAR = "Editar";
     private static final String MENU_ENEMIGO_MOVER = "Mover";
     private static final String MENU_ENEMIGO_ELIMINAR = "Eliminar";
@@ -109,14 +109,15 @@ class MenuCelda extends JPopupMenu{
     }
     private void menuEnemigo_actionPerformed(ActionEvent e){
         JMenuItem src = (JMenuItem)e.getSource();
+        Enemigo enemigo = mapaEnemigos.get((JMenu)((JPopupMenu)src.getParent()).getInvoker());
         switch(src.getText()){
             case MENU_ENEMIGO_EDITAR:
+                new PropiedadesEnemigo(editor, enemigo).setVisible(true);
                 break;
             case MENU_ENEMIGO_MOVER:
                 break;
             case MENU_ENEMIGO_ELIMINAR:
-                
-                editor.eliminarEnemigo(mapaEnemigos.get((JMenu)((JPopupMenu)src.getParent()).getInvoker()));
+                editor.eliminarEnemigo(enemigo);
                 break;
         }
     }

@@ -5,14 +5,19 @@
  */
 package Mapa;
 
+import Excepciones.CeldaObjetivoNoValida;
 import Personajes.Enemigo;
+import Personajes.Sectoid;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
@@ -32,6 +37,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
         this.celda = celda;
         editor = contexto;
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -56,7 +62,6 @@ public class PropiedadesCelda extends javax.swing.JDialog {
         panAceptarCancelar = new javax.swing.JPanel();
         btnAceptar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Propiedades de la celda");
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Menus/ico_map.png")).getImage());
         setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
@@ -92,6 +97,11 @@ public class PropiedadesCelda extends javax.swing.JDialog {
         lstEnemigos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         lstEnemigos.setCellRenderer(new RenderizadorListaEnemigos());
         lstEnemigos.setEnabled(celda instanceof Transitable);
+        lstEnemigos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lstEnemigosMouseClicked(evt);
+            }
+        });
         lstEnemigos.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstEnemigosValueChanged(evt);
@@ -238,7 +248,32 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     }//GEN-LAST:event_spnTipoStateChanged
 
     private void btnEngadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEngadirActionPerformed
+        Punto pos = editor.getMapa().getPosDe(celda);
         
+        String nombre, nombreBase = "Sectoid";
+        int veces = 0;
+        nombre = nombreBase;
+        boolean exito;
+        do{
+            exito = true;
+            for(Enemigo e: editor.getMapa().getEnemigos()){
+                if(e.getNombre().equals(nombre)){
+                    nombre = String.format("%s_%d", nombreBase, ++veces);
+                    exito = false;
+                    break;
+                }
+            }
+        }while(!exito);
+        
+        try {
+            editor.getMapa().addEnemigo(new Sectoid(nombre,pos.toArray(),null));
+        } catch (CeldaObjetivoNoValida ex) {
+            JOptionPane.showMessageDialog(null,
+                        "No se pudo generar el enemigo en esta celda.", "Errorcillo",
+                        JOptionPane.ERROR_MESSAGE);
+        }
+        
+        ((ModeloListaEnemigos)lstEnemigos.getModel()).actualizar();
     }//GEN-LAST:event_btnEngadirActionPerformed
 
     private void lstEnemigosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstEnemigosValueChanged
@@ -251,6 +286,16 @@ public class PropiedadesCelda extends javax.swing.JDialog {
         editor.eliminarEnemigo((Enemigo)lstEnemigos.getSelectedValue());
         ((ModeloListaEnemigos)lstEnemigos.getModel()).actualizar();
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void lstEnemigosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstEnemigosMouseClicked
+        if(evt.getClickCount() > 1)
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new PropiedadesEnemigo(editor, (Enemigo)lstEnemigos.getSelectedValue()).setVisible(true);
+                    ((ModeloListaEnemigos)lstEnemigos.getModel()).actualizar();
+                }
+            });
+    }//GEN-LAST:event_lstEnemigosMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;

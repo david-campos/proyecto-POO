@@ -304,9 +304,17 @@ public final class Mapa {
      */
     public void setObjetosAleatorio(){
         int i=0;
+        double p_objetos = ConstantesMapa.P_OBJETOS_ALEATORIOS;
+        int dano_min_arma = ConstantesMapa.DANO_MIN_ARMA;
+        int defensa_min_armadura = ConstantesMapa.DEFENSA_MIN_ARMADURA;
+        if(juego != null){
+            p_objetos *=(1/juego.getModDificultad());
+            dano_min_arma *= juego.getModDificultad();
+            defensa_min_armadura *= juego.getModDificultad();
+        }
         for(ArrayList<Celda> fila: celdas)
             for(Celda ce: fila)
-                if(ce instanceof Transitable && Math.abs(r.nextFloat()) <   ConstantesMapa.P_OBJETOS_ALEATORIOS*(1/juego.getModDificultad())){   
+                if(ce instanceof Transitable && Math.abs(r.nextFloat()) <   p_objetos){   
                     Transitable c = (Transitable) ce;
                     do{
                         int rand = Math.abs(r.nextInt()) % 6;  //Añadimos objetos aleatoriamente
@@ -318,7 +326,7 @@ public final class Mapa {
                                                 "arma_"+(i++),
                                                 "Es un arma, y mata.",
                                                 r.nextInt(5)+4,
-                                                r.nextInt(16)+(int)(ConstantesMapa.DANO_MIN_ARMA*juego.getModDificultad()),
+                                                r.nextInt(16)+dano_min_arma,
                                                 r.nextBoolean()
                                         )
                                 );
@@ -329,7 +337,7 @@ public final class Mapa {
                                                 "armadura_"+(i++),
                                                 "Es una armadura, y así te matan menos.",
                                                 Math.round(r.nextDouble() * 1000)/100.0,
-                                                r.nextInt(6)+(int)(ConstantesMapa.DEFENSA_MIN_ARMADURA*juego.getModDificultad()),
+                                                r.nextInt(6)+defensa_min_armadura,
                                                 r.nextInt(21)+5,
                                                 r.nextInt(21)+5
                                         )
@@ -381,11 +389,18 @@ public final class Mapa {
     public void setEnemigosAleatorio(){
         int[] enePos = new int[2];
         int enemigoId=0;
+        double p_enemigos;
+        if(juego != null)
+            p_enemigos = ConstantesMapa.P_ENEMIGOS*juego.getModDificultad();
+        else
+            p_enemigos = ConstantesMapa.P_ENEMIGOS;
+        
         for(int pasada=0; pasada < 10; pasada++)
             for(enePos[0]=0; enePos[0] < getAlto(); enePos[0]++)
                 for(enePos[1]=0; enePos[1] < getAncho(); enePos[1]++)
                 {
-                    if(Math.abs(r.nextFloat()) < ConstantesMapa.P_ENEMIGOS*juego.getModDificultad()
+                    
+                    if(Math.abs(r.nextFloat()) < p_enemigos
                                 && getCelda(new Punto(enePos[1], enePos[0])) instanceof Transitable)
                     {
                         try
