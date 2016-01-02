@@ -35,6 +35,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.RowFilter.Entry;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
@@ -89,7 +90,7 @@ public class Editor extends javax.swing.JFrame {
     private final ArrayList<CeldaGrafica> celdas;
     private final HashMap<String, Image> imagenes;
     
-    private static final int TAM_CELDA = 80;
+    private int TAM_CELDA = 80;
     
     /**
      * Creates new form Editor
@@ -143,13 +144,14 @@ public class Editor extends javax.swing.JFrame {
         panAcceptCancel = new javax.swing.JPanel();
         btnAceptar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
         panMapa = new javax.swing.JPanel();
         tbrInferior = new javax.swing.JToolBar();
         lblInfo = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         lblCoordenadas = new javax.swing.JLabel();
+        panZoom = new javax.swing.JPanel();
+        sldZoom = new javax.swing.JSlider();
         mbrSuperior = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         mitNuevo = new javax.swing.JMenuItem();
@@ -362,6 +364,23 @@ public class Editor extends javax.swing.JFrame {
         lblCoordenadas.setText("Coordenadas de la celda");
         tbrInferior.add(lblCoordenadas);
 
+        panZoom.setLayout(new java.awt.BorderLayout());
+
+        sldZoom.setMaximum(160);
+        sldZoom.setMinimum(30);
+        sldZoom.setMinorTickSpacing(5);
+        sldZoom.setToolTipText("Zoom");
+        sldZoom.setValue(80);
+        sldZoom.setEnabled(false);
+        sldZoom.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sldZoomStateChanged(evt);
+            }
+        });
+        panZoom.add(sldZoom, java.awt.BorderLayout.LINE_END);
+
+        tbrInferior.add(panZoom);
+
         getContentPane().add(tbrInferior, java.awt.BorderLayout.SOUTH);
 
         jMenu1.setText("Archivo");
@@ -501,6 +520,12 @@ public class Editor extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_formWindowClosing
 
+    private void sldZoomStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sldZoomStateChanged
+       TAM_CELDA = sldZoom.getValue();
+       flushImagenes();
+       regenerarPanelMapa();
+    }//GEN-LAST:event_sldZoomStateChanged
+
     /**
      * @param args the command line arguments
      */
@@ -546,7 +571,6 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JLabel lblCoordenadas;
     private javax.swing.JLabel lblDescripcion;
@@ -567,6 +591,8 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JPanel panMapa;
     private javax.swing.JPanel panNombreJugador;
     private javax.swing.JPanel panNombreMapa;
+    private javax.swing.JPanel panZoom;
+    private javax.swing.JSlider sldZoom;
     private javax.swing.JSpinner spnAlto;
     private javax.swing.JSpinner spnAncho;
     private javax.swing.JToolBar tbrInferior;
@@ -599,6 +625,7 @@ public class Editor extends javax.swing.JFrame {
             seleccionada = null;
             panMapa.remove(panMapaEnEdicion);
             panMapaEnEdicion = null;
+            sldZoom.setEnabled(false);
         }
         //Debe dejar panMapaEnEdicion a null y el array de celdas vacío, poner mapa a null..., ficheroMapa a null..., seleccionada a null
     }
@@ -705,8 +732,16 @@ public class Editor extends javax.swing.JFrame {
             lblCoordenadas.setText("Coordenadas de la celda");
     }
     
+    private void regenerarPanelMapa(){
+        panMapa.remove(panMapaEnEdicion);
+        panMapaEnEdicion = null;
+        generarPanelMapa();
+        panMapa.repaint();
+    }
     private void generarPanelMapa() {
-        if(panMapaEnEdicion != null || !celdas.isEmpty()){
+        boolean crearCeldas = celdas.isEmpty();
+        
+        if(panMapaEnEdicion != null){
             //Que panMapaEnEdicion no sea null indica algún fallo de programación, pues debería estar cerrado el mapa siempre que se llame aquí
             JOptionPane.showMessageDialog(null, "Hay algún fallo de programación, el panel no es null o el array celdas no está vacío y debería serlo. Contacte con los autores, gracias.", "ERROR", JOptionPane.ERROR_MESSAGE);
         }else{
@@ -717,15 +752,22 @@ public class Editor extends javax.swing.JFrame {
                 for(int j=0; j<mapa.getAncho(); j++)
                 {
                     
-                    CeldaGrafica celda = new LabelCeldaGraficaEditor(new Punto(j,i));
+                    CeldaGrafica celda;
+                    if(crearCeldas)
+                        celda = new LabelCeldaGraficaEditor(new Punto(j,i));
+                    else
+                        celda = celdas.get(i*mapa.getAncho()+j);
                     celda.getComponente().setBorder(BORDE_DEF);
                     celda.getComponente().addMouseListener(mouseListenerCeldas);
                     repintarCelda(celda);
-                    celdas.add(celda);
+                    if(crearCeldas)
+                        celdas.add(celda);
                     panMapaEnEdicion.add(celda.getComponente());
                 }
             panMapa.add(panMapaEnEdicion);
             panMapa.setPreferredSize(panMapaEnEdicion.getSize());
+            sldZoom.setValue(TAM_CELDA);
+            sldZoom.setEnabled(true);
             panMapa.revalidate();
         }
     }
@@ -792,6 +834,9 @@ public class Editor extends javax.swing.JFrame {
         return obtenerImagen(representacion);  
     }
 
+    public void flushImagenes(){
+        imagenes.clear();
+    }
     public Image obtenerImagen(String representacion) {
         if(imagenes.get(representacion) == null){
             Image img;
