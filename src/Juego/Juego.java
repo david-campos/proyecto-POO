@@ -133,9 +133,10 @@ public final class Juego {
                         mapa.getCelda(j, i).detonar();
             
             if(jug.getVida() <= 0){
-                if(consola instanceof ConsolaGrafica)
+                if(consola instanceof ConsolaGrafica){
+                    Thread.sleep(1000);
                     ((ConsolaGrafica)consola).hasMuerto();
-                else
+                }else
                     log("HAS MUERTO! :c");
                 break;
             }
@@ -149,7 +150,6 @@ public final class Juego {
             }
             
         }
-        Thread.sleep(1000);
         log("Fin del juego.");  //TODO: Mover arriba cuando funcione la imagen
     }
     
