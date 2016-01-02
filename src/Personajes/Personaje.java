@@ -459,8 +459,8 @@ public abstract class Personaje {
             enemigo.setVida(vidaResultante);
             if(enemigo instanceof Enemigo)
                 ((Enemigo)enemigo).morir();
-                
-            juego.log(getNombre() + " te ha causado " + danoReal + " de daño.");
+            else
+                juego.log(getNombre() + " te ha causado " + danoReal + " de daño.");
         }else{
             juego.log("Enemigo null!");    
         }
@@ -635,7 +635,7 @@ public abstract class Personaje {
         else
             throw new ObjetoNoEncontradoException("No se puede usar lo que no se tiene, pirata.");
     }
-
+    
     public int manosOcupadasConArmas(){
         int manos=0;
         if(arma != null) manos++;
@@ -661,14 +661,14 @@ public abstract class Personaje {
     public int getToreado() {
         return plusEnergia;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 89 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -683,8 +683,6 @@ public abstract class Personaje {
         }
         return true;
     }
-    
-    
     
     @Override
     public String toString() {
