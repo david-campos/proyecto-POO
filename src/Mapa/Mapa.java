@@ -409,11 +409,11 @@ public final class Mapa {
                         {
                             Enemigo ene;
                             if(r.nextFloat() > 0.5)
-                                ene = new Sectoid("Enemigo " + enemigoId++, enePos, juego);
+                                ene = new Sectoid("Sectoid " + enemigoId++, enePos, juego);
                             else if(r.nextFloat() > 0.25)
-                                ene = new LightFloater("Enemigo " + enemigoId++, enePos, juego);
+                                ene = new LightFloater("LightFloater " + enemigoId++, enePos, juego);
                             else
-                                ene = new HeavyFloater("Enemigo " + enemigoId++, enePos, juego);
+                                ene = new HeavyFloater("HeavyFloater " + enemigoId++, enePos, juego);
                             addEnemigo(ene);
                         }catch(CeldaObjetivoNoValida e){
                             //Béh, no pasará, ignorar.
