@@ -1,4 +1,6 @@
 ﻿AYUDA:
+	ATENCIÓN: la ayuda está desfasada, con la introducción de comandos compuestos ha cambiado el uso de varios comandos (aunque es muy similar). Actualizar antes de publicar el juego si es que se publica en algún lado jajaja.
+
 	Este es el proyecto de Programación Orientada a Objetos (POO) realizado por David Campos R. y Crístofer Canosa D.
 	El objetivo del juego es destruír a todos los enemigos en el mapa sin morir. En cada turno se dispone de cierta cantidad de puntos de energía que se irán consumiendo conforme el jugador realice acciones. Cuando la energía se acabe terminará el turno.
 	

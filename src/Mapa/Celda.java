@@ -106,7 +106,9 @@ public abstract class Celda {
                     break;
             }
         }else{
-            mapa.hacerTransitable(mapa.getPosDe(this), true);
+            Punto pt = mapa.getPosDe(this);
+            mapa.hacerTransitable(pt, true);
+            mapa.getCelda(pt).tipo = 1;
         }
     }
 }
