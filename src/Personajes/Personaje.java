@@ -457,10 +457,10 @@ public abstract class Personaje {
             int vidaResultante = enemigo.getVida() - danoReal;
 
             enemigo.setVida(vidaResultante);
-            if(enemigo instanceof Enemigo)
+            if(enemigo instanceof Enemigo){
                 ((Enemigo)enemigo).morir();
-            else
                 juego.log(getNombre() + " te ha causado " + danoReal + " de daño.");
+            }
         }else{
             juego.log("Enemigo null!");    
         }
