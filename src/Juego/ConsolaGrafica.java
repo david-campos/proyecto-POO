@@ -287,34 +287,18 @@ public class ConsolaGrafica extends JFrame implements Consola{
         add(imgMuerte, BorderLayout.CENTER, 0); 
         pack();
         this.setLocationRelativeTo(null);
-        int opc = JOptionPane.showConfirmDialog(null, "Desea reiniciar?", "", JOptionPane.YES_NO_OPTION);
-        if(opc == JOptionPane.YES_OPTION) {
-            this.dispose();
-            new Thread() {  //Se reinicia el juego en un nuevo hilo y se libera el actual
-                @Override
-                public void run() {
-                    try {
-                            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                            Logger.getLogger(MenuGrafico.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    Menu menuInicio = new MenuGrafico();
-                    menuInicio.lanzar();
-                }
-            }.start();
-        }
-        else
-            cerrar();
-    }
-    
-    private void reiniciar() {
         try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(MenuGrafico.class.getName()).log(Level.SEVERE, null, ex);
+            Thread.sleep(2000); //2 segundos espera
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ConsolaGrafica.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        new Thread() {
+            @Override
+            public void run() {
+                Menu menuInicio = new MenuGrafico();
+                menuInicio.lanzar();
             }
-        Menu menuInicio = new MenuGrafico();
-        menuInicio.lanzar();
+        }.start();
+        this.dispose();
     }
-
 }
