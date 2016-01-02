@@ -71,6 +71,7 @@ public abstract class Celda {
             for(Enemigo e: transitable.getEnemigos())
             {
                 mapa.getJuego().log(e.getNombre() + " ha muerto en la explosión.");
+                e.setVida(0);
                 e.morir();
             }
             if(mapa.getJugador().getPos().equals(mapa.getPosDe(this))){

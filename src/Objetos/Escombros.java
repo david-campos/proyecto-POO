@@ -27,7 +27,7 @@ public class Escombros extends Objeto{
         if(++usos < 10)
             super.usar(p);
         else{
-            p.getMapa().getJuego().log("Estás pesadito... venga va, 'te has comido los escombros'. Hala, ya no hay escombros.");
+            p.getMapa().getJuego().log("Estás pesadito... a ver, venga va... 'te has comido los escombros'. Hala, ya no hay escombros.");
             p.getMochila().remObjeto(this);
         }
     }

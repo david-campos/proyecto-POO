@@ -632,8 +632,7 @@ public abstract class Personaje {
      */
     public void usar (Objeto obj) throws ObjetoNoUsableException, ObjetoNoEncontradoException {
         if(obj != null && mochila.getObjetos().contains(obj))
-            if(!obj.usar(this))
-                throw new ObjetoNoUsableException("Ouh... parece que esto no se usa.");
+            obj.usar(this);
         else
             throw new ObjetoNoEncontradoException("No se puede usar lo que no se tiene, pirata.");
     }
