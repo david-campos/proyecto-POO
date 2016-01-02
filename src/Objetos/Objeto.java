@@ -5,6 +5,7 @@
  */
 package Objetos;
 
+import Excepciones.ObjetoNoUsableException;
 import Personajes.Personaje;
 import java.util.Objects;
 
@@ -39,7 +40,7 @@ public abstract class Objeto {
      * sobrecargar para realizar una acción.
      * @param p Personaje que usa el objeto
      */
-    public boolean usar(Personaje p){ return false;}
+    public void usar(Personaje p) throws ObjetoNoUsableException{ throw new ObjetoNoUsableException("Ouh... parece que esto no se usa."); }
     /**
      * Acción realizada al equipar el objeto, no hace nada,
      * sobrecargar para realizar una acción.

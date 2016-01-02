@@ -19,11 +19,10 @@ public final class ToritoRojo extends Objeto{
     }
     
     @Override
-    public boolean usar(Personaje p){
+    public void usar(Personaje p){
         p.setEnergia(p.getEnergia() + plusEnergia);
         p.setToreado(p.getToreado() + plusEnergia);
         p.getMochila().remObjeto(this);
-        return true;
     }
 
     public final int getPlusEnergia() {

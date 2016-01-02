@@ -18,14 +18,13 @@ public class Explosivo extends Objeto{
     }
 
     @Override
-    public boolean usar(Personaje p) {
+    public void usar(Personaje p) {
         p.getMapa().getCelda(p.getPos()).setBomba(true);
         if(p instanceof Jugador) {
             Jugador jugador = (Jugador) p;
             jugador.getJuego().log("Has colocado una bomba en esta casilla... explotará finalizado el turno.", true);
         }
         p.getMochila().remObjeto(this);
-        return true;
     }
     
     
