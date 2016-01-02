@@ -23,6 +23,8 @@ import Mapa.Transitable;
 import Objetos.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -90,6 +92,13 @@ public abstract class Enemigo extends Personaje{
             this.getMapa().remEnemigo(this);
         }
     }
+
+    @Override
+    protected int obtenerConsumoEnergiaAtacar() {
+        return super.obtenerConsumoEnergiaAtacar()*2;
+    }
+    
+    
     
     protected boolean decidirCogerArma(Arma a) {
         //El enemigo cogerá un arma si es mejor que las que lleva o simplemente puede equiparla
@@ -183,12 +192,21 @@ public abstract class Enemigo extends Personaje{
                 hizoAlgo = true;
             } catch (PosicionFueraDeRangoException | PosicionFueraDeAlcanceException | EnergiaInsuficienteException ex){/*No hace nada*/}
             try {
-                iaMover();
+                if(!hizoAlgo)
+                    iaMover();
                 hizoAlgo = true;
             } catch (CeldaObjetivoNoValida | DireccionMoverIncorrecta | EnergiaInsuficienteException ex) {/*No hace nada*/}
             try {
                 hizoAlgo = hizoAlgo || iaRecogerObjetos();
             } catch (MaximoObjetosException | MaximoPesoException | ImposibleCogerExcepcion | ObjetoNoEquipableException | EnergiaInsuficienteException ex) {/*No hace nada*/}           
+            if(mapa.getJugador().enRango(getPos())){
+                juego.impMapa();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    //Pues nada...
+                }
+            }
             if(!hizoAlgo)
                 break;
         }
