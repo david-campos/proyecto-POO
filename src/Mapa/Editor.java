@@ -735,6 +735,7 @@ public class Editor extends javax.swing.JFrame {
     private void regenerarPanelMapa(){
         panMapa.remove(panMapaEnEdicion);
         panMapaEnEdicion = null;
+        seleccionada = null;
         generarPanelMapa();
         panMapa.repaint();
     }
@@ -753,12 +754,13 @@ public class Editor extends javax.swing.JFrame {
                 {
                     
                     CeldaGrafica celda;
-                    if(crearCeldas)
+                    if(crearCeldas){
                         celda = new LabelCeldaGraficaEditor(new Punto(j,i));
-                    else
+                        celda.getComponente().setBorder(BORDE_DEF);
+                        celda.getComponente().addMouseListener(mouseListenerCeldas);
+                    }else
                         celda = celdas.get(i*mapa.getAncho()+j);
-                    celda.getComponente().setBorder(BORDE_DEF);
-                    celda.getComponente().addMouseListener(mouseListenerCeldas);
+                    
                     repintarCelda(celda);
                     if(crearCeldas)
                         celdas.add(celda);
