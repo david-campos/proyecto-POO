@@ -17,27 +17,31 @@ public class PanelCeldaGraficaEditor extends JPanel implements CeldaGrafica{
     private Punto id;
     private final JLabel fondo;
     private final JLabel delante;
-    
+    private ImagenCelda ultima;
     public PanelCeldaGraficaEditor(Punto pt) {
         super();
         id = pt;
         setLayout(new OverlayLayout(this));
         fondo = new JLabel();
         delante = new JLabel();
+        ultima = null;
         add(delante);
         add(fondo);
     }
     
     @Override
     public void setImagen(ImagenCelda imagen) {
-        if(imagen.getFondo() != null)
-            fondo.setIcon(new ImageIcon(imagen.getFondo()));
-        else
-            fondo.setIcon(null);
-        if(imagen.getDelante() != null)
-            delante.setIcon(new ImageIcon(imagen.getDelante()));
-        else
-            delante.setIcon(null);
+        if(ultima == null || !ultima.equals(imagen)){
+            ultima = imagen;
+            if(imagen.getFondo() != null)
+                fondo.setIcon(new ImageIcon(imagen.getFondo()));
+            else
+                fondo.setIcon(null);
+            if(imagen.getDelante() != null)
+                delante.setIcon(new ImageIcon(imagen.getDelante()));
+            else
+                delante.setIcon(null);
+        }
     }
 
     @Override
@@ -57,7 +61,14 @@ public class PanelCeldaGraficaEditor extends JPanel implements CeldaGrafica{
 
     @Override
     public void setDelante(Image imagen) {
+        ultima = new ImagenCelda(ultima.getFondo());
+        ultima.setDelante(imagen);
         delante.setIcon(new ImageIcon(imagen));
+    }
+
+    @Override
+    public ImagenCelda ultimaImagen() {
+        return ultima;
     }
     
 }

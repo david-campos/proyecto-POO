@@ -820,7 +820,7 @@ public class Editor extends javax.swing.JFrame {
         
     public ImagenCelda imagenRepresentante(CeldaGrafica cg){
         Celda c = mapa.getCelda(cg.getId());
-        String representacionF = null, representacionD = null;
+        String representacionF, representacionD = null;
         
         if(c == null)
             representacionF = "null";

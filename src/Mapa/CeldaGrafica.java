@@ -15,6 +15,7 @@ import javax.swing.JComponent;
 public interface CeldaGrafica{
     public void setImagen(ImagenCelda imagen);
     public void setDelante(Image imagen);
+    public ImagenCelda ultimaImagen();
     public JComponent getComponente();
     public void setId(Punto pt);
     public Punto getId();

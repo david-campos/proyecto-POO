@@ -6,7 +6,10 @@
 package Juego;
 
 import Mapa.Celda;
+import Mapa.CeldaGrafica;
+import Mapa.ImagenCelda;
 import Mapa.Mapa;
+import Mapa.PanelCeldaGraficaEditor;
 import Mapa.Punto;
 import Mapa.Transitable;
 import Menus.Menu;
@@ -50,8 +53,8 @@ public class ConsolaGrafica extends JFrame implements Consola{
     private int dim;
     private final Juego juego;
     
-    private final ArrayList<JLabel> paneles;
-    private final HashMap<String, ImageIcon> imagenes;
+    private final ArrayList<CeldaGrafica> paneles;
+    private final HashMap<String, Image> imagenes;
     private final JTextArea areaConsola;
     private final JTextArea areaConsolaDisplay;
     private final JTextArea areaEstado;
@@ -101,22 +104,19 @@ public class ConsolaGrafica extends JFrame implements Consola{
         
         JPanel panelMapaDisp = new JPanel();
         panelMapaDisp.setLayout(new BoxLayout(panelMapaDisp, BoxLayout.X_AXIS));
-        panelMapa.setSize(new Dimension(dim*mapa.getAncho(), dim*mapa.getAlto()));
+        //panelMapa.setSize(new Dimension(dim*mapa.getAncho(), dim*mapa.getAlto()));
         panelMapa.setMinimumSize(panelMapa.getSize());
         for(int i = 0; i < mapa.getAncho() * mapa.getAlto(); i++){
-            JLabel jPanel1 = new JLabel();
-            jPanel1.setBackground(Color.red);
-            
-            ImageIcon icon = new ImageIcon("img/celda.png");
+            CeldaGrafica celda = new PanelCeldaGraficaEditor(new Punto(i/mapa.getAncho(), i%mapa.getAncho()));
+            Image icon = new ImageIcon("img/celda.png").getImage();
             imagenes.put("celda", icon);
-            jPanel1.setIcon(icon);
+            celda.setImagen(new ImagenCelda(icon));
+            celda.getComponente().setMinimumSize(new Dimension(dim, dim));
+            celda.getComponente().setPreferredSize(new Dimension(dim, dim));
+            //celda.getComponente().setSize(new Dimension(dim, dim));
             
-            jPanel1.setMinimumSize(new Dimension(dim, dim));
-            jPanel1.setPreferredSize(new Dimension(dim, dim));
-            jPanel1.setSize(new Dimension(dim, dim));
-            
-            panelMapa.add(jPanel1);
-            paneles.add(jPanel1);
+            panelMapa.add(celda.getComponente());
+            paneles.add(celda);
         }
         panelMapaDisp.add(panelMapa);
         
@@ -176,6 +176,31 @@ public class ConsolaGrafica extends JFrame implements Consola{
         this.setLocationRelativeTo(null);
     }
     
+    public ImagenCelda imagenRepresentante(Celda c){
+        String representacionF, representacionD = null;
+        
+        if(c == null)
+            representacionF = "null";
+        else if(mapa.getJugador().enRango(mapa.getPosDe(c)))
+            representacionF = c.representacionGrafica(); //Obtiene la imagen
+        else
+            representacionF = "no";
+        if(c != null && !"no".equals(representacionF))
+            if(mapa.getJugador().getPos().equals(mapa.getPosDe(c)))
+                representacionD = "jugador";
+            else if(c instanceof Transitable){
+                Transitable transitable = (Transitable) c;
+                if(transitable.getEnemigos().size() > 0)
+                    if(mapa.getJugador().enAlcance(mapa.getPosDe(c)))
+                        representacionD = "enemigo";
+                    else
+                        representacionD = "ed_mover_enemigo";
+            }
+        ImagenCelda ret =  new ImagenCelda(obtenerImagen(representacionF));
+        if(representacionD != null)
+            ret.setDelante(obtenerImagen(representacionD));
+        return ret;
+    }
     
     @Override
     public void imprimirMapa() {
@@ -184,33 +209,20 @@ public class ConsolaGrafica extends JFrame implements Consola{
         
         for(int y=0;y<mapa.getAlto();y++)
             for(int x=0; x<mapa.getAncho();x++){
-                ImageIcon ico;
                 Celda c = mapa.getCelda(x,y);
-                String img;
-                if(c == null)
-                    img = "null";
-                else if(mapa.getJugador().getPos().equals(mapa.getPosDe(c)))
-                    img = "jugador";
-                else if(!mapa.getJugador().enRango(mapa.getPosDe(c)))
-                    img = "no";
-                else if(c instanceof Transitable){
-                    Transitable transitable = (Transitable) c;
-                    if(transitable.getEnemigos().size() > 0)
-                        img = "enemigo";
-                    else
-                        img = c.representacionGrafica(); //Obtiene la imagen
-                }else
-                    img = c.representacionGrafica(); //Obtiene la imagen
-                
-                if(imagenes.containsKey(img))
-                    ico = imagenes.get(img);
-                else{
-                    ico = new ImageIcon(new ImageIcon("img/"+img+".png").getImage().getScaledInstance(dim, dim, Image.SCALE_SMOOTH));
-                    imagenes.put(img, ico);
-                }
-                paneles.get(y*mapa.getAncho()+x).setIcon(ico);
+                paneles.get(y*mapa.getAncho()+x).setImagen(imagenRepresentante(c));
             }
     }
+    public Image obtenerImagen(String representacion) {
+        if(imagenes.get(representacion) == null){
+            Image img;
+            img = new ImageIcon("img/"+representacion+".png").getImage().getScaledInstance(dim, dim, Image.SCALE_SMOOTH);
+            imagenes.put(representacion, img);
+            return img;
+        }else
+            return imagenes.get(representacion);
+    }
+    
     @Override
     public void imprimir(String mensaje) {
         areaConsolaDisplay.append("\n"+mensaje);

@@ -6,6 +6,7 @@
 package Mapa;
 
 import java.awt.Image;
+import java.util.Objects;
 
 /**
  *
@@ -35,4 +36,28 @@ public class ImagenCelda {
     public void setDelante(Image delante) {
         this.delante = delante;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 13 * hash + Objects.hashCode(this.fondo);
+        hash = 13 * hash + Objects.hashCode(this.delante);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ImagenCelda other = (ImagenCelda) obj;
+        if (!Objects.equals(this.fondo, other.fondo)) {
+            return false;
+        }
+        return Objects.equals(this.delante, other.delante);
+    }
+
 }

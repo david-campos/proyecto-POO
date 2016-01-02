@@ -13,14 +13,17 @@ import javax.swing.JLabel;
 
 public class LabelCeldaGraficaEditor extends JLabel implements CeldaGrafica{
     private Punto id;
+    private ImagenCelda ultima;
     
     public LabelCeldaGraficaEditor(Punto pt) {
         super();
+        ultima = null;
         id = pt;
     }
     
     @Override
     public void setImagen(ImagenCelda imagen) {
+        ultima = imagen;
         if(imagen.getDelante() != null)
             setDelante(imagen.getDelante());
         else
@@ -44,7 +47,14 @@ public class LabelCeldaGraficaEditor extends JLabel implements CeldaGrafica{
 
     @Override
     public void setDelante(Image imagen) {
+        ultima = new ImagenCelda(ultima.getFondo());
+        ultima.setDelante(imagen);
         setIcon(new ImageIcon(imagen));
+    }
+
+    @Override
+    public ImagenCelda ultimaImagen() {
+        return ultima;
     }
     
 }
