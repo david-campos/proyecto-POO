@@ -150,7 +150,8 @@ public final class Juego {
             }
             
         }
-        log("Fin del juego.");  //TODO: Mover arriba cuando funcione la imagen
+        if(! (consola instanceof ConsolaGrafica))
+            log("Fin del juego.");  //TODO: Mover arriba cuando funcione la imagen
     }
     
     private void imprimirPrompt(){
