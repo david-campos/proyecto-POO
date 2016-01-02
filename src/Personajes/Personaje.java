@@ -458,7 +458,9 @@ public abstract class Personaje {
 
             enemigo.setVida(vidaResultante);
             if(enemigo instanceof Enemigo){
+                juego.log("Has causado " + danoReal + " de daño.");
                 ((Enemigo)enemigo).morir();
+            }else{
                 juego.log(getNombre() + " te ha causado " + danoReal + " de daño.");
             }
         }else{
