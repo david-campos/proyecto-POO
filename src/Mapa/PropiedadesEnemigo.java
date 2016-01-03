@@ -5,6 +5,8 @@
  */
 package Mapa;
 
+import Objetos.Mochila;
+import Objetos.Objeto;
 import Personajes.*;
 import java.awt.Color;
 import java.awt.Component;
@@ -17,8 +19,10 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListDataListener;
 /**
  *
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
@@ -69,6 +73,14 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         lblArmaIzq = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
         panMochila = new javax.swing.JPanel();
+        panEspecificaciones = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        txtMaxObjetosMochila = new javax.swing.JFormattedTextField();
+        pbrMaxObjetos = new javax.swing.JProgressBar();
+        panMaxPeso = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        txtMaxPesoMochila = new javax.swing.JFormattedTextField();
+        pbrMaxPeso = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstMochila = new javax.swing.JList();
         panAceptarCancelar = new javax.swing.JPanel();
@@ -231,16 +243,61 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         panMochila.setMaximumSize(new java.awt.Dimension(219, 32767));
         panMochila.setMinimumSize(new java.awt.Dimension(219, 27));
         panMochila.setPreferredSize(new java.awt.Dimension(219, 386));
-        panMochila.setLayout(new javax.swing.BoxLayout(panMochila, javax.swing.BoxLayout.LINE_AXIS));
 
-        lstMochila.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        panEspecificaciones.setPreferredSize(new java.awt.Dimension(390, 40));
+        panEspecificaciones.setLayout(new java.awt.BorderLayout(5, 0));
+
+        jLabel5.setText("Max. objetos:");
+        panEspecificaciones.add(jLabel5, java.awt.BorderLayout.LINE_START);
+
+        txtMaxObjetosMochila.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtMaxObjetosMochila.setText(String.valueOf(enemigo.getMochila().getMaxObjetos()));
+        panEspecificaciones.add(txtMaxObjetosMochila, java.awt.BorderLayout.CENTER);
+
+        pbrMaxObjetos.setMaximum(enemigo.getMochila().getMaxObjetos());
+        pbrMaxObjetos.setValue(enemigo.getMochila().getNumObj());
+        panEspecificaciones.add(pbrMaxObjetos, java.awt.BorderLayout.PAGE_END);
+
+        panMaxPeso.setPreferredSize(new java.awt.Dimension(390, 40));
+        panMaxPeso.setLayout(new java.awt.BorderLayout(5, 0));
+
+        jLabel6.setText("Max. peso:");
+        panMaxPeso.add(jLabel6, java.awt.BorderLayout.LINE_START);
+
+        txtMaxPesoMochila.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtMaxPesoMochila.setText(String.valueOf(enemigo.getMochila().getMaxPeso()));
+        panMaxPeso.add(txtMaxPesoMochila, java.awt.BorderLayout.CENTER);
+
+        pbrMaxPeso.setMaximum((int) Math.round(enemigo.getMochila().getMaxPeso()*1000));
+        pbrMaxPeso.setValue((int) Math.round(enemigo.getMochila().pesoActual()));
+        panMaxPeso.add(pbrMaxPeso, java.awt.BorderLayout.PAGE_END);
+
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(390, 146));
+
+        lstMochila.setModel(new MochilaListModel(enemigo.getMochila()));
+        lstMochila.setCellRenderer(new ObjetosRenderer());
         jScrollPane1.setViewportView(lstMochila);
 
-        panMochila.add(jScrollPane1);
+        javax.swing.GroupLayout panMochilaLayout = new javax.swing.GroupLayout(panMochila);
+        panMochila.setLayout(panMochilaLayout);
+        panMochilaLayout.setHorizontalGroup(
+            panMochilaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panMochilaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(panEspecificaciones, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panMochilaLayout.createSequentialGroup()
+                .addComponent(panMaxPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        panMochilaLayout.setVerticalGroup(
+            panMochilaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panMochilaLayout.createSequentialGroup()
+                .addComponent(panMaxPeso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panEspecificaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
+        );
 
         panGeneral.addTab("Mochila", panMochila);
 
@@ -266,7 +323,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         panAceptarCancelarLayout.setHorizontalGroup(
             panAceptarCancelarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panAceptarCancelarLayout.createSequentialGroup()
-                .addGap(0, 198, Short.MAX_VALUE)
+                .addGap(0, 232, Short.MAX_VALUE)
                 .addComponent(btnCancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAceptar))
@@ -357,6 +414,8 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -369,12 +428,18 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
     private javax.swing.JPanel panAceptarCancelar;
     private javax.swing.JPanel panArmasYArmadura;
     private javax.swing.JPanel panEnergia;
+    private javax.swing.JPanel panEspecificaciones;
     private javax.swing.JTabbedPane panGeneral;
+    private javax.swing.JPanel panMaxPeso;
     private javax.swing.JPanel panMochila;
     private javax.swing.JPanel panPest1;
     private javax.swing.JPanel panVida;
+    private javax.swing.JProgressBar pbrMaxObjetos;
+    private javax.swing.JProgressBar pbrMaxPeso;
     private javax.swing.JSlider sldVida;
     private javax.swing.JFormattedTextField txtEnergia;
+    private javax.swing.JFormattedTextField txtMaxObjetosMochila;
+    private javax.swing.JFormattedTextField txtMaxPesoMochila;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JFormattedTextField txtVidaMax;
     // End of variables declaration//GEN-END:variables
@@ -465,5 +530,31 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
             setOpaque(true);
             return this;
         }
+    }
+
+    private static class MochilaListModel extends AbstractListModel<Objeto> implements ListModel<Objeto> {
+        private Mochila mochila;
+        public MochilaListModel(Mochila mochila) {
+            this.mochila = mochila;
+        }
+
+        public Mochila getMochila() {
+            return mochila;
+        }
+
+        public void setMochila(Mochila mochila) {
+            this.mochila = mochila;
+        }
+        
+        @Override
+        public int getSize() {
+            return mochila.getNumObj();
+        }
+
+        @Override
+        public Objeto getElementAt(int index) {
+            return mochila.getObjeto(index);
+        }
+
     }
 }

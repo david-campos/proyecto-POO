@@ -6,11 +6,13 @@
 package Mapa;
 
 import Excepciones.CeldaObjetivoNoValida;
+import Objetos.*;
 import Personajes.Enemigo;
 import Personajes.Sectoid;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
@@ -20,8 +22,10 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListDataListener;
 
 /**
  *
@@ -61,6 +65,9 @@ public class PropiedadesCelda extends javax.swing.JDialog {
         btnEngadir = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         panObjetos = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        lstObjetos = new javax.swing.JList();
+        btnEngadirObjeto = new javax.swing.JButton();
         panAceptarCancelar = new javax.swing.JPanel();
         btnAceptar = new javax.swing.JButton();
 
@@ -147,7 +154,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
                                 .addComponent(tbtTransitable, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(lblCoordenadas)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(spnTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -178,16 +185,25 @@ public class PropiedadesCelda extends javax.swing.JDialog {
 
         panPestanhas.addTab("General", panGeneral);
 
-        javax.swing.GroupLayout panObjetosLayout = new javax.swing.GroupLayout(panObjetos);
-        panObjetos.setLayout(panObjetosLayout);
-        panObjetosLayout.setHorizontalGroup(
-            panObjetosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 634, Short.MAX_VALUE)
-        );
-        panObjetosLayout.setVerticalGroup(
-            panObjetosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 306, Short.MAX_VALUE)
-        );
+        panObjetos.setLayout(new java.awt.BorderLayout());
+
+        lstObjetos.setBackground(celda instanceof Transitable?Color.white:Color.gray);
+        lstObjetos.setCellRenderer(new ObjetosRenderer());
+        lstObjetos.setEnabled(celda instanceof Transitable);
+        if( celda instanceof Transitable)
+        lstObjetos.setModel(new ObjetosListModel((Transitable)celda));
+        jScrollPane2.setViewportView(lstObjetos);
+
+        panObjetos.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
+        btnEngadirObjeto.setText("+");
+        btnEngadirObjeto.setEnabled(celda instanceof Transitable);
+        btnEngadirObjeto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEngadirObjetoActionPerformed(evt);
+            }
+        });
+        panObjetos.add(btnEngadirObjeto, java.awt.BorderLayout.PAGE_END);
 
         panPestanhas.addTab("Objetos", panObjetos);
 
@@ -205,7 +221,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
         panAceptarCancelarLayout.setHorizontalGroup(
             panAceptarCancelarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panAceptarCancelarLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 460, Short.MAX_VALUE)
                 .addComponent(btnAceptar))
         );
         panAceptarCancelarLayout.setVerticalGroup(
@@ -298,15 +314,64 @@ public class PropiedadesCelda extends javax.swing.JDialog {
             });
     }//GEN-LAST:event_lstEnemigosMouseClicked
 
+    private void btnEngadirObjetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEngadirObjetoActionPerformed
+        if(celda instanceof Transitable){
+            Objeto ob;
+            String nombre = "objeto";
+            int id=0;
+            
+            boolean adecuado;
+            do{
+                adecuado = true;
+                for(Celda c: celda.getMapa().getCeldas())
+                    if(c instanceof Transitable) {
+                        if(((Transitable)c).getObjeto(nombre+(id==0?"":"_"+id)) != null){
+                            adecuado = false;
+                            id++;
+                            break;
+                        }
+                    }
+            }while(!adecuado);
+            
+            nombre+=(id==0?"":"_"+id);
+            
+            switch(new Random().nextInt(6)){
+                case 0:
+                    ob = new Arma(10, nombre, "Es un arma", 10, 10, Arma.ARMA_UNA_MANO);
+                    break;
+                case 1:
+                    ob = new Armadura(nombre, "Es una armadura", 10, 10, 0, 0);
+                    break;
+                case 2:
+                    ob = new Binoculares(nombre, 10, 2);
+                    break;
+                case 3:
+                    ob = new Botiquin(nombre, 10, 2);
+                    break;
+                case 4:
+                    ob = new Explosivo(10, nombre);
+                    break;
+                default:
+                    ob = new ToritoRojo(nombre, 10, 10);
+                    break;
+            }
+            ((Transitable)celda).addObjeto(ob);
+            ((ObjetosListModel)lstObjetos.getModel()).actualizar();
+        }
+    }//GEN-LAST:event_btnEngadirObjetoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnEngadir;
+    private javax.swing.JButton btnEngadirObjeto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblCoordenadas;
     private javax.swing.JLabel lblIconoCelda;
     private javax.swing.JList lstEnemigos;
+    private javax.swing.JList lstObjetos;
     private javax.swing.JPanel panAceptarCancelar;
     private javax.swing.JPanel panGeneral;
     private javax.swing.JPanel panObjetos;
@@ -379,5 +444,29 @@ class RenderizadorListaEnemigos extends JLabel implements ListCellRenderer<Enemi
         setFont(list.getFont());
         setOpaque(true);
         return this;
+    }
+}
+class ObjetosListModel extends AbstractListModel<Objeto> implements ListModel<Objeto> {
+    Transitable celda;
+
+    public ObjetosListModel(Transitable transitable) {
+        celda = transitable;
+    }
+
+    @Override
+    public int getSize() {
+        return celda.getObjetos().size();
+    }
+
+    @Override
+    public Objeto getElementAt(int index) {
+        return celda.getObjetos().get(index);
+    }
+    
+    public void actualizar(){
+        if(getSize() > 0)
+            this.fireContentsChanged(this, 0, getSize()-1);
+        else
+            this.fireContentsChanged(this, 0, 0);
     }
 }
