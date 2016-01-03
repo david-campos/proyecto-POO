@@ -157,7 +157,7 @@ public final class Juego {
             log("Fin del juego.");  //TODO: Mover arriba cuando funcione la imagen
     }
     
-    private void imprimirPrompt(){
+    public void imprimirPrompt(){
         consola.imprimirEstado(jug.getNombre() + "[ "
                 +(jug.tieneBinoculares()?"+"+jug.getBinoculares().getPlusRango()+"\u229A , ":"")
                 +(jug.tieneArmas()?"+"+jug.getEfectoArmas()+"A , ":"")

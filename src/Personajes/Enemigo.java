@@ -190,6 +190,7 @@ public abstract class Enemigo extends Personaje{
             try {
                 iaAtacar();
                 hizoAlgo = true;
+                juego.imprimirPrompt();
             } catch (PosicionFueraDeRangoException | PosicionFueraDeAlcanceException | EnergiaInsuficienteException ex){/*No hace nada*/}
             try {
                 if(!hizoAlgo)
