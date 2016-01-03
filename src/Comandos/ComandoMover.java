@@ -11,6 +11,7 @@ import Excepciones.DireccionMoverIncorrecta;
 import Excepciones.EnergiaInsuficienteException;
 import Excepciones.PersonajeException;
 import Personajes.Jugador;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -46,8 +47,16 @@ public final class ComandoMover implements Comando{
         if(jug!=null)
             try{
                 jug.mover(dir);
+                if(new Random().nextFloat() > 0.7) Utilidades.Sonido.play("hey");
                 jug.getJuego().impMapa();
-            } catch (CeldaObjetivoNoValida | DireccionMoverIncorrecta | EnergiaInsuficienteException ex) {
+            } catch (CeldaObjetivoNoValida ex){
+                Utilidades.Sonido.play("no");
+                throw new ComandoExcepcion(ex.getMessage());
+            } catch (DireccionMoverIncorrecta ex){
+                Utilidades.Sonido.play("carraspeo");
+                throw new ComandoExcepcion(ex.getMessage());
+            } catch (EnergiaInsuficienteException ex){
+                if(new Random().nextFloat() > 0.4) Utilidades.Sonido.play("bostezo");
                 throw new ComandoExcepcion(ex.getMessage());
             }
     }

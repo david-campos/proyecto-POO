@@ -6,10 +6,16 @@
 package Comandos;
 
 import Excepciones.ComandoExcepcion;
+import Excepciones.EnergiaInsuficienteException;
+import Excepciones.PosicionFueraDeAlcanceException;
+import Excepciones.PosicionFueraDeRangoException;
 import Mapa.Celda;
 import Mapa.Punto;
 import Mapa.Transitable;
 import Personajes.Jugador;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -70,14 +76,17 @@ public final class ComandoAtacar implements Comando{
         if(jug != null){
             Celda c = jug.getMapa().getCelda(new Punto(x, y));
             if(c instanceof Transitable){
-                try{
-                    if(nombre == null || nombre.isEmpty())
-                        jug.atacar((Transitable) c);
-                    else
-                        jug.atacar(((Transitable)c).getEnemigo(nombre));
-                }catch(Exception e){
-                    throw new ComandoExcepcion(e.getMessage());
-                }
+                    try {
+                        if(nombre == null || nombre.isEmpty())
+                            jug.atacar((Transitable) c);
+                        else
+                            jug.atacar(((Transitable)c).getEnemigo(nombre));
+                    } catch (PosicionFueraDeRangoException | PosicionFueraDeAlcanceException ex) {
+                        throw new ComandoExcepcion(ex.getMessage());
+                    } catch (EnergiaInsuficienteException ex) {
+                        if(new Random().nextFloat() > 0.4) Utilidades.Sonido.play("bostezo");
+                        throw new ComandoExcepcion(ex.getMessage());
+                    }
             }else
                 throw new ComandoExcepcion("La celda a atacar es no transitable...");
         }

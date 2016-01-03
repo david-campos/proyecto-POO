@@ -6,6 +6,7 @@
 package Personajes;
 
 import Excepciones.CeldaObjetivoNoValida;
+import Excepciones.DireccionMoverIncorrecta;
 import Excepciones.EnemigoNoEncontradoException;
 import Excepciones.EnergiaInsuficienteException;
 import Excepciones.ImposibleCogerExcepcion;
@@ -196,5 +197,4 @@ public abstract class Jugador extends Personaje {
             }
     	}
     }
-
 }
