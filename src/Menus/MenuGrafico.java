@@ -277,6 +277,9 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
         final CargadorJuego cargante;
         String tipo = "Marine";
+        
+        Utilidades.Sonido.play("casquillo");
+        
         if(rbtTipoJugadorZapador.isSelected()) tipo = "Zapador";
         if(rbtFranco.isSelected()) tipo = "Francotirador";
         
@@ -319,6 +322,7 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
     }//GEN-LAST:event_tipoJugadorCambiado
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        Utilidades.Sonido.play("casquillo");
         System.exit(0);
     }//GEN-LAST:event_btnSalirActionPerformed
 

@@ -23,6 +23,7 @@ public final class ToritoRojo extends Objeto{
         p.setEnergia(p.getEnergia() + plusEnergia);
         p.setToreado(p.getToreado() + plusEnergia);
         p.getMochila().remObjeto(this);
+        Utilidades.Sonido.play("yeeha");
     }
 
     public final int getPlusEnergia() {

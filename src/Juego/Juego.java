@@ -78,6 +78,7 @@ public final class Juego {
         log("Pulsa enter para continuar...");
         consola.leer();
         
+        Utilidades.Sonido.play("cuerda_viento");
         while(true)
         {
             int seguir = 2;
@@ -91,6 +92,8 @@ public final class Juego {
                 jug.setEnergia(jug.getEnergia() - jug.getToreado());
                 jug.setToreado(0);
             }
+            Utilidades.Sonido.play("timbre_horno");
+            
             //Bucle de turno
             while(jug.getEnergia() > 0 && jug.getVida() > 0 && seguir>1)
             {

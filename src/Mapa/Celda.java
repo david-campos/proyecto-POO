@@ -1,6 +1,8 @@
 package Mapa;
 
 import Personajes.Enemigo;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class Celda {
     public int tipo;
@@ -66,6 +68,14 @@ public abstract class Celda {
     private void detonar(int lejania, String dir){
         if(lejania >= ConstantesMapa.EXPLOSION_MAX_RAD)
             return;
+        
+        Utilidades.Sonido.play("explosion");
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Celda.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         if(this instanceof Transitable) {
             Transitable transitable = (Transitable) this;
             for(Enemigo e: transitable.getEnemigos())
@@ -81,6 +91,7 @@ public abstract class Celda {
             
             Punto pt = mapa.getPosDe(this);
             tipo = ConstantesMapa.BOQUETE;
+            mapa.getJuego().impMapa();
             if(dir == null)
             {
                 if(mapa.getCelda(pt.x, pt.y - 1) != null) mapa.getCelda(pt.x, pt.y - 1).detonar(lejania+1, "n");
@@ -109,6 +120,7 @@ public abstract class Celda {
             Punto pt = mapa.getPosDe(this);
             mapa.hacerTransitable(pt, true);
             mapa.getCelda(pt).tipo = 1;
+            mapa.getJuego().impMapa();
         }
     }
 }
