@@ -141,26 +141,121 @@ public final class Mapa {
                 c.setMapa(this);
             }
         }
+        
+        //Si se cambian los siguientes arrays, recordar variar luego los ifs en "Grupos de vegetación"
+        int suelos[] = {ConstantesMapa.HIERBA1, ConstantesMapa.HIERBA2};
+        int vegetaciones[] = {ConstantesMapa.ARBUSTO1, ConstantesMapa.ARBUSTO2};
+        
         //Una vez generadas las celdas, recorremos el mapa
         //y generamos círculos de tipos iguales (trata de homogenizar
         //un poco la generación para darle belleza)
         //Elegimos centros y radios aleatorios:
-        int numCentros = r.nextInt( (getAlto()+getAncho())/2 ) + (getAlto()+getAncho())/4;
-        System.out.println(numCentros);
+        int numCentros = r.nextInt( (getAlto()+getAncho())/4 ) + (getAlto()+getAncho())/4;
         int suma = 2;
         int limit = Math.max(getAlto(), getAncho()) / 4;
+        int tipoCirculo = 1;
+        //Generamos suelos pues
         for(int k=0; k < numCentros; k++){
-            Punto pt = new Punto(r.nextInt(getAncho()), r.nextInt(getAlto())); //Si se solapan no pasa nada, aunque será raro
+            Punto pt = new Punto(r.nextInt(getAncho()), r.nextInt(getAlto())); //Si se solapan no pasa nada
             int radio = r.nextInt( limit ) + suma;
-            int tipoCirculo = r.nextInt(ConstantesMapa.CE_REPR_TRANS.length);
-            if(tipoCirculo == ConstantesMapa.BOQUETE) tipoCirculo = ConstantesMapa.HIERBA1;
+            tipoCirculo = 1-tipoCirculo;
             for(i=Math.max(pt.y -  radio, 0); i < pt.y + radio && i < getAlto(); i++)
                 for(int j=Math.max(pt.x - radio, 0); j < pt.x + radio && j < getAncho(); j++)
                     if(pt.dist(new Punto(j,i)) <= radio && celdas.get(i).get(j) instanceof Transitable)
-                        celdas.get(i).get(j).tipo = tipoCirculo;
+                        celdas.get(i).get(j).tipo = suelos[tipoCirculo];
+        }
+        //Grupos de vegetación
+        limit = (int) Math.ceil(Math.max(getAlto(), getAncho()) / 20.0);
+        for(int k=0; k < numCentros; k++){
+            Punto pt = new Punto(r.nextInt(getAncho()), r.nextInt(getAlto())); //Si se solapan no pasa nada, aunque será raro
+            int radio = r.nextInt( limit ) + suma;
+            for(i=Math.max(pt.y -  radio, 0); i < pt.y + radio && i < getAlto(); i++)
+                for(int j=Math.max(pt.x - radio, 0); j < pt.x + radio && j < getAncho(); j++)
+                    if(pt.dist(new Punto(j,i)) <= radio && celdas.get(i).get(j) instanceof Transitable)
+                        if(celdas.get(i).get(j).tipo == suelos[0])
+                            celdas.get(i).get(j).tipo = vegetaciones[0];
+                        else
+                            celdas.get(i).get(j).tipo = vegetaciones[1];
+        }
+        
+        //---Caminos---//
+        int numCaminos = r.nextInt( (int) Math.ceil(getAncho()*getAlto()/450.0) );
+        for(i = 0; i < numCaminos; i++)
+            iniciarCamino();
+        
+    }
+    private void iniciarCamino(){
+        double[] ptInicial = new double[]{0, 0};
+        double[] vecInicial = new double[]{1,1};
+        int zonaInicial = r.nextInt(4);
+        //0=S,1=N,2=E,3=O
+        switch(zonaInicial){
+            case 0:
+                ptInicial[0] = getAlto();
+                vecInicial[0] = -1;
+            case 1:
+                ptInicial[1] = r.nextInt(getAncho());
+                vecInicial[1] = 0;
+                break;
+            case 2:
+                ptInicial[1] = getAncho();
+                vecInicial[1] = -1;
+            case 3:
+                ptInicial[0] = r.nextInt(getAlto());
+                vecInicial[0] = 0;
+                break;
+        }
+        unitario(vecInicial);
+        int energia = getAncho()+getAlto();
+        generarCaminos(ptInicial, vecInicial, energia);
+    }
+    private void unitario(double[] vector){
+        double norma = Math.sqrt(vector[0]*vector[0]+vector[1]*vector[1]);
+        vector[0] = vector[0]/norma;
+        vector[1] = vector[1]/norma;
+    }
+    private void rotar(double[] v, double radianes){
+        double cs = Math.cos(radianes);
+        double sn = Math.sin(radianes);
+
+        double j = v[1] * cs - v[0] * sn;
+        double i = v[1] * sn + v[0] * cs;
+        v[0] = i;
+        v[1] = j;
+    }
+    private void generarCaminos(double[] punto, double[] vector, int energia){
+        //El algoritmo varia ligeramente a veces la dirección
+        //en cada llamada recursiva se pintan las celdas a menos de x de distancia
+        //del punto.
+        if(energia > 0 &&
+                punto[0] < getAlto()+3 && punto[1] < getAncho()+3
+                && punto[0] > -3 && punto[1] > -3){
+            for(int i = (int) Math.max(Math.floor(punto[0] - 2), 0); i < Math.ceil(punto[0])+2 && i < getAlto(); i++)
+                for(int j = (int) Math.max(Math.floor(punto[1] - 2), 0); j < Math.ceil(punto[1])+2 && j < getAncho(); j++){
+                    double di = i - punto[0];
+                    double dj = j - punto[1];
+                    if( Math.sqrt(di*di+dj*dj) <= 1){
+                        if(getCelda(j, i) instanceof NoTransitable)
+                            this.hacerTransitable(new Punto(j,i), false);
+                        this.getCelda(j, i).tipo = ConstantesMapa.CAMINO;
+                    }
+                }
+            if(r.nextFloat() < 0.015){
+                //Dividimos el camino
+                double[] v1 = Arrays.copyOf(vector, vector.length);
+                double[] v2 = Arrays.copyOf(vector, vector.length);
+                rotar(v1, Math.PI/3);
+                rotar(v2, -Math.PI/3);
+                generarCaminos(new double[]{punto[0]+1.3*v1[0], punto[1]+1.3*v1[1]}, v1, energia-1);
+                generarCaminos(new double[]{punto[0]+1.3*v2[0], punto[1]+1.3*v2[1]}, v2, energia-1);
+            }else{
+                if(r.nextFloat() < 0.3)
+                    rotar(vector, r.nextDouble() * (Math.PI/16) - (Math.PI/16));
+                generarCaminos(new double[]{punto[0]+1.3*vector[0], punto[1]+1.3*vector[1]}, vector, energia-1);
+            }
         }
     }
-
+    
     public Juego getJuego() {
         return juego;
     }

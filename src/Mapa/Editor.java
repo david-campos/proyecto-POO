@@ -90,7 +90,7 @@ public class Editor extends javax.swing.JFrame {
     private final ArrayList<CeldaGrafica> celdas;
     private final HashMap<String, Image> imagenes;
     
-    private int TAM_CELDA = 80;
+    private int TAM_CELDA = 40;
     
     /**
      * Creates new form Editor
