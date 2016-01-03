@@ -11,15 +11,20 @@ public final class Transitable extends Celda {
     private final ArrayList<Objeto> objetos;
     private final ArrayList<Enemigo> enemigos;
 
-    public Transitable() {
+    public Transitable(boolean regular){
         super(0,null);
         objetos = new ArrayList();
         enemigos = new ArrayList();
-        Random r = new Random();
-        do
-        {
-            tipo = (int)Math.round(r.nextInt(ConstantesMapa.CE_REPR_TRANS.length));
-        }while(tipo == ConstantesMapa.BOQUETE);
+        if(!regular){            
+            Random r = new Random();
+            do
+            {
+                tipo = (int)Math.round(r.nextInt(ConstantesMapa.CE_REPR_TRANS.length));
+            }while(tipo == ConstantesMapa.BOQUETE);
+        }
+    }
+    public Transitable() {
+        this(false);
     }
 
     /**

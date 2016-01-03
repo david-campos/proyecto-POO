@@ -131,16 +131,33 @@ public final class Mapa {
         for(int k=0; k < alto; k++){
             ArrayList<Celda> fila = new ArrayList();
             celdas.add(fila);
-            for(int j=0; j < ancho; j++)
-            {
+            for(int j=0; j < ancho; j++){
                 Celda c;
                 if(i >= tipos.length || tipos[i] || (posicionInicial.x == j && posicionInicial.y == k) )
-                    fila.add(c = new Transitable());
+                    fila.add(c = new Transitable(true));
                 else
                     fila.add(c = new NoTransitable());
                 i++;
                 c.setMapa(this);
             }
+        }
+        //Una vez generadas las celdas, recorremos el mapa
+        //y generamos círculos de tipos iguales (trata de homogenizar
+        //un poco la generación para darle belleza)
+        //Elegimos centros y radios aleatorios:
+        int numCentros = r.nextInt( (getAlto()+getAncho())/2 ) + (getAlto()+getAncho())/4;
+        System.out.println(numCentros);
+        int suma = 2;
+        int limit = Math.max(getAlto(), getAncho()) / 4;
+        for(int k=0; k < numCentros; k++){
+            Punto pt = new Punto(r.nextInt(getAncho()), r.nextInt(getAlto())); //Si se solapan no pasa nada, aunque será raro
+            int radio = r.nextInt( limit ) + suma;
+            int tipoCirculo = r.nextInt(ConstantesMapa.CE_REPR_TRANS.length);
+            if(tipoCirculo == ConstantesMapa.BOQUETE) tipoCirculo = ConstantesMapa.HIERBA1;
+            for(i=Math.max(pt.y -  radio, 0); i < pt.y + radio && i < getAlto(); i++)
+                for(int j=Math.max(pt.x - radio, 0); j < pt.x + radio && j < getAncho(); j++)
+                    if(pt.dist(new Punto(j,i)) <= radio && celdas.get(i).get(j) instanceof Transitable)
+                        celdas.get(i).get(j).tipo = tipoCirculo;
         }
     }
 
