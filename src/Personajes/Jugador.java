@@ -197,4 +197,18 @@ public abstract class Jugador extends Personaje {
             }
     	}
     }
+
+    @Override
+    public void mover(String c) throws CeldaObjetivoNoValida, DireccionMoverIncorrecta, EnergiaInsuficienteException {
+        super.mover(c);
+        visitarRango();
+    }
+    
+    public void visitarRango(){
+        for(int y=getPos().y-getRango(); y < getPos().y+getRango(); y++)
+            for(int x=getPos().x-getRango(); x < getPos().x+getRango(); x++)
+                if(this.enRango(new Punto(x,y)))
+                    mapa.getCelda(x, y).setVisitada(true);
+    }
+    
 }

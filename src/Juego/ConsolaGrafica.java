@@ -99,7 +99,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
         panelConsola.setLayout(new BoxLayout(panelConsola, BoxLayout.Y_AXIS));
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Punto dim_total = new Punto((int)Math.round(screenSize.width * 0.7), (int) Math.round(screenSize.height * 0.7)); //Tamaño del mapa máximo
+        Punto dim_total = new Punto((int)Math.round(screenSize.width * 0.85), (int) Math.round(screenSize.height * 0.85)); //Tamaño del mapa máximo
         dim = (int) Math.floor(Math.min(dim_total.x/(double)mapa.getAncho(), dim_total.y/(double)mapa.getAlto()));
         
         JPanel panelMapaDisp = new JPanel();
@@ -181,11 +181,15 @@ public class ConsolaGrafica extends JFrame implements Consola{
         
         if(c == null)
             representacionF = "null";
-        else if(mapa.getJugador().enRango(mapa.getPosDe(c)))
+        else if(mapa.getJugador().enRango(mapa.getPosDe(c))){
             representacionF = c.representacionGrafica(); //Obtiene la imagen
-        else
+        }else if(c.isVisitada()){
+            representacionF = c.representacionGrafica();
+            representacionD = "sombra";
+        }else
             representacionF = "no";
-        if(c != null && !"no".equals(representacionF))
+        
+        if(c != null && mapa.getJugador().enRango(mapa.getPosDe(c)))
             if(mapa.getJugador().getPos().equals(mapa.getPosDe(c)))
                 representacionD = "jugador";
             else if(c instanceof Transitable){

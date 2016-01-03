@@ -8,17 +8,20 @@ public abstract class Celda {
     public int tipo;
     protected Mapa mapa;
     private boolean bomba;
+    private boolean visitada;
 
     public Celda(int tipo, Mapa mapa) {
         this.tipo = tipo;
         this.mapa = mapa; //Puede ser null
         this.bomba = false;
+        visitada = false;
     }
 
     public Celda() {
         tipo = 0;
         mapa = null;
         bomba = false;
+        visitada = false;
     }
     
 
@@ -123,4 +126,14 @@ public abstract class Celda {
             mapa.getJuego().impMapa();
         }
     }
+
+    public boolean isVisitada() {
+        return visitada;
+    }
+
+    public void setVisitada(boolean visitada) {
+        this.visitada = visitada;
+    }
+    
+    
 }

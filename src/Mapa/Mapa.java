@@ -135,8 +135,10 @@ public final class Mapa {
                 Celda c;
                 if(i >= tipos.length || tipos[i] || (posicionInicial.x == j && posicionInicial.y == k) )
                     fila.add(c = new Transitable(true));
-                else
+                else{
                     fila.add(c = new NoTransitable());
+                    c.tipo = ConstantesMapa.MURO;
+                }
                 i++;
                 c.setMapa(this);
             }
@@ -177,12 +179,65 @@ public final class Mapa {
                         else
                             celdas.get(i).get(j).tipo = vegetaciones[1];
         }
+        //--- Lagos ---//
+        int numLagos = r.nextInt( (int) Math.ceil(getAncho()*getAlto()/90.0) );
+        System.out.println("Num lagos: " + numLagos);
+        for(i=0; i < numLagos; i++)
+            iniciarLago();
         
         //---Caminos---//
         int numCaminos = r.nextInt( (int) Math.ceil(getAncho()*getAlto()/450.0) );
         for(i = 0; i < numCaminos; i++)
             iniciarCamino();
         
+    }
+    private Punto adyacenteAleatorio(Punto pt){
+        Punto ady;
+        do{
+            ady = new Punto(pt.x+r.nextInt(3)-1, pt.y + r.nextInt(3)-1);
+        }while(ady.x < 0 || ady.y < 0 || ady.x >= getAncho() || ady.y >= getAlto());
+        return ady;
+    }
+    private ArrayList<Punto> adyacentes(ArrayList<Punto> grupo){
+        ArrayList<Punto> prf = new ArrayList();
+        for(Punto pt: grupo){
+            Punto der = new Punto(pt.x +1, pt.y);
+            Punto izq = new Punto(pt.x -1, pt.y);
+            Punto sur = new Punto(pt.x, pt.y+1);
+            Punto nor = new Punto(pt.x, pt.y-1);
+            if(der.en(getAncho(), getAlto()) && !grupo.contains(der)) prf.add(der);
+            if(izq.en(getAncho(), getAlto()) && !grupo.contains(izq)) prf.add(izq);
+            if(nor.en(getAncho(), getAlto()) && !grupo.contains(nor)) prf.add(nor);
+            if(sur.en(getAncho(), getAlto()) && !grupo.contains(sur)) prf.add(sur);
+        }
+        return prf;
+    }
+    
+    private void iniciarLago(){
+        int tam = r.nextInt(Math.min(getAlto(), getAncho())-4)+2; //El tamaño mínimo es 5 :d
+        //Seleccionamos dos celdas aleatorias de semilla
+        ArrayList<Punto> lago = new ArrayList(tam);
+        Punto pt = new Punto(r.nextInt(getAncho()), r.nextInt(getAlto()));
+        //Seleccionamos una celda adyacente
+        Punto pt2 = adyacenteAleatorio(pt);
+        lago.add(pt);
+        lago.add(pt2);
+        generarLago(lago, tam);
+        
+        for(Punto p: lago){
+            if(!p.equals(getPosicionInicial())){
+                this.setCelda(p, new NoTransitable());
+                this.getCelda(p).tipo = ConstantesMapa.AGUA;
+            }
+        }
+    }
+    private void generarLago(ArrayList<Punto> lago, int tam){
+        if(lago.size() < tam){
+            ArrayList<Punto> prf = adyacentes(lago);
+            int i = r.nextInt(prf.size());
+            lago.add(prf.get(i));
+            generarLago(lago, tam);
+        }
     }
     private void iniciarCamino(){
         double[] ptInicial = new double[]{0, 0};
@@ -237,6 +292,7 @@ public final class Mapa {
                     if( Math.sqrt(di*di+dj*dj) <= 1){
                         if(getCelda(j, i) instanceof NoTransitable)
                             this.hacerTransitable(new Punto(j,i), false);
+                        
                         this.getCelda(j, i).tipo = ConstantesMapa.CAMINO;
                     }
                 }
@@ -343,6 +399,7 @@ public final class Mapa {
         {
             this.jugador = jugador;
             jugador.setPos(posicionInicial);
+            jugador.visitarRango();
         }
     }
     /**
