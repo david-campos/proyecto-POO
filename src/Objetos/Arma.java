@@ -10,8 +10,8 @@ package Objetos;
 public class Arma extends Objeto{
     public static final boolean ARMA_UNA_MANO = false;
     public static final boolean ARMA_DOS_MANOS = true;
-    private final int dano;
-    private final int rango;
+    private int dano;
+    private int rango;
     private boolean tipo;
     
     public Arma(double peso, String nombre, String descripcion, int rango, int dano, boolean tipo){
@@ -42,6 +42,15 @@ public class Arma extends Objeto{
     }
     public final int getRango() {
         return rango;
+    }
+
+    public void setDano(int dano) {
+        if(dano > 0)
+            this.dano = dano;
+    }
+    public void setRango(int rango) {
+        if(rango > 0)
+            this.rango = rango;
     }
 
     @Override

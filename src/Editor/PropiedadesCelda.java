@@ -16,20 +16,18 @@ import Personajes.Sectoid;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListDataListener;
 
 /**
  *
@@ -44,7 +42,8 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     public PropiedadesCelda(Celda celda, Editor contexto) {
         this.celda = celda;
         editor = contexto;
-        initComponents();
+        if(celda != null)
+            initComponents();
         setLocationRelativeTo(null);
     }
 
@@ -57,6 +56,13 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pmnNuevoObjeto = new javax.swing.JPopupMenu();
+        mitArma = new javax.swing.JMenuItem();
+        mitArmadura = new javax.swing.JMenuItem();
+        mitBinoculares = new javax.swing.JMenuItem();
+        mitBotiquin = new javax.swing.JMenuItem();
+        mitExplosivo = new javax.swing.JMenuItem();
+        mitToritoRojo = new javax.swing.JMenuItem();
         panPestanhas = new javax.swing.JTabbedPane();
         panGeneral = new javax.swing.JPanel();
         tbtTransitable = new javax.swing.JToggleButton();
@@ -69,12 +75,62 @@ public class PropiedadesCelda extends javax.swing.JDialog {
         btnEngadir = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         panObjetos = new javax.swing.JPanel();
+        btnEngadirObjeto = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         lstObjetos = new javax.swing.JList();
-        btnEngadirObjeto = new javax.swing.JButton();
+        btnEliminarObj = new javax.swing.JButton();
         panAceptarCancelar = new javax.swing.JPanel();
         btnAceptar = new javax.swing.JButton();
 
+        mitArma.setText("Arma");
+        mitArma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuevoObjeto(evt);
+            }
+        });
+        pmnNuevoObjeto.add(mitArma);
+
+        mitArmadura.setText("Armadura");
+        mitArmadura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuevoObjeto(evt);
+            }
+        });
+        pmnNuevoObjeto.add(mitArmadura);
+
+        mitBinoculares.setText("Binoculares");
+        mitBinoculares.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuevoObjeto(evt);
+            }
+        });
+        pmnNuevoObjeto.add(mitBinoculares);
+
+        mitBotiquin.setText("Botiquín");
+        mitBotiquin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuevoObjeto(evt);
+            }
+        });
+        pmnNuevoObjeto.add(mitBotiquin);
+
+        mitExplosivo.setText("Explosivo");
+        mitExplosivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuevoObjeto(evt);
+            }
+        });
+        pmnNuevoObjeto.add(mitExplosivo);
+
+        mitToritoRojo.setText("ToritoRojo");
+        mitToritoRojo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuevoObjeto(evt);
+            }
+        });
+        pmnNuevoObjeto.add(mitToritoRojo);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Propiedades de la celda");
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Menus/ico_map.png")).getImage());
         setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
@@ -191,15 +247,6 @@ public class PropiedadesCelda extends javax.swing.JDialog {
 
         panObjetos.setLayout(new java.awt.BorderLayout());
 
-        lstObjetos.setBackground(celda instanceof Transitable?Color.white:Color.gray);
-        lstObjetos.setCellRenderer(new ObjetosRenderer());
-        lstObjetos.setEnabled(celda instanceof Transitable);
-        if( celda instanceof Transitable)
-        lstObjetos.setModel(new ObjetosListModel((Transitable)celda));
-        jScrollPane2.setViewportView(lstObjetos);
-
-        panObjetos.add(jScrollPane2, java.awt.BorderLayout.CENTER);
-
         btnEngadirObjeto.setText("+");
         btnEngadirObjeto.setEnabled(celda instanceof Transitable);
         btnEngadirObjeto.addActionListener(new java.awt.event.ActionListener() {
@@ -207,7 +254,31 @@ public class PropiedadesCelda extends javax.swing.JDialog {
                 btnEngadirObjetoActionPerformed(evt);
             }
         });
-        panObjetos.add(btnEngadirObjeto, java.awt.BorderLayout.PAGE_END);
+        panObjetos.add(btnEngadirObjeto, java.awt.BorderLayout.PAGE_START);
+
+        lstObjetos.setBackground(celda instanceof Transitable?Color.white:Color.gray);
+        lstObjetos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstObjetos.setCellRenderer(new ObjetosRenderer());
+        lstObjetos.setEnabled(celda instanceof Transitable);
+        if( celda instanceof Transitable)
+        lstObjetos.setModel(new ObjetosListModel((Transitable)celda));
+        lstObjetos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lstObjetosMouseClicked(evt);
+            }
+        });
+        lstObjetos.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstObjetosValueChanged(evt);
+            }
+        });
+        jScrollPane2.setViewportView(lstObjetos);
+
+        panObjetos.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
+        btnEliminarObj.setText("-");
+        btnEliminarObj.setEnabled(false);
+        panObjetos.add(btnEliminarObj, java.awt.BorderLayout.PAGE_END);
 
         panPestanhas.addTab("Objetos", panObjetos);
 
@@ -241,6 +312,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+        dispose();
         this.setVisible(false);
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -319,6 +391,25 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     }//GEN-LAST:event_lstEnemigosMouseClicked
 
     private void btnEngadirObjetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEngadirObjetoActionPerformed
+        pmnNuevoObjeto.show((Component)evt.getSource(), ((JButton)evt.getSource()).getWidth()/2, ((JButton)evt.getSource()).getHeight()/2);
+    }//GEN-LAST:event_btnEngadirObjetoActionPerformed
+
+    private void lstObjetosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstObjetosValueChanged
+        btnEliminarObj.setEnabled(!lstObjetos.isSelectionEmpty());
+    }//GEN-LAST:event_lstObjetosValueChanged
+
+    private void lstObjetosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstObjetosMouseClicked
+        if(evt.getClickCount() > 1){
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new PropiedadesObjeto(editor, (Objeto)lstObjetos.getSelectedValue()).setVisible(true);
+                    ((ObjetosListModel)lstObjetos.getModel()).actualizar();
+                }
+            });
+        }
+    }//GEN-LAST:event_lstObjetosMouseClicked
+
+    private void nuevoObjeto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoObjeto
         if(celda instanceof Transitable){
             Objeto ob;
             String nombre = "objeto";
@@ -339,20 +430,20 @@ public class PropiedadesCelda extends javax.swing.JDialog {
             
             nombre+=(id==0?"":"_"+id);
             
-            switch(new Random().nextInt(6)){
-                case 0:
+            switch(((JMenuItem)evt.getSource()).getLabel()){
+                case "Arma":
                     ob = new Arma(10, nombre, "Es un arma", 10, 10, Arma.ARMA_UNA_MANO);
                     break;
-                case 1:
+                case "Armadura":
                     ob = new Armadura(nombre, "Es una armadura", 10, 10, 0, 0);
                     break;
-                case 2:
+                case "Binoculares":
                     ob = new Binoculares(nombre, 10, 2);
                     break;
-                case 3:
+                case "Botiquín":
                     ob = new Botiquin(nombre, 10, 2);
                     break;
-                case 4:
+                case "Explosivo":
                     ob = new Explosivo(10, nombre);
                     break;
                 default:
@@ -362,11 +453,12 @@ public class PropiedadesCelda extends javax.swing.JDialog {
             ((Transitable)celda).addObjeto(ob);
             ((ObjetosListModel)lstObjetos.getModel()).actualizar();
         }
-    }//GEN-LAST:event_btnEngadirObjetoActionPerformed
+    }//GEN-LAST:event_nuevoObjeto
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnEliminarObj;
     private javax.swing.JButton btnEngadir;
     private javax.swing.JButton btnEngadirObjeto;
     private javax.swing.JLabel jLabel1;
@@ -376,10 +468,17 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     private javax.swing.JLabel lblIconoCelda;
     private javax.swing.JList lstEnemigos;
     private javax.swing.JList lstObjetos;
+    private javax.swing.JMenuItem mitArma;
+    private javax.swing.JMenuItem mitArmadura;
+    private javax.swing.JMenuItem mitBinoculares;
+    private javax.swing.JMenuItem mitBotiquin;
+    private javax.swing.JMenuItem mitExplosivo;
+    private javax.swing.JMenuItem mitToritoRojo;
     private javax.swing.JPanel panAceptarCancelar;
     private javax.swing.JPanel panGeneral;
     private javax.swing.JPanel panObjetos;
     private javax.swing.JTabbedPane panPestanhas;
+    private javax.swing.JPopupMenu pmnNuevoObjeto;
     private javax.swing.JSpinner spnTipo;
     private javax.swing.JToggleButton tbtTransitable;
     // End of variables declaration//GEN-END:variables

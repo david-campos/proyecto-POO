@@ -10,7 +10,7 @@ import Personajes.Personaje;
  * @author david.campos
  */
 public final class Binoculares extends Objeto{
-    private final int plusRango;
+    private int plusRango;
     
     public Binoculares(String nombre, double peso, int plus){
         super(peso, nombre, "Al equipar, aumenta el rango de visión.");
@@ -29,6 +29,9 @@ public final class Binoculares extends Objeto{
 
     public final int getPlusRango() {
         return plusRango;
+    }
+    public void setPlusRango(int plusRango) {
+        this.plusRango = plusRango;
     }
     
     @Override

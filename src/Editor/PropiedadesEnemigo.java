@@ -87,7 +87,8 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         btnAceptar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Propiedades enemigo...");
         setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         setResizable(false);
         getContentPane().setLayout(new java.awt.BorderLayout(0, 5));

@@ -10,7 +10,7 @@ import Personajes.Personaje;
  * @author david.campos
  */
 public final class Botiquin extends Objeto{
-    private final int plusVida;
+    private int plusVida;
     
     public Botiquin(String nombre, double peso, int plusVida){
         super(peso, nombre, "Cura vida al usar.");
@@ -26,6 +26,10 @@ public final class Botiquin extends Objeto{
 
     public final int getPlusVida() {
         return plusVida;
+    }
+
+    public void setPlusVida(int plusVida) {
+        this.plusVida = plusVida;
     }
     
     @Override

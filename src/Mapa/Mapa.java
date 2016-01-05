@@ -182,7 +182,6 @@ public final class Mapa {
         }
         //--- Lagos ---//
         int numLagos = r.nextInt( (int) Math.ceil(getAncho()*getAlto()/90.0) );
-        System.out.println("Num lagos: " + numLagos);
         for(i=0; i < numLagos; i++)
             iniciarLago();
         

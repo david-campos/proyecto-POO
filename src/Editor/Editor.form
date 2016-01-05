@@ -34,6 +34,9 @@
           <Dimension value="[446, 280]"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="dlgNuevoMapa.setLocationRelativeTo(null);&#xd;&#xa;"/>
+      </AuxValues>
 
       <Layout>
         <DimensionLayout dim="0">

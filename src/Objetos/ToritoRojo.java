@@ -10,7 +10,7 @@ import Personajes.Personaje;
  * @author david.campos
  */
 public final class ToritoRojo extends Objeto{
-    private final int plusEnergia;
+    private int plusEnergia;
     
     public ToritoRojo(String nombre, double peso, int plus){
         super(peso, nombre, "Aumenta la energía al usar, pero la disminuye en el siguiente turno.");
@@ -29,6 +29,11 @@ public final class ToritoRojo extends Objeto{
     public final int getPlusEnergia() {
         return plusEnergia;
     }
+
+    public void setPlusEnergia(int plusEnergia) {
+        this.plusEnergia = plusEnergia;
+    }
+    
     
     @Override
     public String toString() {

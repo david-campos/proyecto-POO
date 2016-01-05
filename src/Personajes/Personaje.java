@@ -292,6 +292,8 @@ public abstract class Personaje {
     public final  void setRango(int rango) {
         if(rango > 0)
             this.rango = rango;
+        else
+            this.rango = 1;
     }
 
     //MÉTODOS

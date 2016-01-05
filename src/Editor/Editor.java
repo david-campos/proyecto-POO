@@ -186,6 +186,7 @@ public class Editor extends javax.swing.JFrame {
         dlgNuevoMapa.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         dlgNuevoMapa.setResizable(false);
         dlgNuevoMapa.setSize(new java.awt.Dimension(446, 280));
+        dlgNuevoMapa.setLocationRelativeTo(null);
 
         panNombreMapa.setLayout(new java.awt.BorderLayout(5, 0));
 

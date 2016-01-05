@@ -154,4 +154,10 @@ public class CeldasML extends MouseAdapter{
                                 ((JComponent)e.getComponent()).setBorder(Editor.BORDE_DEF);
                             ed.infoCoordenadas(null);
                         }
+                        
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            if(e.getClickCount() > 1)
+                                ed.editarCelda(celdaGrafica(e));
+                        }
     }
