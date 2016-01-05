@@ -20,6 +20,7 @@ import Objetos.Arma;
 import Personajes.HeavyFloater;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * Clase que se encargará de gestionar el juego en general
@@ -94,8 +95,6 @@ public final class Juego {
                 jug.setEnergia(jug.getEnergia() - jug.getToreado());
                 jug.setToreado(0);
             }
-            Utilidades.Sonido.play("timbre_horno");
-            
             //Bucle de turno
             while(jug.getEnergia() > 0 && jug.getVida() > 0 && seguir>1)
             {
@@ -152,15 +151,19 @@ public final class Juego {
             
             if(mapa.getEnemigos().isEmpty()) {
                 finJuego();
-                if(jefeFinal)
-                    break;  //Introducir aquí mensaje de felicitación o lo que sea
+                if(jefeFinal){
+                    JOptionPane.showMessageDialog(null, "HAS GANADO!", "Enhorabuena", JOptionPane.INFORMATION_MESSAGE);
+                    if(consola instanceof ConsolaGrafica)
+                        ((ConsolaGrafica)consola).hasGanado();
+                    break;
+                }
                 jefeFinal = true;                
             }
+            
+            Utilidades.Sonido.play("timbre_horno");
         }
         if(! (consola instanceof ConsolaGrafica))
             log("Fin del juego.");
-        else
-            consola.cerrar();
     }
     
     public void imprimirPrompt(){
@@ -226,7 +229,7 @@ public final class Juego {
                     break;
                 case "mirar":
                     if(i+1 < comando.length){
-                        if(comando[i+1].matches("-?\\d*")){
+                        if(comando[i+1].matches("-\\d+|\\d*")){
                             if(i+3 < comando.length){
                                 cc.add(new ComandoMirar(
                                         jug,

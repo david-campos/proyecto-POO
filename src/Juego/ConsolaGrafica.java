@@ -296,13 +296,12 @@ public class ConsolaGrafica extends JFrame implements Consola{
         } catch (InterruptedException ex) {
             Logger.getLogger(ConsolaGrafica.class.getName()).log(Level.SEVERE, null, ex);
         }
-        new Thread() {
-            @Override
-            public void run() {
-                Menu menuInicio = new MenuGrafico();
-                menuInicio.lanzar();
-            }
-        }.start();
-        this.dispose();
+        dispose();
+        new MenuGrafico().lanzar();
+    }
+    
+    public void hasGanado(){
+        dispose();
+        new MenuGrafico().lanzar();
     }
 }
