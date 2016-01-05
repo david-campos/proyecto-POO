@@ -14,7 +14,7 @@ import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.MaximoObjetosException;
 import Excepciones.MaximoPesoException;
 import Excepciones.ObjetoNoEquipableException;
-import Mapa.Punto;
+import Utilidades.Punto;
 import Objetos.Arma;
 import Personajes.HeavyFloater;
 import java.util.logging.Level;

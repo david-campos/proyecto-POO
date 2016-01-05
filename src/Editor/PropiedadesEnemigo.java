@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Mapa;
+package Editor;
 
 import Objetos.Mochila;
 import Objetos.Objeto;

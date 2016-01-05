@@ -3,9 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Mapa;
+package Editor;
 
+import Editor.Editor;
+import Editor.MenuCelda;
 import Excepciones.CeldaObjetivoNoValida;
+import Mapa.Celda;
+import Utilidades.CeldaGrafica;
+import Mapa.ConstantesMapa;
+import Mapa.NoTransitable;
+import Mapa.Transitable;
 import Personajes.Enemigo;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;

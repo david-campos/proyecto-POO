@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Mapa;
+package Editor;
 
+import Mapa.Celda;
+import Utilidades.CeldaGrafica;
+import Mapa.Transitable;
 import Personajes.Enemigo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +22,7 @@ import javax.swing.JSeparator;
  *
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
-class MenuCelda extends javax.swing.JPopupMenu{
+public class MenuCelda extends javax.swing.JPopupMenu{
     private static final String MENU_ENEMIGO_EDITAR = "Editar";
     private static final String MENU_ENEMIGO_MOVER = "Mover";
     private static final String MENU_ENEMIGO_ELIMINAR = "Eliminar";

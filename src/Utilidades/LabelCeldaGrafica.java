@@ -3,19 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Mapa;
+package Utilidades;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-
-public class LabelCeldaGraficaEditor extends JLabel implements CeldaGrafica{
+/**
+ * No usado actualmente...
+ * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ */
+public class LabelCeldaGrafica extends JLabel implements CeldaGrafica{
     private Punto id;
     private ImagenCelda ultima;
     
-    public LabelCeldaGraficaEditor(Punto pt) {
+    public LabelCeldaGrafica(Punto pt) {
         super();
         ultima = null;
         id = pt;

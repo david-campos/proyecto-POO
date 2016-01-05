@@ -5,6 +5,7 @@
  */
 package Juego;
 
+import Utilidades.Punto;
 import Mapa.*;
 import Objetos.*;
 import Personajes.*;

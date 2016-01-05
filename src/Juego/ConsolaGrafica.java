@@ -6,11 +6,11 @@
 package Juego;
 
 import Mapa.Celda;
-import Mapa.CeldaGrafica;
-import Mapa.ImagenCelda;
+import Utilidades.CeldaGrafica;
+import Utilidades.ImagenCelda;
 import Mapa.Mapa;
-import Mapa.PanelCeldaGraficaEditor;
-import Mapa.Punto;
+import Utilidades.PanelCeldaGrafica;
+import Utilidades.Punto;
 import Mapa.Transitable;
 import Menus.Menu;
 import Menus.MenuGrafico;
@@ -107,7 +107,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
         //panelMapa.setSize(new Dimension(dim*mapa.getAncho(), dim*mapa.getAlto()));
         panelMapa.setMinimumSize(panelMapa.getSize());
         for(int i = 0; i < mapa.getAncho() * mapa.getAlto(); i++){
-            CeldaGrafica celda = new PanelCeldaGraficaEditor(new Punto(i/mapa.getAncho(), i%mapa.getAncho()));
+            CeldaGrafica celda = new PanelCeldaGrafica(new Punto(i/mapa.getAncho(), i%mapa.getAncho()));
             Image icon = new ImageIcon("img/celda.png").getImage();
             imagenes.put("celda", icon);
             celda.setImagen(new ImagenCelda(icon));

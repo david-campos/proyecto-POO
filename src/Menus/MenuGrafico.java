@@ -10,7 +10,7 @@ import Juego.CargarJuegoDeFicheros;
 import Juego.CargarJuegoPorDefecto;
 import Juego.ConsolaGrafica;
 import Juego.Juego;
-import Mapa.Editor;
+import Editor.Editor;
 import java.io.File;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;

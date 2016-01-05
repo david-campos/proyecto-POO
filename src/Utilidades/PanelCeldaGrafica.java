@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Mapa;
+package Utilidades;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
@@ -13,12 +13,12 @@ import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
 
 
-public class PanelCeldaGraficaEditor extends JPanel implements CeldaGrafica{
+public class PanelCeldaGrafica extends JPanel implements CeldaGrafica{
     private Punto id;
     private final JLabel fondo;
     private final JLabel delante;
     private ImagenCelda ultima;
-    public PanelCeldaGraficaEditor(Punto pt) {
+    public PanelCeldaGrafica(Punto pt) {
         super();
         id = pt;
         setLayout(new OverlayLayout(this));

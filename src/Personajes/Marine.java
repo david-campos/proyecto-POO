@@ -5,6 +5,7 @@
  */
 package Personajes;
 
+import Utilidades.Punto;
 import Excepciones.ObjetoNoDesequipableException;
 import Excepciones.ObjetoNoEncontradoException;
 import Excepciones.ObjetoNoEquipableException;

@@ -1,5 +1,6 @@
 package Mapa;
 
+import Utilidades.Punto;
 import Personajes.Enemigo;
 import java.util.logging.Level;
 import java.util.logging.Logger;

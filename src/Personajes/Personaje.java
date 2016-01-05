@@ -5,6 +5,7 @@
  */
 package Personajes;
 
+import Utilidades.Punto;
 import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.DireccionMoverIncorrecta;
 import Excepciones.EnergiaInsuficienteException;

@@ -1,7 +1,7 @@
 /*
  * 
  */
-package Mapa;
+package Utilidades;
 
 /**
  *

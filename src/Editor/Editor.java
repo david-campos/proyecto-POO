@@ -3,9 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Mapa;
+package Editor;
 
 import Excepciones.CeldaObjetivoNoValida;
+import Utilidades.Adaptador;
+import Mapa.Celda;
+import Utilidades.CeldaGrafica;
+import Utilidades.ImagenCelda;
+import Mapa.Mapa;
+import Mapa.NoTransitable;
+import Utilidades.PanelCeldaGrafica;
+import Utilidades.Punto;
+import Mapa.Transitable;
 import Objetos.Objeto;
 import Personajes.Enemigo;
 import com.google.gson.GsonBuilder;
@@ -339,7 +348,6 @@ public class Editor extends javax.swing.JFrame {
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/Menus/ico_map.png")).getImage());
         setMinimumSize(new java.awt.Dimension(440, 417));
         setName("editor"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(440, 417));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -755,7 +763,7 @@ public class Editor extends javax.swing.JFrame {
                     
                     CeldaGrafica celda;
                     if(crearCeldas){
-                        celda = new PanelCeldaGraficaEditor(new Punto(j,i));
+                        celda = new PanelCeldaGrafica(new Punto(j,i));
                         celda.getComponente().setBorder(BORDE_DEF);
                         celda.getComponente().addMouseListener(mouseListenerCeldas);
                     }else

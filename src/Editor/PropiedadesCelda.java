@@ -3,9 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Mapa;
+package Editor;
 
 import Excepciones.CeldaObjetivoNoValida;
+import Mapa.Celda;
+import Mapa.ConstantesMapa;
+import Utilidades.Punto;
+import Mapa.Transitable;
 import Objetos.*;
 import Personajes.Enemigo;
 import Personajes.Sectoid;

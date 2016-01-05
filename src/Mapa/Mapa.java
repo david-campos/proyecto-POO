@@ -3,6 +3,7 @@
  */
 package Mapa;
 
+import Utilidades.Punto;
 import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.MapaExcepcion;
 import Juego.Juego;

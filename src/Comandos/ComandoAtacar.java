@@ -10,7 +10,7 @@ import Excepciones.EnergiaInsuficienteException;
 import Excepciones.PosicionFueraDeAlcanceException;
 import Excepciones.PosicionFueraDeRangoException;
 import Mapa.Celda;
-import Mapa.Punto;
+import Utilidades.Punto;
 import Mapa.Transitable;
 import Personajes.Jugador;
 import java.util.Random;

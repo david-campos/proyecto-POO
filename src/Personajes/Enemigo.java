@@ -18,7 +18,7 @@ import Excepciones.PosicionFueraDeAlcanceException;
 import Excepciones.PosicionFueraDeRangoException;
 import Juego.Juego;
 import Mapa.Mapa;
-import Mapa.Punto;
+import Utilidades.Punto;
 import Mapa.Transitable;
 import Objetos.*;
 import java.util.ArrayList;
