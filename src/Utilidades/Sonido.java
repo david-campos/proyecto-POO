@@ -23,7 +23,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public abstract class Sonido {
     
-    public static void play(String sonido){
+    public static Clip play(String sonido){
         try {
             AudioInputStream stream;
             AudioFormat format;
@@ -38,8 +38,10 @@ public abstract class Sonido {
             clip = (Clip) AudioSystem.getLine(info);
             clip.open(stream);
             clip.start();
+            return clip;
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
             Logger.getLogger(Sonido.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
 }
