@@ -47,7 +47,8 @@ public final class ComandoMover implements Comando{
         if(jug!=null)
             try{
                 jug.mover(dir);
-                if(new Random().nextFloat() > 0.7) Utilidades.Sonido.play("hey");
+                if(new Random().nextFloat() > 0.8) Utilidades.Sonido.play("hey");
+                else if(new Random().nextFloat() > 0.5) Utilidades.Sonido.play("pasos_escalera");
                 jug.getJuego().impMapa();
             } catch (CeldaObjetivoNoValida ex){
                 Utilidades.Sonido.play("no");

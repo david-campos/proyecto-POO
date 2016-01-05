@@ -11,6 +11,7 @@ import Mapa.Mapa;
 import Personajes.Enemigo;
 import Comandos.*;
 import Excepciones.CeldaObjetivoNoValida;
+import Excepciones.JuegoException;
 import Excepciones.MaximoObjetosException;
 import Excepciones.MaximoPesoException;
 import Excepciones.ObjetoNoEquipableException;
@@ -68,9 +69,9 @@ public final class Juego {
     /**
      * Inicia el juego.
      */
-    public void iniciar() throws Exception{
+    public void iniciar() throws JuegoException{
         if(mapa == null || jug == null || consola == null){
-            throw new Exception("No se puede iniciar el juego :c"); //No se inicia tt...
+            throw new JuegoException("No se puede iniciar el juego :c"); //No se inicia tt...
         }
         
         log(mapa.getNombre());
@@ -79,6 +80,7 @@ public final class Juego {
         consola.leer();
         
         Utilidades.Sonido.play("cuerda_viento");
+        boolean jefeFinal = false;
         while(true)
         {
             int seguir = 2;
@@ -137,24 +139,28 @@ public final class Juego {
             
             if(jug.getVida() <= 0){
                 if(consola instanceof ConsolaGrafica){
-                    Thread.sleep(1000);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     ((ConsolaGrafica)consola).hasMuerto();
                 }else
                     log("HAS MUERTO! :c");
                 break;
             }
             
-            boolean jefeFinal = false;
             if(mapa.getEnemigos().isEmpty()) {
                 finJuego();
                 if(jefeFinal)
                     break;  //Introducir aquí mensaje de felicitación o lo que sea
                 jefeFinal = true;                
             }
-            
         }
         if(! (consola instanceof ConsolaGrafica))
-            log("Fin del juego.");  //TODO: Mover arriba cuando funcione la imagen
+            log("Fin del juego.");
+        else
+            consola.cerrar();
     }
     
     public void imprimirPrompt(){
@@ -220,7 +226,7 @@ public final class Juego {
                     break;
                 case "mirar":
                     if(i+1 < comando.length){
-                        if(comando[i+1].matches("-?\\d")){
+                        if(comando[i+1].matches("-?\\d*")){
                             if(i+3 < comando.length){
                                 cc.add(new ComandoMirar(
                                         jug,
@@ -282,6 +288,10 @@ public final class Juego {
                     }else
                         throw new ComandoExcepcion("Sintaxis incorrecta. Faltan argumentos para ayuda, requerido 1 (palabra "+(i+1)+")");
                     break;
+                case "suicidarse":
+                    cc.add(new ComandoMatar(jug));
+                    cc.ejecutar();
+                    return 1;
                 default:
                     throw new ComandoExcepcion("Hay un error de sintaxis, palabra " + (i+1) + ", se esperaba un nombre de comando, se encontró '"+comando[i]+"'");
             }

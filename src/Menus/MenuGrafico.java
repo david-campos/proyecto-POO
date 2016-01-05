@@ -11,7 +11,10 @@ import Juego.CargarJuegoPorDefecto;
 import Juego.ConsolaGrafica;
 import Juego.Juego;
 import Editor.Editor;
+import Excepciones.JuegoException;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -302,12 +305,19 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         new Thread(){
                 @Override
                 public void run() {
+                    Juego j;
                     try {
-                        Juego j = cargante.cargarJuego(null);
-                        j.setConsola(new ConsolaGrafica(j, j.getMapa()));
-                        j.iniciar();
+                        j = cargante.cargarJuego(null);
                     } catch (Exception ex) {
+                        ex.printStackTrace();
                         JOptionPane.showConfirmDialog(null, "Hubo un errorcillo cargando el juego ^^' : " + ex.getMessage(), "Error cargando", JOptionPane.DEFAULT_OPTION);
+                        return;
+                    }
+                    j.setConsola(new ConsolaGrafica(j, j.getMapa()));
+                    try {
+                        j.iniciar();
+                    } catch (JuegoException ex) {
+                        JOptionPane.showConfirmDialog(null, "Hubo un errorcillo en el juego ^^'\n" + ex.getMessage(), "Error de juego", JOptionPane.DEFAULT_OPTION);
                     }
                 }
         }.start();

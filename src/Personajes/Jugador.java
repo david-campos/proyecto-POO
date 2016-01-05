@@ -206,8 +206,8 @@ public abstract class Jugador extends Personaje {
     }
     
     public void visitarRango(){
-        for(int y=getPos().y-getRango(); y < getPos().y+getRango(); y++)
-            for(int x=getPos().x-getRango(); x < getPos().x+getRango(); x++)
+        for(int y=Math.max(getPos().y-getRango(), 0); y < getPos().y+getRango() && y < mapa.getAlto(); y++)
+            for(int x=Math.max(getPos().x-getRango(), 0); x < getPos().x+getRango() && x < mapa.getAlto(); x++)
                 if(this.enRango(new Punto(x,y)))
                     mapa.getCelda(x, y).setVisitada(true);
     }

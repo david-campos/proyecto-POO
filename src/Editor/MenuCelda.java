@@ -8,6 +8,7 @@ package Editor;
 import Mapa.Celda;
 import Utilidades.CeldaGrafica;
 import Mapa.Transitable;
+import Objetos.Objeto;
 import Personajes.Enemigo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,14 +24,15 @@ import javax.swing.JSeparator;
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
 public class MenuCelda extends javax.swing.JPopupMenu{
-    private static final String MENU_ENEMIGO_EDITAR = "Editar";
-    private static final String MENU_ENEMIGO_MOVER = "Mover";
-    private static final String MENU_ENEMIGO_ELIMINAR = "Eliminar";
+    private static final String MENU_EDITAR = "Editar";
+    private static final String MENU_MOVER = "Mover";
+    private static final String MENU_ELIMINAR = "Eliminar";
     
     private final CeldaGrafica celdaAsociada;
     private final Editor editor;
     
     private final HashMap<JMenu, Enemigo> mapaEnemigos;
+    private final HashMap<JMenu, Objeto> mapaObjetos;
     
     JCheckBoxMenuItem mitToggleTransitable;
     
@@ -38,6 +40,7 @@ public class MenuCelda extends javax.swing.JPopupMenu{
         celdaAsociada = cg;
         editor = ed;
         mapaEnemigos = new HashMap();
+        mapaObjetos = new HashMap();
         iniciarMenu();
     }
     
@@ -72,7 +75,10 @@ public class MenuCelda extends javax.swing.JPopupMenu{
         });
         add(mitToggleTransitable);
         
-        if(trans() != null)
+        if(trans() != null){
+            if(trans().getObjetos().size() > 0)
+                generarSeccionObjetos(trans());
+            
             if(trans().getNumEnemigos() > 0)
                 generarSeccionEnemigos(trans());
             else{
@@ -87,6 +93,7 @@ public class MenuCelda extends javax.swing.JPopupMenu{
                     }
                 });
             }
+        }
     }
     private void generarSeccionEnemigos(Transitable t){
         add(new JSeparator());
@@ -99,13 +106,32 @@ public class MenuCelda extends javax.swing.JPopupMenu{
         };
         for(Enemigo e: t.getEnemigos()){
             JMenu otroEnemigo = new JMenu(e.getNombre());
-            otroEnemigo.add(MENU_ENEMIGO_EDITAR).addActionListener(menuEnemigo);
-            otroEnemigo.add(MENU_ENEMIGO_MOVER).addActionListener(menuEnemigo);
-            otroEnemigo.add(MENU_ENEMIGO_ELIMINAR).addActionListener(menuEnemigo);
+            otroEnemigo.add(MENU_EDITAR).addActionListener(menuEnemigo);
+            otroEnemigo.add(MENU_MOVER).addActionListener(menuEnemigo);
+            otroEnemigo.add(MENU_ELIMINAR).addActionListener(menuEnemigo);
             mapaEnemigos.put(otroEnemigo, e);
             seccionEnemigos.add(otroEnemigo);
         }
         add(seccionEnemigos);
+    }
+    private void generarSeccionObjetos(Transitable t){
+        add(new JSeparator());
+        JMenu seccionObjetos = new JMenu("Objetos");
+        ActionListener menuObjeto = new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                menuObjeto_actionPerformed(e);
+            }
+        };
+        for(Objeto o: t.getObjetos()){
+            JMenu otroObjeto = new JMenu(o.getNombre());
+            otroObjeto.add(MENU_EDITAR).addActionListener(menuObjeto);
+            otroObjeto.add(MENU_MOVER).addActionListener(menuObjeto);
+            otroObjeto.add(MENU_ELIMINAR).addActionListener(menuObjeto);
+            mapaObjetos.put(otroObjeto, o);
+            seccionObjetos.add(otroObjeto);
+        }
+        add(seccionObjetos);
     }
     private void mitToggleTransitable_actionPerformed(ActionEvent e){
         editor.toggleTransitable(celdaAsociada);
@@ -114,13 +140,33 @@ public class MenuCelda extends javax.swing.JPopupMenu{
         JMenuItem src = (JMenuItem)e.getSource();
         Enemigo enemigo = mapaEnemigos.get((JMenu)((JPopupMenu)src.getParent()).getInvoker());
         switch(src.getText()){
-            case MENU_ENEMIGO_EDITAR:
+            case MENU_EDITAR:
                 new PropiedadesEnemigo(editor, enemigo).setVisible(true);
                 break;
-            case MENU_ENEMIGO_MOVER:
+            case MENU_MOVER:
+                editor.setEnemigoMovido(enemigo);
+                editor.setCeldaOrigen(trans());
+                editor.setHerramienta(Editor.Herramienta.MOVER_ENEMIGO);
                 break;
-            case MENU_ENEMIGO_ELIMINAR:
+            case MENU_ELIMINAR:
                 editor.eliminarEnemigo(enemigo);
+                break;
+        }
+    }
+    private void menuObjeto_actionPerformed(ActionEvent e){
+        JMenuItem src = (JMenuItem)e.getSource();
+        Objeto objeto = mapaObjetos.get((JMenu)((JPopupMenu)src.getParent()).getInvoker());
+        switch(src.getText()){
+            case MENU_EDITAR:
+                new PropiedadesObjeto(editor, objeto).setVisible(true);
+                break;
+            case MENU_MOVER:
+                editor.setObjetoMovido(objeto);
+                editor.setCeldaOrigen(trans());
+                editor.setHerramienta(Editor.Herramienta.MOVER_OBJETO);
+                break;
+            case MENU_ELIMINAR:
+                editor.eliminarObjeto(objeto);
                 break;
         }
     }

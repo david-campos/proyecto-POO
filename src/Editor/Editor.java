@@ -55,8 +55,16 @@ import javax.swing.border.LineBorder;
 public class Editor extends javax.swing.JFrame {
     public static final Border BORDE_DEF = new LineBorder(Color.white);
     public static final Border BORDE_HOVER = new LineBorder(Color.blue);
+    public static final Border BORDE_MOVER = new LineBorder(Color.green);
     public static final Border BORDE_SELEC = new LineBorder(Color.black);
-    public static final Border BORDE_PROP = new LineBorder(Color.red);
+    public static final Border BORDE_PROP = new LineBorder(Color.orange);
+    public static final Border BORDE_NOMOVER = new LineBorder(Color.red);
+
+    public static enum Herramienta{
+        NORMAL,
+        MOVER_ENEMIGO,
+        MOVER_OBJETO
+    }
     
     private final MouseListener mouseListenerCeldas = new CeldasML(this);
 
@@ -99,18 +107,54 @@ public class Editor extends javax.swing.JFrame {
     private final ArrayList<CeldaGrafica> celdas;
     private final HashMap<String, Image> imagenes;
     
-    private int TAM_CELDA = 40;
-    
+    private int tam_celda;
+    private Herramienta herramienta;
+    private Objeto objetoMovido; //Objeto movido (herramienta mover objeto)
+    private Transitable celdaOrigen; //Origen del objeto (herramienta mover objeto)
+    private Enemigo enemigoMovido; //Enemigo movido (herramienta mover enemigo)
     /**
      * Creates new form Editor
      */
     public Editor() {
-        mapa = null;
-        archivoMapa = null;
-        seleccionada = null;
-        imagenes = new HashMap();
-        celdas = new ArrayList();
+        mapa = null                     ;   archivoMapa = null;
+        seleccionada = null             ;   tam_celda = 40;
+        objetoMovido = null             ;   enemigoMovido = null;
+        imagenes = new HashMap()        ;   celdas = new ArrayList();
+        herramienta = Herramienta.NORMAL;
+        
         initComponents();
+    }
+
+    public Transitable getCeldaOrigen() {
+        return celdaOrigen;
+    }
+
+    public void setCeldaOrigen(Transitable celdaOrigen) {
+        this.celdaOrigen = celdaOrigen;
+    }
+
+    public Objeto getObjetoMovido() {
+        return objetoMovido;
+    }
+
+    public void setObjetoMovido(Objeto objetoMovido) {
+        this.objetoMovido = objetoMovido;
+    }
+
+    public Enemigo getEnemigoMovido() {
+        return enemigoMovido;
+    }
+
+    public void setEnemigoMovido(Enemigo enemigoMovido) {
+        this.enemigoMovido = enemigoMovido;
+    }
+
+    public Herramienta getHerramienta() {
+        return herramienta;
+    }
+
+    public void setHerramienta(Herramienta herramienta) {
+        this.herramienta = herramienta;
     }
 
     public File getArchivoMapa() {
@@ -530,7 +574,7 @@ public class Editor extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void sldZoomStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sldZoomStateChanged
-       TAM_CELDA = sldZoom.getValue();
+       tam_celda = sldZoom.getValue();
        flushImagenes();
        regenerarPanelMapa();
     }//GEN-LAST:event_sldZoomStateChanged
@@ -757,7 +801,7 @@ public class Editor extends javax.swing.JFrame {
         }else{
             panMapaEnEdicion = new JPanel(new GridLayout(mapa.getAlto(), mapa.getAncho()));
             panMapaEnEdicion.setBackground(Color.white);
-            panMapaEnEdicion.setSize(new Dimension(mapa.getAncho()*TAM_CELDA, mapa.getAlto()*TAM_CELDA));
+            panMapaEnEdicion.setSize(new Dimension(mapa.getAncho()*tam_celda, mapa.getAlto()*tam_celda));
             for(int i=0; i <mapa.getAlto();i++)
                 for(int j=0; j<mapa.getAncho(); j++)
                 {
@@ -777,7 +821,7 @@ public class Editor extends javax.swing.JFrame {
                 }
             panMapa.add(panMapaEnEdicion);
             panMapa.setPreferredSize(panMapaEnEdicion.getSize());
-            sldZoom.setValue(TAM_CELDA);
+            sldZoom.setValue(tam_celda);
             sldZoom.setEnabled(true);
             panMapa.revalidate();
         }
@@ -855,7 +899,7 @@ public class Editor extends javax.swing.JFrame {
     public Image obtenerImagen(String representacion) {
         if(imagenes.get(representacion) == null){
             Image img;
-            img = new ImageIcon("img/"+representacion+".png").getImage().getScaledInstance(TAM_CELDA, TAM_CELDA, Image.SCALE_SMOOTH);
+            img = new ImageIcon("img/"+representacion+".png").getImage().getScaledInstance(tam_celda, tam_celda, Image.SCALE_SMOOTH);
             imagenes.put(representacion, img);
             return img;
         }else
@@ -868,7 +912,48 @@ public class Editor extends javax.swing.JFrame {
         if(cg!=null)
             repintarCelda(cg);
     }
-
+    public void eliminarObjeto(Objeto o){
+        for(Celda c: mapa.getCeldas())
+            if(c instanceof Transitable){
+                Transitable transitable = (Transitable) c;
+                if(transitable.getObjeto(o.getNombre()) != null)
+                    transitable.remObjeto(o);
+            }
+    }
+    void moverEnemigo(CeldaGrafica celdaGrafica) {
+        if(herramienta == Herramienta.MOVER_ENEMIGO && enemigoMovido != null){
+            try{
+                enemigoMovido.setPos(celdaGrafica.getId());
+                repintarCelda(grafica(mapa.getPosDe(celdaOrigen)));
+                repintarCelda(celdaGrafica);
+            } catch (CeldaObjetivoNoValida ex) {
+                JOptionPane.showMessageDialog(null, "Celda a mover el enemigo no válida.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        celdaGrafica.getComponente().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        celdaGrafica.getComponente().setBorder(BORDE_DEF);
+        enemigoMovido = null;
+        celdaOrigen = null;
+        herramienta = Herramienta.NORMAL;
+    }
+    void moverObjeto(CeldaGrafica celdaGrafica) {
+        if(herramienta == Herramienta.MOVER_OBJETO && objetoMovido != null){
+            Celda c = mapa.getCelda(celdaGrafica.getId());
+            if(c instanceof Transitable){
+                Transitable transitable = (Transitable) c;
+                transitable.addObjeto(objetoMovido);
+                celdaOrigen.remObjeto(objetoMovido);
+            }else{
+                JOptionPane.showMessageDialog(null, "Celda a mover el objeto no válida.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        celdaGrafica.getComponente().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        celdaGrafica.getComponente().setBorder(BORDE_DEF);
+        objetoMovido = null;
+        celdaOrigen = null;
+        herramienta = Herramienta.NORMAL;
+    }
+    
     public CeldaGrafica grafica(Punto pos) {
         for(CeldaGrafica cg : celdas)
             if(cg.getId().equals(pos))

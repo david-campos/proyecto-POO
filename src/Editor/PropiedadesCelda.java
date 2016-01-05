@@ -278,6 +278,11 @@ public class PropiedadesCelda extends javax.swing.JDialog {
 
         btnEliminarObj.setText("-");
         btnEliminarObj.setEnabled(false);
+        btnEliminarObj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarObjActionPerformed(evt);
+            }
+        });
         panObjetos.add(btnEliminarObj, java.awt.BorderLayout.PAGE_END);
 
         panPestanhas.addTab("Objetos", panObjetos);
@@ -454,6 +459,12 @@ public class PropiedadesCelda extends javax.swing.JDialog {
             ((ObjetosListModel)lstObjetos.getModel()).actualizar();
         }
     }//GEN-LAST:event_nuevoObjeto
+
+    private void btnEliminarObjActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarObjActionPerformed
+        if(!lstObjetos.isSelectionEmpty()){
+            editor.eliminarObjeto((Objeto)lstObjetos.getSelectedValue());
+        }
+    }//GEN-LAST:event_btnEliminarObjActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
