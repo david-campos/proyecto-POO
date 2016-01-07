@@ -60,13 +60,6 @@ public abstract class Jugador extends Personaje {
     public boolean tieneBinoculares(){
         return binoculares!=null;
     }
-
-    public Juego getJuego() {
-        return juego;
-    }
-    public void setJuego(Juego juego) {
-        this.juego = juego;
-    }
         
     /**
      * Examina la celda en la que se encuentra el jugador en busca de objetos.

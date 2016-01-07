@@ -6,11 +6,12 @@
 package Juego;
 
 import Excepciones.CargadorException;
+import java.io.FileNotFoundException;
 
 /**
  *
  * @author crist
  */
 public interface CargadorJuego {
-    public Juego cargarJuego(Consola c) throws CargadorException ;    
+    public Juego cargarJuego(Consola c) throws CargadorException, FileNotFoundException, IllegalArgumentException ;    
 }

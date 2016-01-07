@@ -15,6 +15,7 @@ import Mapa.NoTransitable;
 import Utilidades.PanelCeldaGrafica;
 import Utilidades.Punto;
 import Mapa.Transitable;
+import Menus.MenuGrafico;
 import Objetos.Objeto;
 import Personajes.Enemigo;
 import com.google.gson.GsonBuilder;
@@ -244,9 +245,6 @@ public class Editor extends javax.swing.JFrame {
         lblDescripcion = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDescripcionMapa = new javax.swing.JTextArea();
-        panNombreJugador = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        txtNombreJugador = new javax.swing.JTextField();
         panDimensiones = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         spnAncho = new javax.swing.JSpinner();
@@ -271,6 +269,9 @@ public class Editor extends javax.swing.JFrame {
         mitAbrir = new javax.swing.JMenuItem();
         mitGuardar = new javax.swing.JMenuItem();
         mitGuardarComo = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        mirCerrarMapa = new javax.swing.JMenuItem();
+        mitCerrar = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         mitEditarMapa = new javax.swing.JMenuItem();
         mitEditarCelda = new javax.swing.JMenuItem();
@@ -290,6 +291,8 @@ public class Editor extends javax.swing.JFrame {
         dlgNuevoMapa.setSize(new java.awt.Dimension(446, 280));
         dlgNuevoMapa.setLocationRelativeTo(null);
 
+        panGeneral.setLayout(new javax.swing.BoxLayout(panGeneral, javax.swing.BoxLayout.Y_AXIS));
+
         panNombreMapa.setLayout(new java.awt.BorderLayout(5, 0));
 
         jLabel1.setText("Nombre del mapa:");
@@ -301,6 +304,8 @@ public class Editor extends javax.swing.JFrame {
             }
         });
         panNombreMapa.add(txtNombreMapa, java.awt.BorderLayout.CENTER);
+
+        panGeneral.add(panNombreMapa);
 
         panDescripcion.setLayout(new java.awt.BorderLayout(0, 5));
 
@@ -316,19 +321,9 @@ public class Editor extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(txtDescripcionMapa);
 
-        panDescripcion.add(jScrollPane1, java.awt.BorderLayout.PAGE_END);
+        panDescripcion.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        panNombreJugador.setLayout(new java.awt.BorderLayout(5, 0));
-
-        jLabel2.setText("Nombre del jugador:");
-        panNombreJugador.add(jLabel2, java.awt.BorderLayout.LINE_START);
-
-        txtNombreJugador.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                fijarFondoBlanco(evt);
-            }
-        });
-        panNombreJugador.add(txtNombreJugador, java.awt.BorderLayout.CENTER);
+        panGeneral.add(panDescripcion);
 
         jLabel3.setText("Ancho:");
         panDimensiones.add(jLabel3);
@@ -345,6 +340,8 @@ public class Editor extends javax.swing.JFrame {
         spnAlto.setValue(30);
         panDimensiones.add(spnAlto);
 
+        panGeneral.add(panDimensiones);
+
         cbxAleatorio.setSelected(true);
         cbxAleatorio.setText("Generar aleatorio");
         cbxAleatorio.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -359,6 +356,8 @@ public class Editor extends javax.swing.JFrame {
             panAleatorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(cbxAleatorio)
         );
+
+        panGeneral.add(panAleatorio);
 
         btnAceptar.setText("Aceptar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -379,7 +378,7 @@ public class Editor extends javax.swing.JFrame {
         panAcceptCancelLayout.setHorizontalGroup(
             panAcceptCancelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panAcceptCancelLayout.createSequentialGroup()
-                .addContainerGap(243, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAceptar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCancelar))
@@ -393,40 +392,7 @@ public class Editor extends javax.swing.JFrame {
                     .addComponent(btnCancelar)))
         );
 
-        javax.swing.GroupLayout panGeneralLayout = new javax.swing.GroupLayout(panGeneral);
-        panGeneral.setLayout(panGeneralLayout);
-        panGeneralLayout.setHorizontalGroup(
-            panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panAleatorio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(panGeneralLayout.createSequentialGroup()
-                .addGroup(panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panNombreMapa, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panNombreJugador, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panGeneralLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(panDimensiones, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 12, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panGeneralLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(panAcceptCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        panGeneralLayout.setVerticalGroup(
-            panGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panGeneralLayout.createSequentialGroup()
-                .addComponent(panNombreMapa, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(panDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(panNombreJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
-                .addComponent(panDimensiones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(panAleatorio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panAcceptCancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11))
-        );
+        panGeneral.add(panAcceptCancel);
 
         javax.swing.GroupLayout dlgNuevoMapaLayout = new javax.swing.GroupLayout(dlgNuevoMapa.getContentPane());
         dlgNuevoMapa.getContentPane().setLayout(dlgNuevoMapaLayout);
@@ -434,14 +400,14 @@ public class Editor extends javax.swing.JFrame {
             dlgNuevoMapaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dlgNuevoMapaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
                 .addContainerGap())
         );
         dlgNuevoMapaLayout.setVerticalGroup(
             dlgNuevoMapaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dlgNuevoMapaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -496,7 +462,7 @@ public class Editor extends javax.swing.JFrame {
 
         jMenu1.setText("Archivo");
 
-        mitNuevo.setText("Nuevo mapa...");
+        mitNuevo.setText("Nuevo mapa");
         mitNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mitNuevoActionPerformed(evt);
@@ -504,7 +470,7 @@ public class Editor extends javax.swing.JFrame {
         });
         jMenu1.add(mitNuevo);
 
-        mitAbrir.setText("Abrir mapa...");
+        mitAbrir.setText("Abrir mapa");
         mitAbrir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mitAbrirActionPerformed(evt);
@@ -512,7 +478,7 @@ public class Editor extends javax.swing.JFrame {
         });
         jMenu1.add(mitAbrir);
 
-        mitGuardar.setText("Guardar mapa...");
+        mitGuardar.setText("Guardar mapa");
         mitGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mitGuardarActionPerformed(evt);
@@ -528,6 +494,24 @@ public class Editor extends javax.swing.JFrame {
             }
         });
         jMenu1.add(mitGuardarComo);
+        jMenu1.add(jSeparator1);
+
+        mirCerrarMapa.setText("Cerrar mapa");
+        mirCerrarMapa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mirCerrarMapaActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mirCerrarMapa);
+
+        mitCerrar.setText("Cerrar editor");
+        mitCerrar.setToolTipText("");
+        mitCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitCerrarActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mitCerrar);
 
         mbrSuperior.add(jMenu1);
 
@@ -569,27 +553,24 @@ public class Editor extends javax.swing.JFrame {
         //Nombres y descripción válidos
         if(!txtNombreMapa.getText().isEmpty()){
             if(!txtDescripcionMapa.getText().isEmpty()){
-                if(!txtNombreJugador.getText().isEmpty()){
-                        dlgNuevoMapa.setVisible(false);
-                        cerrarMapa();
-                        archivoMapa = null;
-                        if(cbxAleatorio.isSelected())
-                        {
-                            mapa = new Mapa(
-                                    txtNombreMapa.getText(),
-                                    txtDescripcionMapa.getText(),
-                                    (int)spnAncho.getValue(),
-                                    (int)spnAlto.getValue(),
-                                    Mapa.getPlantillaAleatoria((int)spnAncho.getValue(), (int)spnAlto.getValue()),
-                                    null);
-                            mapa.setEnemigosAleatorio();
-                            mapa.setObjetosAleatorio();
-                        }else
-                            mapa = new Mapa(txtNombreMapa.getText(),txtDescripcionMapa.getText(),(int)spnAncho.getValue(),(int)spnAlto.getValue(),null);
-                        generarPanelMapa();
-                        info("Creado mapa '"+mapa.getNombre()+"'");
+                dlgNuevoMapa.setVisible(false);
+                cerrarMapa();
+                archivoMapa = null;
+                if(cbxAleatorio.isSelected())
+                {
+                    mapa = new Mapa(
+                            txtNombreMapa.getText(),
+                            txtDescripcionMapa.getText(),
+                            (int)spnAncho.getValue(),
+                            (int)spnAlto.getValue(),
+                            Mapa.getPlantillaAleatoria((int)spnAncho.getValue(), (int)spnAlto.getValue()),
+                            null);
+                    mapa.setEnemigosAleatorio();
+                    mapa.setObjetosAleatorio();
                 }else
-                    txtNombreJugador.setBackground(new Color(255, 200, 200));
+                    mapa = new Mapa(txtNombreMapa.getText(),txtDescripcionMapa.getText(),(int)spnAncho.getValue(),(int)spnAlto.getValue(),null);
+                generarPanelMapa();
+                info("Creado mapa '"+mapa.getNombre()+"'");
             }else
                 txtDescripcionMapa.setBackground(new Color(255, 200, 200));
         }else
@@ -624,6 +605,17 @@ public class Editor extends javax.swing.JFrame {
        regenerarPanelMapa();
     }//GEN-LAST:event_sldZoomStateChanged
 
+    private void mitCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitCerrarActionPerformed
+        cerrar();
+    }//GEN-LAST:event_mitCerrarActionPerformed
+
+    private void mirCerrarMapaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mirCerrarMapaActionPerformed
+        cerrarMapa();
+    }//GEN-LAST:event_mirCerrarMapaActionPerformed
+    private void cerrar(){
+        dispose();
+        new MenuGrafico().lanzar();
+    }
     /**
      * @param args the command line arguments
      */
@@ -661,19 +653,21 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JDialog dlgNuevoMapa;
     private javax.swing.JFileChooser fchMapa;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JLabel lblCoordenadas;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblInfo;
     private javax.swing.JMenuBar mbrSuperior;
+    private javax.swing.JMenuItem mirCerrarMapa;
     private javax.swing.JMenuItem mitAbrir;
+    private javax.swing.JMenuItem mitCerrar;
     private javax.swing.JMenuItem mitEditarCelda;
     private javax.swing.JMenuItem mitEditarMapa;
     private javax.swing.JMenuItem mitGuardar;
@@ -685,7 +679,6 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JPanel panDimensiones;
     private javax.swing.JPanel panGeneral;
     private javax.swing.JPanel panMapa;
-    private javax.swing.JPanel panNombreJugador;
     private javax.swing.JPanel panNombreMapa;
     private javax.swing.JPanel panZoom;
     private javax.swing.JSlider sldZoom;
@@ -693,7 +686,6 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JSpinner spnAncho;
     private javax.swing.JToolBar tbrInferior;
     private javax.swing.JTextArea txtDescripcionMapa;
-    private javax.swing.JTextField txtNombreJugador;
     private javax.swing.JTextField txtNombreMapa;
     // End of variables declaration//GEN-END:variables
 
@@ -701,7 +693,6 @@ public class Editor extends javax.swing.JFrame {
     //Métodos de funcionamiento
     public void nuevoMapa() {
         fchMapa.setCurrentDirectory(null);
-        txtNombreJugador.setText("Nombre");
         txtNombreMapa.setText("Mapa");
         txtDescripcionMapa.setText("Descripcion...");
         dlgNuevoMapa.setVisible(true);
@@ -721,6 +712,7 @@ public class Editor extends javax.swing.JFrame {
             seleccionada = null;
             panMapa.remove(panMapaEnEdicion);
             panMapaEnEdicion = null;
+            panMapa.repaint();
             sldZoom.setEnabled(false);
         }
         //Debe dejar panMapaEnEdicion a null y el array de celdas vacío, poner mapa a null..., ficheroMapa a null..., seleccionada a null
@@ -732,32 +724,32 @@ public class Editor extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             String n = fchMapa.getSelectedFile().getName();
             if(n.lastIndexOf(".") != -1 && n.substring(n.lastIndexOf(".")+1).equals(Utilidades.ConstantesGenerales.EXTENSION_MAPA)){
-            cerrarMapa();
-            try {
-                BufferedReader lector = new BufferedReader(
-                        new FileReader(fchMapa.getSelectedFile())
-                );
-                mapa = new GsonBuilder()
-                        .registerTypeAdapter(Celda.class, new Adaptador<Celda>())
-                        .registerTypeAdapter(Objeto.class, new Adaptador<Objeto>())
-                        .registerTypeAdapter(Enemigo.class, new Adaptador<Enemigo>())
-                        .create().fromJson(lector, Mapa.class);
-                for(Celda c: mapa.getCeldas())
-                    c.setMapa(mapa);
-                for(Enemigo e: mapa.getEnemigos()){
-                    try {
-                        e.setMapa(mapa);
-                    } catch (CeldaObjetivoNoValida ex) {
-                       //No debería ser no válida, fue guardado ahí.
+                cerrarMapa();
+                try {
+                    BufferedReader lector = new BufferedReader(
+                            new FileReader(fchMapa.getSelectedFile())
+                    );
+                    mapa = new GsonBuilder()
+                            .registerTypeAdapter(Celda.class, new Adaptador<Celda>())
+                            .registerTypeAdapter(Objeto.class, new Adaptador<Objeto>())
+                            .registerTypeAdapter(Enemigo.class, new Adaptador<Enemigo>())
+                            .create().fromJson(lector, Mapa.class);
+                    for(Celda c: mapa.getCeldas())
+                        c.setMapa(mapa);
+                    for(Enemigo e: mapa.getEnemigos()){
+                        try {
+                            e.setMapa(mapa);
+                        } catch (CeldaObjetivoNoValida ex) {
+                           //No debería ser no válida, fue guardado ahí.
+                        }
+
                     }
-                    
+                    archivoMapa = fchMapa.getSelectedFile();
+                    generarPanelMapa();
+                    info("Mapa abierto: " + fchMapa.getSelectedFile().getAbsolutePath());
+                } catch (IOException ex) {
+                    System.out.println(ex);
                 }
-                archivoMapa = fchMapa.getSelectedFile();
-                generarPanelMapa();
-                info("Mapa abierto: " + fchMapa.getSelectedFile().getAbsolutePath());
-            } catch (IOException ex) {
-                System.out.println(ex);
-            }
             }else
                 JOptionPane.showMessageDialog(null, "Archivo no válido", "Error", JOptionPane.ERROR_MESSAGE);
         }

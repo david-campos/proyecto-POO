@@ -11,7 +11,6 @@
         <Property name="fileFilter" type="javax.swing.filechooser.FileFilter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="new Utilidades.FiltroMapa()" type="code"/>
         </Property>
-        <Property name="fileSelectionMode" type="int" value="1"/>
         <Property name="fileView" type="javax.swing.filechooser.FileView" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="new Utilidades.FileViewMapa()" type="code"/>
         </Property>
@@ -209,23 +208,8 @@
         </Component>
         <Container class="javax.swing.JPanel" name="panLosQueIntercambian">
 
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panNombre" min="-2" pref="546" max="-2" attributes="0"/>
-                  <Component id="panElegirMapa" min="-2" pref="546" max="-2" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="panNombre" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="panElegirMapa" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
+            <Property name="axis" type="int" value="0"/>
           </Layout>
           <SubComponents>
             <Container class="javax.swing.JPanel" name="panNombre">
@@ -279,7 +263,7 @@
                 <Component class="javax.swing.JLabel" name="lblMapa">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="Carpeta del mapa"/>
+                    <Property name="text" type="java.lang.String" value="Archivo del mapa"/>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">

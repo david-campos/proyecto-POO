@@ -12,6 +12,7 @@ import Juego.ConsolaGrafica;
 import Juego.Juego;
 import Editor.Editor;
 import Excepciones.JuegoException;
+import Juego.CargarJuegoJson;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,7 +78,6 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         fchMapa.setAcceptAllFileFilterUsed(false);
         fchMapa.setDialogTitle("Abrir mapa");
         fchMapa.setFileFilter(new Utilidades.FiltroMapa());
-        fchMapa.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         fchMapa.setFileView(new Utilidades.FileViewMapa());
         fchMapa.setToolTipText("");
 
@@ -153,6 +153,8 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         panGeneral.add(panJuegoPorDefecto);
         panGeneral.add(jSeparator2);
 
+        panLosQueIntercambian.setLayout(new javax.swing.BoxLayout(panLosQueIntercambian, javax.swing.BoxLayout.X_AXIS));
+
         panNombre.setMinimumSize(new java.awt.Dimension(102, 41));
         panNombre.setPreferredSize(new java.awt.Dimension(235, 41));
         panNombre.setLayout(new java.awt.BorderLayout());
@@ -166,11 +168,13 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         txtNombre.setPreferredSize(new java.awt.Dimension(6, 22));
         panNombre.add(txtNombre, java.awt.BorderLayout.CENTER);
 
+        panLosQueIntercambian.add(panNombre);
+
         panElegirMapa.setVisible(false);
         panElegirMapa.setLayout(new java.awt.BorderLayout());
 
         lblMapa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblMapa.setText("Carpeta del mapa");
+        lblMapa.setText("Archivo del mapa");
         panElegirMapa.add(lblMapa, java.awt.BorderLayout.PAGE_START);
 
         txtMapa.setText("No seleccionado");
@@ -187,21 +191,7 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         });
         panElegirMapa.add(btnMapa, java.awt.BorderLayout.EAST);
 
-        javax.swing.GroupLayout panLosQueIntercambianLayout = new javax.swing.GroupLayout(panLosQueIntercambian);
-        panLosQueIntercambian.setLayout(panLosQueIntercambianLayout);
-        panLosQueIntercambianLayout.setHorizontalGroup(
-            panLosQueIntercambianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(panElegirMapa, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        panLosQueIntercambianLayout.setVerticalGroup(
-            panLosQueIntercambianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panLosQueIntercambianLayout.createSequentialGroup()
-                .addComponent(panNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panElegirMapa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
-        );
+        panLosQueIntercambian.add(panElegirMapa);
 
         panGeneral.add(panLosQueIntercambian);
 
@@ -297,9 +287,11 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
                 cargante = (CargadorJuego) new CargarJuegoPorDefecto(txtNombre.getText(), tipo, dificultad);
         }else{
                 if(!txtMapa.getText().isEmpty())
-                    cargante = new CargarJuegoDeFicheros(txtMapa.getText() + "mapa.csv", txtMapa.getText()+"objetos.csv", txtMapa.getText()+"npcs.csv", tipo);
-                else
-                    cargante = new CargarJuegoDeFicheros(tipo);
+                    cargante = new CargarJuegoJson(txtMapa.getText(), tipo, txtNombre.getText());
+                else{
+                    JOptionPane.showMessageDialog(null,"Seleccione un mapa a cargar.", "Ningún mapa seleccionado", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
         }
         //Hay que iniciar el juego en otro Thread
         new Thread(){
@@ -340,13 +332,10 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
         int returnVal = fchMapa.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             txtMapa.setText(fchMapa.getSelectedFile().toURI().getPath());
-        } else {
-            System.out.println("File access canceled by the user.");
         }
     }//GEN-LAST:event_btnMapaActionPerformed
 
     private void cbxJuegoPorDefectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxJuegoPorDefectoActionPerformed
-        panNombre.setVisible(cbxJuegoPorDefecto.isSelected());
         panDificultad.setVisible(cbxJuegoPorDefecto.isSelected());
         panElegirMapa.setVisible(!cbxJuegoPorDefecto.isSelected());
     }//GEN-LAST:event_cbxJuegoPorDefectoActionPerformed

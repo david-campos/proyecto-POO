@@ -11,6 +11,8 @@ import Personajes.Francotirador;
 import Personajes.Jugador;
 import Personajes.Marine;
 import Personajes.Zapador;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -66,7 +68,12 @@ public final class CargarJuegoPorDefecto implements CargadorJuego{
         try {
             map.setJugador(jug);
         } catch (CeldaObjetivoNoValida ex) {
-            map.hacerTransitable(map.getPosicionInicial(), false);
+                map.hacerTransitable(map.getPosicionInicial(), false);
+                try {
+                    map.setJugador(jug);
+                } catch (CeldaObjetivoNoValida ex1) {
+                    Logger.getLogger(CargarJuegoJson.class.getName()).log(Level.SEVERE, null, ex1);
+                }
         }
         
         map.setEnemigosAleatorio();

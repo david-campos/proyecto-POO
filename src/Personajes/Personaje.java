@@ -96,6 +96,12 @@ public abstract class Personaje {
 
     //GETTERS Y SETTERS
 
+    public Juego getJuego() {
+        return juego;
+    }
+    public void setJuego(Juego juego) {
+        this.juego = juego;
+    }
     /**
      * Devuelve el nombre de este jugador.
      * @return El nombre del jugador.
