@@ -16,6 +16,7 @@ import Juego.CargarJuegoJson;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.Clip;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -325,7 +326,12 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
     }//GEN-LAST:event_tipoJugadorCambiado
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        Utilidades.Sonido.play("casquillo");
+        Clip c = Utilidades.Sonido.play("casquillo");
+        try {
+            Thread.sleep(c.getMicrosecondLength()/1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MenuGrafico.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.exit(0);
     }//GEN-LAST:event_btnSalirActionPerformed
 

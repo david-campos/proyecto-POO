@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -406,10 +407,11 @@ public class ConsolaGrafica extends JFrame implements Consola{
         getContentPane().add(imgMuerte, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(null);
+        Clip c = Utilidades.Sonido.play("muerte");
         try {
-            Thread.sleep(2000); //2 segundos espera
+            Thread.sleep(c.getMicrosecondLength()/1000);
         } catch (InterruptedException ex) {
-            Logger.getLogger(ConsolaGrafica.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MenuGrafico.class.getName()).log(Level.SEVERE, null, ex);
         }
         dispose();
         new MenuGrafico().lanzar();
