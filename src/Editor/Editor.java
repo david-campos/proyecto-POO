@@ -274,8 +274,6 @@ public class Editor extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         mitEditarMapa = new javax.swing.JMenuItem();
         mitEditarCelda = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        mitMapaRepintar = new javax.swing.JMenuItem();
 
         fchMapa.setAcceptAllFileFilterUsed(false);
         fchMapa.setDialogTitle("Abrir mapa");
@@ -546,15 +544,6 @@ public class Editor extends javax.swing.JFrame {
             }
         });
         jMenu2.add(mitEditarCelda);
-        jMenu2.add(jSeparator1);
-
-        mitMapaRepintar.setText("Repintar mapa");
-        mitMapaRepintar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mitMapaRepintarActionPerformed(evt);
-            }
-        });
-        jMenu2.add(mitMapaRepintar);
 
         mbrSuperior.add(jMenu2);
 
@@ -624,10 +613,6 @@ public class Editor extends javax.swing.JFrame {
         editarCelda(seleccionada);
     }//GEN-LAST:event_mitEditarCeldaActionPerformed
 
-    private void mitMapaRepintarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitMapaRepintarActionPerformed
-        repintarCeldas();
-    }//GEN-LAST:event_mitMapaRepintarActionPerformed
-
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         cerrarMapa();
         System.exit(0);
@@ -683,7 +668,6 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JLabel lblCoordenadas;
     private javax.swing.JLabel lblDescripcion;
@@ -694,7 +678,6 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenuItem mitEditarMapa;
     private javax.swing.JMenuItem mitGuardar;
     private javax.swing.JMenuItem mitGuardarComo;
-    private javax.swing.JMenuItem mitMapaRepintar;
     private javax.swing.JMenuItem mitNuevo;
     private javax.swing.JPanel panAcceptCancel;
     private javax.swing.JPanel panAleatorio;
