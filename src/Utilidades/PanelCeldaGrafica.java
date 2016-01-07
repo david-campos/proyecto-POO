@@ -22,6 +22,7 @@ public class PanelCeldaGrafica extends JPanel implements CeldaGrafica{
         super();
         id = pt;
         setLayout(new OverlayLayout(this));
+        setOpaque(false);
         fondo = new JLabel();
         delante = new JLabel();
         ultima = null;

@@ -55,6 +55,6 @@ public class Arma extends Objeto{
 
     @Override
     public String toString() {
-        return String.format("%s\n\t%s\n\tDaño causado: %d\n\tRango de ataque: %d", getTipo()==Arma.ARMA_UNA_MANO?"A una mano":"A dos manos",super.toString(), dano, rango);
+        return String.format("%s\n\t%s\n\tDaño causado: %d\n\tRango de ataque: %d",super.toString(), getTipo()==Arma.ARMA_UNA_MANO?"A una mano":"A dos manos", dano, rango);
     }
 }

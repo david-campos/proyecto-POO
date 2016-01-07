@@ -493,7 +493,7 @@ public final class Mapa {
                             case 0:
                                 c.addObjeto(
                                         new Arma(
-                                                Math.round(r.nextDouble() * 500)/100.0,
+                                                Math.round(r.nextDouble() * 100)/100.0,
                                                 "arma_"+(i++),
                                                 "Es un arma, y mata.",
                                                 r.nextInt(5)+4,
@@ -507,7 +507,7 @@ public final class Mapa {
                                         new Armadura(
                                                 "armadura_"+(i++),
                                                 "Es una armadura, y así te matan menos.",
-                                                Math.round(r.nextDouble() * 1000)/100.0,
+                                                Math.round(r.nextDouble() * 500)/100.0,
                                                 r.nextInt(6)+defensa_min_armadura,
                                                 r.nextInt(21)+5,
                                                 r.nextInt(21)+5
@@ -544,7 +544,7 @@ public final class Mapa {
                             case 5:
                                 c.addObjeto(
                                         new Explosivo(
-                                            Math.round(r.nextDouble()*50)/100.0,
+                                            Math.round(r.nextDouble()*100)/100.0,
                                                 "explosivo_"+(i++)
                                         )
                                 );

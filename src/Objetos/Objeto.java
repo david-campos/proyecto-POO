@@ -113,7 +113,7 @@ public abstract class Objeto {
 
     @Override
     public String toString() {
-        return String.format("%s\n\t%s\n\tPeso: %fkg", nombre, descripcion, peso);
+        return String.format("%s\n\t%s\n\tPeso: %.3fkg", nombre, descripcion, peso);
     }
     
 }
