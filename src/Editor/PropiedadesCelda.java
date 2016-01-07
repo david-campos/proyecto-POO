@@ -348,23 +348,8 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     private void btnEngadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEngadirActionPerformed
         Punto pos = editor.getMapa().getPosDe(celda);
         
-        String nombre, nombreBase = "Sectoid";
-        int veces = 0;
-        nombre = nombreBase;
-        boolean exito;
-        do{
-            exito = true;
-            for(Enemigo e: editor.getMapa().getEnemigos()){
-                if(e.getNombre().equals(nombre)){
-                    nombre = String.format("%s_%d", nombreBase, ++veces);
-                    exito = false;
-                    break;
-                }
-            }
-        }while(!exito);
-        
         try {
-            editor.getMapa().addEnemigo(new Sectoid(nombre,pos.toArray(),null));
+            editor.getMapa().addEnemigo(new Sectoid(editor.obtenerNombreEnemigo("sectoid"),pos.toArray(),null));
         } catch (CeldaObjetivoNoValida ex) {
             JOptionPane.showMessageDialog(null,
                         "No se pudo generar el enemigo en esta celda.", "Errorcillo",
@@ -386,7 +371,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void lstEnemigosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstEnemigosMouseClicked
-        if(evt.getClickCount() > 1)
+        if(evt.getClickCount() > 1 && !lstEnemigos.isSelectionEmpty())
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     new PropiedadesEnemigo(editor, (Enemigo)lstEnemigos.getSelectedValue()).setVisible(true);
@@ -404,7 +389,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     }//GEN-LAST:event_lstObjetosValueChanged
 
     private void lstObjetosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstObjetosMouseClicked
-        if(evt.getClickCount() > 1){
+        if(evt.getClickCount() > 1 && !lstObjetos.isSelectionEmpty()){
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     new PropiedadesObjeto(editor, (Objeto)lstObjetos.getSelectedValue()).setVisible(true);
@@ -417,23 +402,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     private void nuevoObjeto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoObjeto
         if(celda instanceof Transitable){
             Objeto ob;
-            String nombre = "objeto";
-            int id=0;
-            
-            boolean adecuado;
-            do{
-                adecuado = true;
-                for(Celda c: celda.getMapa().getCeldas())
-                    if(c instanceof Transitable) {
-                        if(((Transitable)c).getObjeto(nombre+(id==0?"":"_"+id)) != null){
-                            adecuado = false;
-                            id++;
-                            break;
-                        }
-                    }
-            }while(!adecuado);
-            
-            nombre+=(id==0?"":"_"+id);
+            String nombre = editor.obtenerNombreObjeto("objeto");
             
             switch(((JMenuItem)evt.getSource()).getLabel()){
                 case "Arma":

@@ -60,6 +60,66 @@ public class Editor extends javax.swing.JFrame {
     public static final Border BORDE_PROP = new LineBorder(Color.orange);
     public static final Border BORDE_NOMOVER = new LineBorder(Color.red);
 
+    public String obtenerNombreObjeto(String objeto) {
+        int i = 0;
+        boolean valido;
+        
+        objeto = objeto.replace(" ", "_");
+        
+        do{
+            valido = true;
+            for(Celda c: mapa.getCeldas()){
+                String intento = objeto + (i>0?"_"+i:"");
+                if(c instanceof Transitable)
+                    if(((Transitable)c).getObjeto(intento) != null){
+                        i++;
+                        valido = false;
+                        break;
+                    }
+            }
+        }while(!valido);
+        
+        do{
+            valido = true;
+            for(Enemigo e: mapa.getEnemigos()){
+                String intento = objeto + (i>0?"_"+i:"");
+                if( e.getMochila().getObjeto(intento) != null
+                    || (e.getArma() != null
+                        && e.getArma().getNombre().equals(intento))
+                    || (e.getArma_izq() != null
+                        && e.getArma_izq().getNombre().equals(intento))
+                    || (e.getArmadura() != null
+                        && e.getArmadura().getNombre().equals(intento))
+                    ){
+                        i++;
+                        valido = false;
+                        break;
+                    }
+            }
+        }while(!valido);
+        
+        return objeto + (i>0?"_"+i:"");
+    }
+
+    public String obtenerNombreEnemigo(String nombreBase) {
+        String nombre;
+        int veces = 0;
+        nombre = nombreBase.replace(" ", "_");
+        boolean exito;
+        do{
+            exito = true;
+            for(Enemigo e: mapa.getEnemigos()){
+                if(e.getNombre().equals(nombre)){
+                    nombre = String.format("%s_%d", nombreBase, ++veces);
+                    exito = false;
+                    break;
+                }
+            }
+        }while(!exito);
+        
+        return nombre;
+    }
+
     public static enum Herramienta{
         NORMAL,
         MOVER_ENEMIGO,

@@ -5,40 +5,67 @@
  */
 package Editor;
 
-import Objetos.Mochila;
-import Objetos.Objeto;
+import Excepciones.CeldaObjetivoNoValida;
+import Excepciones.MaximoObjetosException;
+import Excepciones.MaximoPesoException;
+import Mapa.Transitable;
+import Objetos.*;
 import Personajes.*;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListDataListener;
+
 /**
  *
  * @author David Campos Rodríguez <david.campos@rai.usc.es>
  */
-public class PropiedadesEnemigo extends javax.swing.JDialog{
-    //TODO todo lo respectivo a la mochila
+public class PropiedadesEnemigo extends javax.swing.JDialog {
+
+    private static final String MIT_ARMA = "Arma";
+    private static final String MIT_ARMADURA = "Armadura";
+    private static final String MIT_BOTIQUIN = "Botiquín";
+    private static final String MIT_BINOCULARES = "Binoculares";
+    private static final String MIT_EXPLOSIVO = "Explosivo";
+    private static final String MIT_TORITO = "Torito rojo";
 
     private final Enemigo enemigo;
     private final Editor editor;
+    private Arma arma_der;
+    private Arma arma_izq;
+    private Armadura armadura;
+    private ArrayList<Objeto> objetosAtirar;
+
     /**
      * Creates new form PropiedadesEnemigo
      */
     public PropiedadesEnemigo(Editor contexto, Enemigo enemigo) {
         this.enemigo = enemigo;
         this.editor = contexto;
-        initComponents();
+        if(enemigo != null && contexto != null){
+            arma_der = enemigo.getArma();
+            arma_izq = enemigo.getArma_izq();
+            armadura = enemigo.getArmadura();
+            objetosAtirar = new ArrayList();
+            initComponents();
+        }
         setLocationRelativeTo(null);
     }
 
@@ -51,11 +78,20 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        pmnLista = new javax.swing.JPopupMenu();
+        menEngObj = new javax.swing.JMenu();
+        mitEngArma = new javax.swing.JMenuItem();
+        mitEngArmadura = new javax.swing.JMenuItem();
+        mitEngBinoculares = new javax.swing.JMenuItem();
+        mitEngBotiquin = new javax.swing.JMenuItem();
+        mitEngExplosivo = new javax.swing.JMenuItem();
+        mitEngTorito = new javax.swing.JMenuItem();
+        mitEliminar = new javax.swing.JMenuItem();
         panGeneral = new javax.swing.JTabbedPane();
         panPest1 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         txtNombre = new javax.swing.JTextField();
+        panTipo = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         cbxTipo = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
@@ -72,7 +108,11 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         lblArmaDer = new javax.swing.JLabel();
         lblArmaIzq = new javax.swing.JLabel();
         lblFondo = new javax.swing.JLabel();
+        panAceptarCancelar = new javax.swing.JPanel();
+        btnAceptar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
         panMochila = new javax.swing.JPanel();
+        panCabeza = new javax.swing.JPanel();
         panEspecificaciones = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         txtMaxObjetosMochila = new javax.swing.JFormattedTextField();
@@ -83,15 +123,74 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         pbrMaxPeso = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstMochila = new javax.swing.JList();
-        panAceptarCancelar = new javax.swing.JPanel();
-        btnAceptar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        menEngObj.setText("Añadir...");
+
+        mitEngArma.setText(MIT_ARMA);
+        mitEngArma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitEng_ActionPerformed(evt);
+            }
+        });
+        menEngObj.add(mitEngArma);
+
+        mitEngArmadura.setText(MIT_ARMADURA);
+        mitEngArmadura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitEng_ActionPerformed(evt);
+            }
+        });
+        menEngObj.add(mitEngArmadura);
+
+        mitEngBinoculares.setText(MIT_BINOCULARES);
+        mitEngBinoculares.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitEng_ActionPerformed(evt);
+            }
+        });
+        menEngObj.add(mitEngBinoculares);
+
+        mitEngBotiquin.setText(MIT_BOTIQUIN);
+        mitEngBotiquin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitEng_ActionPerformed(evt);
+            }
+        });
+        menEngObj.add(mitEngBotiquin);
+
+        mitEngExplosivo.setText(MIT_EXPLOSIVO);
+        mitEngExplosivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitEng_ActionPerformed(evt);
+            }
+        });
+        menEngObj.add(mitEngExplosivo);
+
+        mitEngTorito.setText(MIT_TORITO);
+        mitEngTorito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitEng_ActionPerformed(evt);
+            }
+        });
+        menEngObj.add(mitEngTorito);
+
+        pmnLista.add(menEngObj);
+
+        mitEliminar.setText("Eliminar");
+        mitEliminar.setEnabled(false);
+        mitEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitEliminarActionPerformed(evt);
+            }
+        });
+        pmnLista.add(mitEliminar);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Propiedades enemigo...");
+        setMinimumSize(new java.awt.Dimension(416, 295));
         setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         setResizable(false);
-        getContentPane().setLayout(new java.awt.BorderLayout(0, 5));
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         panPest1.setMaximumSize(new java.awt.Dimension(219, 32767));
         panPest1.setMinimumSize(new java.awt.Dimension(219, 265));
@@ -149,13 +248,14 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         panPest1.add(jPanel1);
 
         jLabel1.setText("Tipo:");
-        panPest1.add(jLabel1);
+        panTipo.add(jLabel1);
 
         cbxTipo.setModel(new ModeloCbxTipoEnemigo());
-        cbxTipo.setSelectedItem(enemigo.getClass()
-        );
+        cbxTipo.setSelectedItem(enemigo.getClass());
         cbxTipo.setRenderer(new RenderizadorClases());
-        panPest1.add(cbxTipo);
+        panTipo.add(cbxTipo);
+
+        panPest1.add(panTipo);
 
         jLabel2.setText("Vida máx:");
         panPest1.add(jLabel2);
@@ -220,89 +320,40 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         lblArmadura.setText(textoArmadura());
         lblArmadura.setToolTipText("Armadura...");
         lblArmadura.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblArmadura.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblArmadura.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblArmaduraMouseClicked(evt);
+            }
+        });
         panArmasYArmadura.add(lblArmadura, new org.netbeans.lib.awtextra.AbsoluteConstraints(103, 40, 90, 150));
 
         lblArmaDer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblArmaDer.setText(textoArmaDer());
         lblArmaDer.setToolTipText("Arma derecha...");
         lblArmaDer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblArmaDer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblArmaDerMouseClicked(evt);
+            }
+        });
         panArmasYArmadura.add(lblArmaDer, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 50, 50));
 
         lblArmaIzq.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblArmaIzq.setText(textoArmaIzq());
         lblArmaIzq.setToolTipText("Arma izquierda...");
         lblArmaIzq.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblArmaIzq.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblArmaIzqMouseClicked(evt);
+            }
+        });
         panArmasYArmadura.add(lblArmaIzq, new org.netbeans.lib.awtextra.AbsoluteConstraints(237, 180, 50, 50));
 
         lblFondo.setIcon(new javax.swing.ImageIcon("C:\\NetBeansProjects\\proyecto-poo\\img\\cuerpo.png")); // NOI18N
         panArmasYArmadura.add(lblFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         panPest1.add(panArmasYArmadura);
-
-        panGeneral.addTab("General", null, panPest1, "");
-
-        panMochila.setMaximumSize(new java.awt.Dimension(219, 32767));
-        panMochila.setMinimumSize(new java.awt.Dimension(219, 27));
-        panMochila.setPreferredSize(new java.awt.Dimension(219, 386));
-
-        panEspecificaciones.setPreferredSize(new java.awt.Dimension(390, 40));
-        panEspecificaciones.setLayout(new java.awt.BorderLayout(5, 0));
-
-        jLabel5.setText("Max. objetos:");
-        panEspecificaciones.add(jLabel5, java.awt.BorderLayout.LINE_START);
-
-        txtMaxObjetosMochila.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txtMaxObjetosMochila.setText(String.valueOf(enemigo.getMochila().getMaxObjetos()));
-        panEspecificaciones.add(txtMaxObjetosMochila, java.awt.BorderLayout.CENTER);
-
-        pbrMaxObjetos.setMaximum(enemigo.getMochila().getMaxObjetos());
-        pbrMaxObjetos.setValue(enemigo.getMochila().getNumObj());
-        panEspecificaciones.add(pbrMaxObjetos, java.awt.BorderLayout.PAGE_END);
-
-        panMaxPeso.setPreferredSize(new java.awt.Dimension(390, 40));
-        panMaxPeso.setLayout(new java.awt.BorderLayout(5, 0));
-
-        jLabel6.setText("Max. peso:");
-        panMaxPeso.add(jLabel6, java.awt.BorderLayout.LINE_START);
-
-        txtMaxPesoMochila.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txtMaxPesoMochila.setText(String.valueOf(enemigo.getMochila().getMaxPeso()));
-        panMaxPeso.add(txtMaxPesoMochila, java.awt.BorderLayout.CENTER);
-
-        pbrMaxPeso.setMaximum((int) Math.round(enemigo.getMochila().getMaxPeso()*1000));
-        pbrMaxPeso.setValue((int) Math.round(enemigo.getMochila().pesoActual()));
-        panMaxPeso.add(pbrMaxPeso, java.awt.BorderLayout.PAGE_END);
-
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(390, 146));
-
-        lstMochila.setModel(new MochilaListModel(enemigo.getMochila()));
-        lstMochila.setCellRenderer(new ObjetosRenderer());
-        jScrollPane1.setViewportView(lstMochila);
-
-        javax.swing.GroupLayout panMochilaLayout = new javax.swing.GroupLayout(panMochila);
-        panMochila.setLayout(panMochilaLayout);
-        panMochilaLayout.setHorizontalGroup(
-            panMochilaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panMochilaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(panEspecificaciones, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panMochilaLayout.createSequentialGroup()
-                .addComponent(panMaxPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        panMochilaLayout.setVerticalGroup(
-            panMochilaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panMochilaLayout.createSequentialGroup()
-                .addComponent(panMaxPeso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panEspecificaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
-        );
-
-        panGeneral.addTab("Mochila", panMochila);
-
-        getContentPane().add(panGeneral, java.awt.BorderLayout.CENTER);
 
         btnAceptar.setText("Aceptar");
         btnAceptar.setToolTipText("");
@@ -338,9 +389,97 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
                     .addComponent(btnCancelar)))
         );
 
-        getContentPane().add(panAceptarCancelar, java.awt.BorderLayout.PAGE_END);
+        panPest1.add(panAceptarCancelar);
+
+        panGeneral.addTab("General", null, panPest1, "");
+
+        panMochila.setMaximumSize(new java.awt.Dimension(219, 32767));
+        panMochila.setMinimumSize(new java.awt.Dimension(219, 27));
+        panMochila.setPreferredSize(new java.awt.Dimension(219, 386));
+        panMochila.setLayout(new java.awt.BorderLayout());
+
+        panCabeza.setLayout(new javax.swing.BoxLayout(panCabeza, javax.swing.BoxLayout.Y_AXIS));
+
+        panEspecificaciones.setPreferredSize(new java.awt.Dimension(390, 40));
+        panEspecificaciones.setLayout(new java.awt.BorderLayout(5, 0));
+
+        jLabel5.setText("Max. objetos:");
+        panEspecificaciones.add(jLabel5, java.awt.BorderLayout.LINE_START);
+
+        txtMaxObjetosMochila.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtMaxObjetosMochila.setText(String.valueOf(enemigo.getMochila().getMaxObjetos()));
+        txtMaxObjetosMochila.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMaxObjetosMochilaFocusLost(evt);
+            }
+        });
+        txtMaxObjetosMochila.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtMaxObjetosMochilaKeyReleased(evt);
+            }
+        });
+        panEspecificaciones.add(txtMaxObjetosMochila, java.awt.BorderLayout.CENTER);
+
+        pbrMaxObjetos.setMaximum(enemigo.getMochila().getMaxObjetos());
+        pbrMaxObjetos.setToolTipText(String.valueOf(enemigo.getMochila().getNumObj()));
+        pbrMaxObjetos.setValue(enemigo.getMochila().getNumObj());
+        panEspecificaciones.add(pbrMaxObjetos, java.awt.BorderLayout.PAGE_END);
+
+        panCabeza.add(panEspecificaciones);
+
+        panMaxPeso.setPreferredSize(new java.awt.Dimension(390, 40));
+        panMaxPeso.setLayout(new java.awt.BorderLayout(5, 0));
+
+        jLabel6.setText("Max. peso:");
+        panMaxPeso.add(jLabel6, java.awt.BorderLayout.LINE_START);
+
+        txtMaxPesoMochila.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        txtMaxPesoMochila.setValue(enemigo.getMochila().getMaxPeso());
+        txtMaxPesoMochila.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMaxPesoMochilaFocusLost(evt);
+            }
+        });
+        txtMaxPesoMochila.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtMaxPesoMochilaKeyReleased(evt);
+            }
+        });
+        panMaxPeso.add(txtMaxPesoMochila, java.awt.BorderLayout.CENTER);
+
+        pbrMaxPeso.setMaximum((int) Math.round(enemigo.getMochila().getMaxPeso()*1000));
+        pbrMaxPeso.setToolTipText(String.valueOf(enemigo.getMochila().pesoActual()));
+        pbrMaxPeso.setValue((int) Math.round(enemigo.getMochila().pesoActual()*1000));
+        panMaxPeso.add(pbrMaxPeso, java.awt.BorderLayout.PAGE_END);
+
+        panCabeza.add(panMaxPeso);
+
+        panMochila.add(panCabeza, java.awt.BorderLayout.PAGE_START);
+
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(390, 315));
+
+        lstMochila.setModel(new MochilaListModel(enemigo.getMochila()));
+        lstMochila.setCellRenderer(new ObjetosRenderer());
+        lstMochila.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lstMochilaMouseClicked(evt);
+            }
+        });
+        lstMochila.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstMochilaValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(lstMochila);
+
+        panMochila.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        panGeneral.addTab("Mochila", panMochila);
+
+        getContentPane().add(panGeneral);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtNombreFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusGained
@@ -350,19 +489,22 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
 
     private void txtNombreFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusLost
         txtNombre.setBackground(Color.getColor("control"));
+        txtNombre.setText(editor.obtenerNombreEnemigo(txtNombre.getText()));
         txtNombre.setBorder(null);
     }//GEN-LAST:event_txtNombreFocusLost
 
     private void txtNombreMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNombreMouseEntered
-        if(txtNombre.getBorder() == null)
+        if (txtNombre.getBorder() == null) {
             txtNombre.setBorder(new javax.swing.border.LineBorder(Color.gray, 1, false));
+        }
     }//GEN-LAST:event_txtNombreMouseEntered
 
     private void txtNombreMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNombreMouseExited
-        if(txtNombre.getBorder() != null &&
-                txtNombre.getBorder() instanceof javax.swing.border.LineBorder
-                && ((javax.swing.border.LineBorder)txtNombre.getBorder()).getLineColor().equals(Color.gray))
+        if (txtNombre.getBorder() != null
+                && txtNombre.getBorder() instanceof javax.swing.border.LineBorder
+                && ((javax.swing.border.LineBorder) txtNombre.getBorder()).getLineColor().equals(Color.gray)) {
             txtNombre.setBorder(null);
+        }
     }//GEN-LAST:event_txtNombreMouseExited
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -372,10 +514,12 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
 
     private void txtVidaMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtVidaMaxActionPerformed
         Integer n = Integer.parseInt(txtVidaMax.getText());
-        if(n < 1){
+        if (n < 1) {
             txtVidaMax.setText("1");
             txtVidaMaxActionPerformed(evt);
-        }else sldVida.setMaximum(n);
+        } else {
+            sldVida.setMaximum(n);
+        }
     }//GEN-LAST:event_txtVidaMaxActionPerformed
 
     private void sldVidaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sldVidaStateChanged
@@ -388,25 +532,288 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
 
     private void txtEnergiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEnergiaActionPerformed
         Integer n = Integer.parseInt(txtVidaMax.getText());
-        if(n < 1)
+        if (n < 1) {
             txtEnergia.setText("1");
+        }
     }//GEN-LAST:event_txtEnergiaActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        // TODO al aceptar, poner las propiedades del enemigo (o si se cambió la clase, crear un enemigo nuevo de la clase adecuada)
-        // puede que haya que hacer un "setEnemigo" en celda o así, para que esté en la misma posición
-        // aunque lo veo un poco innecesario.
+        Enemigo guardado = enemigo;
+        if(tipoCambiado()){
+            editor.eliminarEnemigo(enemigo);
+            try{
+                if((Class)cbxTipo.getSelectedItem() == Floater.class)
+                    guardado = new Floater("f",enemigo.getPos().toArray(),null);
+                else if((Class)cbxTipo.getSelectedItem() == HeavyFloater.class)
+                    guardado = new HeavyFloater("hf",enemigo.getPos().toArray(),null);
+                else if((Class)cbxTipo.getSelectedItem() == LightFloater.class)
+                    guardado = new LightFloater("lf",enemigo.getPos().toArray(),null);
+                else
+                    guardado = new Sectoid("s",enemigo.getPos().toArray(),null);
+                editor.getMapa().addEnemigo(guardado);
+                guardado.setMochila(enemigo.getMochila());
+            }catch (CeldaObjetivoNoValida ex){
+                //Esto no debería ocurrir, no es posible
+            }
+        }
+        guardado.setNombre(editor.obtenerNombreEnemigo(txtNombre.getText()));
+        guardado.setMaxVida(Integer.valueOf(txtVidaMax.getText()));
+        guardado.setVida(sldVida.getValue());
+        guardado.setEnergiaPorTurno(Integer.valueOf(txtEnergia.getText()));
+        guardado.setArma(arma_der);
+        guardado.setArma_izq(arma_izq);
+        guardado.setArmadura(armadura);
+        for(Objeto obj: objetosAtirar){
+            //Antes de añadirlos, los renombramos, esto evita que los objetos creados hayan
+            //duplicado los nombres.
+            obj.setNombre(editor.obtenerNombreObjeto(obj.getNombre()));
+            ((Transitable)editor.getMapa().getCelda(guardado.getPos())).addObjeto(obj);
+        }
+        dispose();
+        editor.repintarCelda(editor.grafica(guardado.getPos()));
     }//GEN-LAST:event_btnAceptarActionPerformed
 
-    private void txtNombreTextoCambiado(){
+    private void lstMochilaValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstMochilaValueChanged
+        mitEliminar.setEnabled(!lstMochila.isSelectionEmpty());
+    }//GEN-LAST:event_lstMochilaValueChanged
+
+    private void lstMochilaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstMochilaMouseClicked
+        if (evt.getButton() == MouseEvent.BUTTON3) {
+            pmnLista.show((Component) evt.getSource(), evt.getX(), evt.getY());
+        } else if (evt.getClickCount() > 1 && !lstMochila.isSelectionEmpty()) {
+            new PropiedadesObjeto(editor, (Objeto) lstMochila.getSelectedValue()).setVisible(true);
+            ((MochilaListModel) lstMochila.getModel()).actualizar();
+            actualizarValoresMochila();
+        }
+    }//GEN-LAST:event_lstMochilaMouseClicked
+
+    private void mitEng_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitEng_ActionPerformed
+        Objeto obj;
+        switch (((JMenuItem) evt.getSource()).getText()) {
+            case MIT_ARMA: {
+                String nombre = editor.obtenerNombreObjeto("arma");
+                obj = new Arma(0.2, nombre, "Teme a este arma.", 4, 10, Arma.ARMA_UNA_MANO);
+                break;
+            }
+            case MIT_ARMADURA: {
+                String nombre = editor.obtenerNombreObjeto("armadura");
+                obj = new Armadura(nombre, "Es una durísima armadura.", 0.5, 10, 0, 0);
+                break;
+            }
+            case MIT_BOTIQUIN: {
+                String nombre = editor.obtenerNombreObjeto("botiquin");
+                obj = new Botiquin(nombre, 0.2, 10);
+                break;
+            }
+            case MIT_BINOCULARES: {
+                String nombre = editor.obtenerNombreObjeto("binoculares");
+                obj = new Binoculares(nombre, 0.1, 3);
+                break;
+            }
+            case MIT_EXPLOSIVO: {
+                String nombre = editor.obtenerNombreObjeto("explosivo");
+                obj = new Explosivo(0.4, nombre);
+                break;
+            }
+            default: {
+                String nombre = editor.obtenerNombreObjeto("torito");
+                obj = new ToritoRojo(nombre, 0.2, 10);
+                break;
+            }
+        }
+        try {
+            enemigo.getMochila().addObjeto(obj);
+        } catch (MaximoObjetosException ex) {
+            JOptionPane.showMessageDialog(null, "No se pueden añadir más objetos, la mochila está llena!", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (MaximoPesoException ex) {
+            double dif = enemigo.getMochila().getMaxPeso()-enemigo.getMochila().pesoActual();
+            if( dif > 0.0009){
+                obj.setPeso(Math.floor(dif*1000)/1000.0); //Redondeamos hacia abajo con 3 decimales
+                try {
+                    enemigo.getMochila().addObjeto(obj);
+                } catch (MaximoObjetosException ex1) {
+                    System.out.println("QUE? IMPOSIBLE");
+                } catch (MaximoPesoException ex1) {
+                    System.out.println("TENEMOS UN FALLITO NEN.");
+                }
+            }else
+                JOptionPane.showMessageDialog(null, "La mochila está al máximo de peso.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        actualizarValoresMochila();
+        ((MochilaListModel)lstMochila.getModel()).actualizar();
+    }//GEN-LAST:event_mitEng_ActionPerformed
+
+    private void mitEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitEliminarActionPerformed
+       if(!lstMochila.isSelectionEmpty()){
+           enemigo.getMochila().remObjeto((Objeto)lstMochila.getSelectedValue());
+           ((MochilaListModel) lstMochila.getModel()).actualizar();
+            actualizarValoresMochila();
+       }
+    }//GEN-LAST:event_mitEliminarActionPerformed
+
+    private void lblArmaDerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblArmaDerMouseClicked
+        switch(evt.getButton()){
+            case MouseEvent.BUTTON1:
+                if(arma_der == null)
+                    arma_der = new Arma(0.2, editor.obtenerNombreObjeto("arma"), "Un arma", 3, 10, Arma.ARMA_UNA_MANO);
+                else if(arma_der.equals(arma_izq))
+                    arma_izq = null;
+                new PropiedadesObjeto(editor,arma_der).setVisible(true);
+
+                if(arma_der.getTipo() == Arma.ARMA_DOS_MANOS){
+                    //Si la nueva arma es a dos manos, si en la otra no hay nada, perfecto
+                    //si sí hay algo... habrá que tirarlo no?
+                    if(arma_izq == null)
+                        arma_izq = arma_der;
+                    else{
+                        if(JOptionPane.showConfirmDialog(this,
+                                "Has marcado este arma como arma a dos manos. El arma "
+                                + arma_izq.getNombre() + ", que " + enemigo.getNombre()
+                                + " porta en la mano derecha, se tirará a la celda.\n"
+                                + "¿Dejarla como arma a dos manos?",
+                                "¿Continuar?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+                            objetosAtirar.add(arma_izq);
+                            arma_izq = arma_der;
+                        }else{
+                            arma_der.setTipo(Arma.ARMA_UNA_MANO);
+                        }
+                    }
+                }
+                break;
+            case MouseEvent.BUTTON3:
+                if(arma_der != null)
+                    switch(JOptionPane.showConfirmDialog(this,
+                            "¿Tirar " + arma_der.getNombre() + " a la celda?",
+                            "¿Tirar arma?",
+                            JOptionPane.YES_NO_CANCEL_OPTION)){
+                        case JOptionPane.YES_OPTION:
+                            objetosAtirar.add(arma_der);
+                        case JOptionPane.NO_OPTION:
+                            if(arma_der.equals(arma_izq))
+                                arma_izq = null;
+                            arma_der = null;
+                            break;
+                    }
+                break;
+        }
+        lblArmaDer.setText(textoArmaDer());
+        lblArmaIzq.setText(textoArmaIzq());
+    }//GEN-LAST:event_lblArmaDerMouseClicked
+
+    private void lblArmaIzqMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblArmaIzqMouseClicked
+        switch(evt.getButton()){
+            case MouseEvent.BUTTON1:
+                if(arma_izq == null)
+                    arma_izq = new Arma(0.2, editor.obtenerNombreObjeto("arma"), "Un arma", 3, 10, Arma.ARMA_UNA_MANO);
+                else if(arma_izq.equals(arma_der))
+                    arma_der = null;
+                new PropiedadesObjeto(editor,arma_izq).setVisible(true);
+
+                if(arma_izq.getTipo() == Arma.ARMA_DOS_MANOS){
+                    //Si la nueva arma es a dos manos, si en la otra no hay nada, perfecto
+                    //si sí hay algo... habrá que tirarlo no?
+                    if(arma_der == null)
+                        arma_der = arma_izq;
+                    else{
+                        if(JOptionPane.showConfirmDialog(this,
+                                "Has marcado este arma como arma a dos manos. El arma "
+                                + arma_der.getNombre() + ", que " + enemigo.getNombre()
+                                + " porta en la mano derecha, se tirará a la celda.\n"
+                                + "¿Dejarla como arma a dos manos?",
+                                "¿Continuar?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+                            objetosAtirar.add(arma_der);
+                            arma_der = arma_izq;
+                        }else{
+                            arma_izq.setTipo(Arma.ARMA_UNA_MANO);
+                        }
+                    }
+                }
+                break;
+            case MouseEvent.BUTTON3:
+                if(arma_izq != null)
+                    switch(JOptionPane.showConfirmDialog(this,
+                            "¿Tirar " + arma_izq.getNombre() + " a la celda?",
+                            "¿Tirar arma?",
+                            JOptionPane.YES_NO_CANCEL_OPTION)){
+                        case JOptionPane.YES_OPTION:
+                            objetosAtirar.add(arma_izq);
+                        case JOptionPane.NO_OPTION:
+                            if(arma_izq.equals(arma_der))
+                                arma_der = null;
+                            arma_izq = null;
+                            break;
+                    }
+                break;
+        }
+        lblArmaDer.setText(textoArmaDer());
+        lblArmaIzq.setText(textoArmaIzq());
+    }//GEN-LAST:event_lblArmaIzqMouseClicked
+
+    private void lblArmaduraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblArmaduraMouseClicked
+        switch(evt.getButton()){
+            case MouseEvent.BUTTON1:
+                if(armadura == null)
+                    armadura = new Armadura(editor.obtenerNombreObjeto("armadura"), "Protege! Wow!", 0.6, 12, 0, 0);
+                new PropiedadesObjeto(editor, armadura).setVisible(true);
+                break;
+            case MouseEvent.BUTTON3:
+                if(armadura != null)
+                    switch(JOptionPane.showConfirmDialog(this,
+                            "¿Tirar " + armadura.getNombre() + " a la celda?",
+                            "¿Tirar arma?",
+                            JOptionPane.YES_NO_CANCEL_OPTION)){
+                        case JOptionPane.YES_OPTION:
+                            objetosAtirar.add(armadura);
+                        case JOptionPane.NO_OPTION:
+                            armadura = null;
+                            break;
+                    }
+                break;
+        }
+        lblArmadura.setText(textoArmadura());
+    }//GEN-LAST:event_lblArmaduraMouseClicked
+
+    private void txtMaxObjetosMochilaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaxObjetosMochilaFocusLost
+        try{
+            enemigo.getMochila().setMaxObjetos(Integer.parseInt(txtMaxObjetosMochila.getText()));
+        }catch (NumberFormatException ne){
+            //No pasa nada, simplemente se anulará en la siguientes líneas tt.
+        }
+        txtMaxObjetosMochila.setText(String.valueOf(enemigo.getMochila().getMaxObjetos()));
+        pbrMaxObjetos.setMaximum(enemigo.getMochila().getMaxObjetos());
+    }//GEN-LAST:event_txtMaxObjetosMochilaFocusLost
+
+    private void txtMaxPesoMochilaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaxPesoMochilaFocusLost
+        try{
+            double peso = (double)txtMaxPesoMochila.getValue();
+            enemigo.getMochila().setMaxPeso(peso);
+        }catch (NumberFormatException ne){
+            //No pasa nada, simplemente se anulará en la siguientes líneas tt.
+        }
+        txtMaxPesoMochila.setValue(enemigo.getMochila().getMaxPeso());
+        pbrMaxPeso.setMaximum((int)Math.round(enemigo.getMochila().getMaxPeso() * 1000));
+    }//GEN-LAST:event_txtMaxPesoMochilaFocusLost
+
+    private void txtMaxPesoMochilaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMaxPesoMochilaKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+            txtMaxPesoMochilaFocusLost(null);
+    }//GEN-LAST:event_txtMaxPesoMochilaKeyReleased
+
+    private void txtMaxObjetosMochilaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMaxObjetosMochilaKeyReleased
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+            txtMaxPesoMochilaFocusLost(null);
+    }//GEN-LAST:event_txtMaxObjetosMochilaKeyReleased
+
+    private void txtNombreTextoCambiado() {
         //Recalculamos el ancho del cuadro de texto
-        AffineTransform affinetransform = new AffineTransform();     
-        FontRenderContext frc = new FontRenderContext(affinetransform,true,true);     
-        int ancho = (int)(txtNombre.getFont().getStringBounds(txtNombre.getText(), frc).getWidth())+2;
+        AffineTransform affinetransform = new AffineTransform();
+        FontRenderContext frc = new FontRenderContext(affinetransform, true, true);
+        int ancho = (int) (txtNombre.getFont().getStringBounds(txtNombre.getText(), frc).getWidth()) + 2;
         ancho = Math.min(Math.max(20, ancho), panGeneral.getWidth());
         txtNombre.setSize(new Dimension(ancho, txtNombre.getPreferredSize().height));
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnCancelar;
@@ -419,24 +826,34 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblArmaDer;
     private javax.swing.JLabel lblArmaIzq;
     private javax.swing.JLabel lblArmadura;
     private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblVida;
     private javax.swing.JList lstMochila;
+    private javax.swing.JMenu menEngObj;
+    private javax.swing.JMenuItem mitEliminar;
+    private javax.swing.JMenuItem mitEngArma;
+    private javax.swing.JMenuItem mitEngArmadura;
+    private javax.swing.JMenuItem mitEngBinoculares;
+    private javax.swing.JMenuItem mitEngBotiquin;
+    private javax.swing.JMenuItem mitEngExplosivo;
+    private javax.swing.JMenuItem mitEngTorito;
     private javax.swing.JPanel panAceptarCancelar;
     private javax.swing.JPanel panArmasYArmadura;
+    private javax.swing.JPanel panCabeza;
     private javax.swing.JPanel panEnergia;
     private javax.swing.JPanel panEspecificaciones;
     private javax.swing.JTabbedPane panGeneral;
     private javax.swing.JPanel panMaxPeso;
     private javax.swing.JPanel panMochila;
     private javax.swing.JPanel panPest1;
+    private javax.swing.JPanel panTipo;
     private javax.swing.JPanel panVida;
     private javax.swing.JProgressBar pbrMaxObjetos;
     private javax.swing.JProgressBar pbrMaxPeso;
+    private javax.swing.JPopupMenu pmnLista;
     private javax.swing.JSlider sldVida;
     private javax.swing.JFormattedTextField txtEnergia;
     private javax.swing.JFormattedTextField txtMaxObjetosMochila;
@@ -446,37 +863,60 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
     // End of variables declaration//GEN-END:variables
 
     private String textoArmadura() {
-        if(enemigo.getArmadura() != null)
-            return enemigo.getArmadura().toString();
-        else
+        if (armadura != null) {
+            return "<html>"+armadura.toString().replace("\n", "<br>")+"</html>";
+        } else {
             return "<html>Sin<br>armadura</html>";
+        }
     }
 
     private String textoArmaDer() {
-        if(enemigo.getArma() != null)
+        if (arma_der != null) {
             return "Editar";
-        else
+        } else {
             return "No";
+        }
     }
 
     private String textoArmaIzq() {
-        if(enemigo.getArma_izq()!= null)
+        if (arma_izq != null) {
             return "Editar";
-        else
-            return "No";        
+        } else {
+            return "No";
+        }
+    }
+
+    private void actualizarValoresMochila() {
+        pbrMaxPeso.setValue((int)Math.round(enemigo.getMochila().pesoActual()*1000) );
+        pbrMaxPeso.setToolTipText(String.valueOf(enemigo.getMochila().pesoActual()));
+        pbrMaxObjetos.setValue(enemigo.getMochila().getNumObj());
+        pbrMaxObjetos.setToolTipText(String.valueOf(enemigo.getMochila().getNumObj()));
+    }
+
+    private boolean tipoCambiado() {
+        if((Class)cbxTipo.getSelectedItem() == Floater.class){
+            return !(enemigo instanceof Floater);
+        }else if((Class)cbxTipo.getSelectedItem() == HeavyFloater.class){
+            return !(enemigo instanceof HeavyFloater);
+        }else if((Class)cbxTipo.getSelectedItem() == LightFloater.class){
+            return !(enemigo instanceof LightFloater);
+        }else{
+            return !(enemigo instanceof Sectoid);
+        }
     }
 
     private static class ModeloCbxTipoEnemigo extends AbstractListModel<Class> implements ComboBoxModel<Class> {
+
         ArrayList<Class> tipos;
         Class selecto;
-        
+
         public ModeloCbxTipoEnemigo() {
             tipos = new ArrayList(4);
             tipos.add(Floater.class);
             tipos.add(LightFloater.class);
             tipos.add(HeavyFloater.class);
             tipos.add(Sectoid.class);
-            
+
             selecto = tipos.get(0);
         }
 
@@ -492,8 +932,9 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
 
         @Override
         public void setSelectedItem(Object anItem) {
-            if(anItem instanceof Class && tipos.contains((Class)anItem))
-                selecto = (Class)anItem;
+            if (anItem instanceof Class && tipos.contains((Class) anItem)) {
+                selecto = (Class) anItem;
+            }
         }
 
         @Override
@@ -503,10 +944,11 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
     }
 
     private static class RenderizadorClases extends JLabel implements ListCellRenderer<Class> {
+
         public RenderizadorClases() {
             super();
         }
-        
+
         @Override
         public Component getListCellRendererComponent(
                 JList<? extends Class> list,
@@ -514,9 +956,9 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
                 int index,
                 boolean isSelected,
                 boolean cellHasFocus) {
-            if(value == null)
+            if (value == null) {
                 setText("null");
-            else{
+            } else {
                 setText(value.getSimpleName());
             }
             if (isSelected) {
@@ -534,7 +976,9 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
     }
 
     private static class MochilaListModel extends AbstractListModel<Objeto> implements ListModel<Objeto> {
+
         private Mochila mochila;
+
         public MochilaListModel(Mochila mochila) {
             this.mochila = mochila;
         }
@@ -546,7 +990,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
         public void setMochila(Mochila mochila) {
             this.mochila = mochila;
         }
-        
+
         @Override
         public int getSize() {
             return mochila.getNumObj();
@@ -557,5 +1001,12 @@ public class PropiedadesEnemigo extends javax.swing.JDialog{
             return mochila.getObjeto(index);
         }
 
+        public void actualizar() {
+            if (getSize() > 0) {
+                this.fireContentsChanged(this, 0, getSize() - 1);
+            } else {
+                this.fireContentsChanged(this, 0, 0);
+            }
+        }
     }
 }

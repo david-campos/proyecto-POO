@@ -26,7 +26,7 @@ public class ObjetosRenderer extends JLabel implements ListCellRenderer<Objeto> 
             if(value == null)
                 setText("null");
             else{
-                setText(value.getNombre() + "[" + PropiedadesObjeto.tipoObjeto(value) + "]");
+                setText(value.getNombre() + "[" + PropiedadesObjeto.tipoObjeto(value) + ", peso " + value.getPeso() + "Kg]");
             }
             if (isSelected) {
                 setBackground(list.getSelectionBackground());

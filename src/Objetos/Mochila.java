@@ -38,7 +38,7 @@ public class Mochila {
         this(maxObjetos, maxPeso, new ArrayList(maxObjetos));
     }
     public Mochila(){
-        this(10,50);
+        this(10,5);
     }
     
     /**
@@ -55,6 +55,18 @@ public class Mochila {
     public double getMaxPeso() {
         return maxPeso;
     }
+
+    public void setMaxObjetos(int maxObjetos) {
+        if(maxObjetos > 0)
+            this.maxObjetos = maxObjetos;
+    }
+    public void setMaxPeso(double maxPeso) {
+        if(maxPeso > 0){
+            this.maxPeso = maxPeso;
+        }
+    }
+    
+    
     
     /**
      * Añade un objeto a la mochila.

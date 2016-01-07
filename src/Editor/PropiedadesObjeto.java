@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent;
  */
 public class PropiedadesObjeto extends javax.swing.JDialog {
     private Objeto obj;
-    private Editor editor;
+    private final Editor editor;
     /**
      * Creates new form PropiedadesObjeto
      */
@@ -321,7 +321,8 @@ public class PropiedadesObjeto extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtNombreFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusLost
-        obj.setNombre(txtNombre.getText());
+        String nombre = editor.obtenerNombreObjeto(txtNombre.getText().replace(" ", "_"));
+        obj.setNombre(nombre);
         txtNombre.setText(obj.getNombre());
     }//GEN-LAST:event_txtNombreFocusLost
 

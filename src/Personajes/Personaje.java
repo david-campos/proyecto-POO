@@ -204,7 +204,17 @@ public abstract class Personaje {
     public Armadura getArmadura() {
         return armadura;
     }
-    //No se necesita setArmadura porque se usa el método "equipar"
+
+    public void setArma(Arma arma) {
+        this.arma = arma;
+    }
+    public void setArma_izq(Arma arma_izq) {
+        this.arma_izq = arma_izq;
+    }
+    public void setArmadura(Armadura armadura) {
+        this.armadura = armadura;
+    }
+    
     public Arma getArma() {
         return arma;
     }
