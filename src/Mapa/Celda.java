@@ -60,8 +60,7 @@ public abstract class Celda {
      * @param map El mapa al que asignar la celda.
      */
     public void setMapa(Mapa map){
-        if(map != null && mapa == null) //Comprobamos que mapa sea null porque solo se puede setear el mapa una vez
-            mapa = map;
+        mapa = map;
     }
     public void detonar(){
         mapa.getJuego().log("¡Una bomba ha explotado!");

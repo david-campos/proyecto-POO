@@ -399,7 +399,8 @@ public class ConsolaGrafica extends JFrame implements Consola{
     
     @Override
     public void cerrar(){
-        System.exit(0);
+        dispose();
+        new MenuGrafico().lanzar();
     }
     
     public void hasMuerto() {

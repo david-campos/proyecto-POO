@@ -314,8 +314,8 @@ public final class Juego {
         Punto pos = new Punto (mapa.getAlto()/2, mapa.getAncho()/2);
         mapa.hacerTransitable(pos, false);
         try {
-            Enemigo jefeFinal = new HeavyFloater("Jefe final", 300, 60, new int[]{pos.y, pos.x}, this);
-            Arma arma = new Arma(15, "Ragnarok", "Espada buena, mejor cogela", 2, 120, Arma.ARMA_UNA_MANO);
+            Enemigo jefeFinal = new HeavyFloater("jefe final", 300, 60, new int[]{pos.y, pos.x}, this);
+            Arma arma = new Arma(1.5, "Ragnarok", "Espada buena, mejor cogela", 2, 120, Arma.ARMA_UNA_MANO);
             try {
                 jefeFinal.getMochila().addObjeto(arma);
                 jefeFinal.equipar(arma);

@@ -368,7 +368,9 @@ public final class Mapa {
         if(getCelda(pt) instanceof Transitable){
             enemigos.removeAll(((Transitable)getCelda(pt)).getEnemigos());
         }
+        celdas.get(pt.y).get(pt.x).setMapa(null);
         celdas.get(pt.y).set(pt.x, c);
+        c.setMapa(this);
     }
     
     /**

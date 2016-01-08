@@ -876,16 +876,7 @@ public class Editor extends javax.swing.JFrame {
     }
     public void toggleTransitable(CeldaGrafica cg){
         Celda c = mapa.getCelda(cg.getId());
-        if(c==null)
-            return;
-
-        if(c instanceof Transitable){
-            for(Enemigo e: ((Transitable)c).getEnemigos())
-                mapa.remEnemigo(e);
-            mapa.setCelda(cg.getId(), new NoTransitable());
-        }else
-            mapa.setCelda(cg.getId(), new Transitable());
-
+        toggleTransitable(c);
         repintarCelda(cg);
     }
     
