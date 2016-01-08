@@ -5,6 +5,11 @@
  */
 package Juego;
 
+import Comandos.Comando;
+import Comandos.ComandoDesequipar;
+import Comandos.ComandoTirar;
+import Editor.Editor;
+import Excepciones.ComandoExcepcion;
 import Mapa.Celda;
 import Utilidades.CeldaGrafica;
 import Utilidades.ImagenCelda;
@@ -15,10 +20,12 @@ import Mapa.Transitable;
 import Menus.MenuGrafico;
 import Objetos.Objeto;
 import Personajes.Jugador;
+import Personajes.Personaje;
 import Utilidades.BarraDeCargaUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -27,9 +34,13 @@ import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -151,13 +162,13 @@ public class ConsolaGrafica extends JFrame implements Consola{
         panelMapa.setOpaque(false);
         
         for(int i = 0; i < mapa.getAncho() * mapa.getAlto(); i++){
-            CeldaGrafica celda = new PanelCeldaGrafica(new Punto(i/mapa.getAncho(), i%mapa.getAncho()));
+            CeldaGrafica celda = new PanelCeldaGrafica(new Punto(i%mapa.getAncho(), i/mapa.getAncho()));
             Image icon = new ImageIcon("img/celda.png").getImage().getScaledInstance(dim, dim, Image.SCALE_FAST);
             imagenes.put("celda", icon);
             celda.setImagen(new ImagenCelda(icon));
             celda.getComponente().setMinimumSize(new Dimension(dim, dim));
             celda.getComponente().setPreferredSize(new Dimension(dim, dim));
-            
+            celda.getComponente().addMouseListener(new CoordenadaAlClick(areaConsola, mapa.getJugador(), celda.getId()));
             panelMapa.add(celda.getComponente());
             paneles.add(celda);
         }
@@ -240,9 +251,17 @@ public class ConsolaGrafica extends JFrame implements Consola{
         lblArmadura = new JLabel(); lblArmadura.setIcon(new ImageIcon("img/armadura_dis.png"));
         lblBinoculares = new JLabel(); lblBinoculares.setIcon(new ImageIcon("img/binoculares_dis.png"));
         lblArmaDer.setToolTipText("Arma derecha");
+        lblArmaDer.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "arma"), this));
+        lblArmaDer.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lblArmaIzq.setToolTipText("Arma izquierda");
+        lblArmaIzq.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "arma_izq"), this));
+        lblArmaIzq.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lblArmadura.setToolTipText("Armadura equipada");
+        lblArmadura.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "armadura"), this));
+        lblArmadura.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lblBinoculares.setToolTipText("Binoculares equipados");
+        lblBinoculares.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "binoculares"), this));
+        lblBinoculares.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         LineBorder borde = new LineBorder(Color.white);
         lblArmaDer.setBorder(borde); panIconos.add(lblArmaDer);
         lblArmaIzq.setBorder(borde); panIconos.add(lblArmaIzq);
@@ -433,15 +452,22 @@ public class ConsolaGrafica extends JFrame implements Consola{
         
         for(Component c: panelObjetos.getComponents())
             panelObjetos.remove(c);
-        for(Objeto o: mapa.getJugador().getMochila().getObjetos())
-            panelObjetos.add(new IconoObjetoMochila(o));
         
-        panelMochila.repaint();
+        for(Objeto o: mapa.getJugador().getMochila().getObjetos()){
+            IconoObjetoMochila ico = new IconoObjetoMochila(o);
+            ico.addMouseListener(new TextoAlClick(areaConsola, o.getNombre()));
+            ico.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            panelObjetos.add(ico);
+        }
         
         pbrCargaObjetos.setValue(mapa.getJugador().getMochila().getNumObj());
         pbrCargaObjetos.setToolTipText(mapa.getJugador().getMochila().getNumObj() + "/" + mapa.getJugador().getMochila().getMaxObjetos());
         pbrCargaPeso.setValue((int)Math.round(mapa.getJugador().getMochila().pesoActual() * 1000) );
         pbrCargaPeso.setToolTipText(mapa.getJugador().getMochila().pesoActual() + "/" + mapa.getJugador().getMochila().getMaxPeso());
+        
+        Rectangle r = panelMochila.getBounds();
+        panelMochila.repaint(r);
+        panelObjetos.revalidate();
     }
 
     private void actualizarIconosEquipacion() {
@@ -453,4 +479,78 @@ public class ConsolaGrafica extends JFrame implements Consola{
             lblBinoculares.setIcon(new ImageIcon("img/binoculares"+(j.tieneBinoculares()?"":"_dis")+".png"));
         }
     }
+
+    private static class CoordenadaAlClick extends MouseAdapter {
+        Punto pt;
+        JTextField area;
+        Personaje personaje;
+        public CoordenadaAlClick(JTextField donde, Personaje relativo, Punto pt) {
+            this.pt = pt;
+            this.personaje = relativo;
+            this.area = donde;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if(area.isEnabled()){
+                String pre = area.getText().substring(0, area.getSelectionStart());
+                String pos = area.getText().substring(area.getSelectionEnd());
+                String texto = String.format("%s%s%d %d%s%s",
+                        pre,
+                        pre.endsWith(" ")?"":" ",
+                        pt.x - personaje.getPos().x, pt.y - personaje.getPos().y,
+                        pos.startsWith(" ")?"":" ",
+                        pos
+                        );
+                area.setText(texto);
+            }
+        }
+    }    
+    private static class TextoAlClick extends MouseAdapter {
+        String texto;
+        JTextField area;
+        public TextoAlClick(JTextField donde, String texto) {
+            this.texto = texto;
+            this.area = donde;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if(area.isEnabled()){
+                String pre = area.getText().substring(0, area.getSelectionStart());
+                String pos = area.getText().substring(area.getSelectionEnd());
+                String text = String.format("%s%s%s%s%s",
+                        pre,
+                        pre.endsWith(" ")?"":" ",
+                        texto,
+                        pos.startsWith(" ")?"":" ",
+                        pos
+                        );
+                area.setText(text);
+            }
+        }
+    }    
+    private static class ComandoAlClick extends MouseAdapter {
+        Comando comando;
+        JTextField area;
+        ConsolaGrafica cg;
+        public ComandoAlClick(JTextField donde, Comando comando, ConsolaGrafica cg) {
+            this.comando = comando;
+            this.area = donde;
+            this.cg = cg;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if(area.isEnabled()){
+                try {
+                    comando.ejecutar();
+                } catch (ComandoExcepcion ex) {
+                    cg.limpiar();
+                    cg.imprimir(ex.getMessage());
+                }
+                cg.imprimirMapa();
+            }
+        }
+    }        
 }
