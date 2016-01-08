@@ -11,9 +11,11 @@ import Juego.CargarJuegoPorDefecto;
 import Juego.ConsolaGrafica;
 import Juego.Juego;
 import Editor.Editor;
+import Excepciones.CargadorException;
 import Excepciones.JuegoException;
 import Juego.CargarJuegoJson;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.Clip;
@@ -302,9 +304,15 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
                     Juego j;
                     try {
                         j = cargante.cargarJuego(null);
-                    } catch (Exception ex) {
+                    } catch (CargadorException ex){
                         ex.printStackTrace();
                         JOptionPane.showConfirmDialog(null, "Hubo un errorcillo cargando el juego ^^' : " + ex.getMessage(), "Error cargando", JOptionPane.DEFAULT_OPTION);
+                        return;
+                    } catch (FileNotFoundException ex) {
+                        JOptionPane.showConfirmDialog(null, "Archivo de mapa no encontrado.", "Error cargando", JOptionPane.DEFAULT_OPTION);
+                        return;
+                    } catch (IllegalArgumentException ex) {
+                        JOptionPane.showConfirmDialog(null, "Archivo de mapa no válido: " + ex.getMessage(), "Error cargando", JOptionPane.DEFAULT_OPTION);
                         return;
                     }
                     j.setConsola(new ConsolaGrafica(j, j.getMapa()));

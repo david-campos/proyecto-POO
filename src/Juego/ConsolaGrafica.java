@@ -239,6 +239,10 @@ public class ConsolaGrafica extends JFrame implements Consola{
         lblArmaIzq = new JLabel(); lblArmaIzq.setIcon(new ImageIcon("img/arma_izq_dis.png"));
         lblArmadura = new JLabel(); lblArmadura.setIcon(new ImageIcon("img/armadura_dis.png"));
         lblBinoculares = new JLabel(); lblBinoculares.setIcon(new ImageIcon("img/binoculares_dis.png"));
+        lblArmaDer.setToolTipText("Arma derecha");
+        lblArmaIzq.setToolTipText("Arma izquierda");
+        lblArmadura.setToolTipText("Armadura equipada");
+        lblBinoculares.setToolTipText("Binoculares equipados");
         LineBorder borde = new LineBorder(Color.white);
         lblArmaDer.setBorder(borde); panIconos.add(lblArmaDer);
         lblArmaIzq.setBorder(borde); panIconos.add(lblArmaIzq);

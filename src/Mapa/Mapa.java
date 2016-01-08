@@ -145,10 +145,6 @@ public final class Mapa {
             }
         }
         
-        //Si se cambian los siguientes arrays, recordar variar luego los ifs en "Grupos de vegetación"
-        int suelos[] = {ConstantesMapa.HIERBA1, ConstantesMapa.HIERBA2};
-        int vegetaciones[] = {ConstantesMapa.ARBUSTO1, ConstantesMapa.ARBUSTO2};
-        
         //Una vez generadas las celdas, recorremos el mapa
         //y generamos círculos de tipos iguales (trata de homogenizar
         //un poco la generación para darle belleza)
@@ -165,7 +161,7 @@ public final class Mapa {
             for(i=Math.max(pt.y -  radio, 0); i < pt.y + radio && i < getAlto(); i++)
                 for(int j=Math.max(pt.x - radio, 0); j < pt.x + radio && j < getAncho(); j++)
                     if(pt.dist(new Punto(j,i)) <= radio && celdas.get(i).get(j) instanceof Transitable)
-                        celdas.get(i).get(j).tipo = suelos[tipoCirculo];
+                        celdas.get(i).get(j).tipo = ConstantesMapa.SUELOS[tipoCirculo];
         }
         //Grupos de vegetación
         limit = (int) Math.ceil(Math.max(getAlto(), getAncho()) / 20.0);
@@ -175,10 +171,11 @@ public final class Mapa {
             for(i=Math.max(pt.y -  radio, 0); i < pt.y + radio && i < getAlto(); i++)
                 for(int j=Math.max(pt.x - radio, 0); j < pt.x + radio && j < getAncho(); j++)
                     if(pt.dist(new Punto(j,i)) <= radio && celdas.get(i).get(j) instanceof Transitable)
-                        if(celdas.get(i).get(j).tipo == suelos[0])
-                            celdas.get(i).get(j).tipo = vegetaciones[0];
-                        else
-                            celdas.get(i).get(j).tipo = vegetaciones[1];
+                        for(int l=0; l < ConstantesMapa.SUELOS.length; l++)
+                            if(celdas.get(i).get(j).tipo == ConstantesMapa.SUELOS[l]){
+                                celdas.get(i).get(j).tipo = ConstantesMapa.VEGETACIONES[l];
+                                break;
+                            }
         }
         //--- Lagos ---//
         int numLagos = r.nextInt( (int) Math.ceil(getAncho()*getAlto()/90.0) );

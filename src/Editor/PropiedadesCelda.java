@@ -432,6 +432,7 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     private void btnEliminarObjActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarObjActionPerformed
         if(!lstObjetos.isSelectionEmpty()){
             editor.eliminarObjeto((Objeto)lstObjetos.getSelectedValue());
+            ((ObjetosListModel)lstObjetos.getModel()).actualizar();
         }
     }//GEN-LAST:event_btnEliminarObjActionPerformed
 

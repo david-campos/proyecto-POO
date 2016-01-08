@@ -13,6 +13,8 @@ public interface ConstantesMapa {
     /*CELDAS*/
     public String[] CE_REPR_TRANS={" ", " ", "\u001B[32mx\u001B[0m","\u001B[33mx\u001B[0m", "\u001B[35mO\u001B[0m", " ", " "};
     public String[] CE_REPR_NOTRANS={"\u001B[34m\u00A7\u001B[0m", "\u001B[30mM\u001B[0m"};
+    public String[] CE_REPG_TRANS={"hierba","hierba2","arbusto","arbusto2","boquete", "camino", "madera"};
+    public String[] CE_REPG_NOTRANS={"agua", "muro"};
     
     public int HIERBA1 = 0;
     public int HIERBA2 = 1;
@@ -25,9 +27,9 @@ public interface ConstantesMapa {
     public int AGUA = 0;
     public int MURO = 1;
     
-    /*IMAGENES*/
-    public String[] CE_REPG_TRANS={"hierba","hierba2","arbusto","arbusto2","boquete", "camino", "madera"};
-    public String[] CE_REPG_NOTRANS={"agua", "muro"};
+    //Usados en generaciones aleatorias, deben tener la misma longitud
+    int SUELOS[] = {ConstantesMapa.HIERBA1, ConstantesMapa.HIERBA2};
+    int VEGETACIONES[] = {ConstantesMapa.ARBUSTO1, ConstantesMapa.ARBUSTO2};
     
     /*EXPLOSIVO*/
     public int EXPLOSION_MAX_RAD = 3;
