@@ -152,19 +152,38 @@ public final class Mapa {
         int numCentros = r.nextInt( (getAlto()+getAncho())/4 ) + (getAlto()+getAncho())/4;
         int suma = 2;
         int limit = Math.max(getAlto(), getAncho()) / 4;
-        int tipoCirculo = 1;
+        int tipoCirculo = -1;
         //Generamos suelos pues
         for(int k=0; k < numCentros; k++){
             Punto pt = new Punto(r.nextInt(getAncho()), r.nextInt(getAlto())); //Si se solapan no pasa nada
             int radio = r.nextInt( limit ) + suma;
-            tipoCirculo = 1-tipoCirculo;
+            tipoCirculo = r.nextInt(ConstantesMapa.SUELOS.length+1)%ConstantesMapa.SUELOS.length;
             for(i=Math.max(pt.y -  radio, 0); i < pt.y + radio && i < getAlto(); i++)
                 for(int j=Math.max(pt.x - radio, 0); j < pt.x + radio && j < getAncho(); j++)
                     if(pt.dist(new Punto(j,i)) <= radio && celdas.get(i).get(j) instanceof Transitable)
                         celdas.get(i).get(j).tipo = ConstantesMapa.SUELOS[tipoCirculo];
         }
-        //Grupos de vegetación
+        
+        //--- Lagos ---//
+        int numLagos = r.nextInt( (int) Math.ceil(getAncho()*getAlto()/90.0) );
+        for(i=0; i < numLagos; i++)
+            iniciarLago();
+        
+        //---Caminos---//
+        int numCaminos = r.nextInt( getAncho()*getAncho()/500 + getAlto()*getAlto()/500 + 1);
+        for(i = 0; i < numCaminos; i++)
+            iniciarCamino();
+        
+        //Corregir componentes inconexas
+        corregirComponentesInconexas();
+        
+        //Grupos de vegetación y decorados puntuales
+        numCentros++;
         limit = (int) Math.ceil(Math.max(getAlto(), getAncho()) / 20.0);
+        int fuentes = 0;
+        int arbustosRojos = 0;
+        int maxFuentes = r.nextInt(numCentros/4+1);
+        int maxArbustosR = r.nextInt(numCentros/2+1);
         for(int k=0; k < numCentros; k++){
             Punto pt = new Punto(r.nextInt(getAncho()), r.nextInt(getAlto())); //Si se solapan no pasa nada, aunque será raro
             int radio = r.nextInt( limit ) + suma;
@@ -173,20 +192,17 @@ public final class Mapa {
                     if(pt.dist(new Punto(j,i)) <= radio && celdas.get(i).get(j) instanceof Transitable)
                         for(int l=0; l < ConstantesMapa.SUELOS.length; l++)
                             if(celdas.get(i).get(j).tipo == ConstantesMapa.SUELOS[l]){
-                                celdas.get(i).get(j).tipo = ConstantesMapa.VEGETACIONES[l];
+                                if(fuentes < maxFuentes && ConstantesMapa.SUELOS[l] == ConstantesMapa.HIERBA1 && r.nextDouble() < 0.002){
+                                    celdas.get(i).get(j).tipo = ConstantesMapa.FUENTE;
+                                    fuentes++;
+                                }else if(arbustosRojos < maxArbustosR && ConstantesMapa.SUELOS[l] == ConstantesMapa.HIERBA2 && r.nextDouble() < 0.04){
+                                    celdas.get(i).get(j).tipo = ConstantesMapa.ARBUSTO_ROJO;
+                                    arbustosRojos++;
+                                }else
+                                    celdas.get(i).get(j).tipo = ConstantesMapa.VEGETACIONES[l];
                                 break;
                             }
         }
-        //--- Lagos ---//
-        int numLagos = r.nextInt( (int) Math.ceil(getAncho()*getAlto()/90.0) );
-        for(i=0; i < numLagos; i++)
-            iniciarLago();
-        
-        //---Caminos---//
-        int numCaminos = r.nextInt( (int) Math.ceil(getAncho()*getAlto()/450.0) );
-        for(i = 0; i < numCaminos; i++)
-            iniciarCamino();
-        
     }
     private Punto adyacenteAleatorio(Punto pt){
         Punto ady;
@@ -307,6 +323,69 @@ public final class Mapa {
                 generarCaminos(new double[]{punto[0]+1.3*vector[0], punto[1]+1.3*vector[1]}, vector, energia-1);
             }
         }
+    }
+    
+    private void meterCercanas(ArrayList<Punto> area, Punto pt, ArrayList<Punto> celdis){
+        celdis.remove(pt);
+        area.add(pt);
+        if(celdis.isEmpty()) return;
+        Punto der = new Punto(pt.x +1, pt.y);
+        Punto izq = new Punto(pt.x -1, pt.y);
+        Punto sur = new Punto(pt.x, pt.y+1);
+        Punto nor = new Punto(pt.x, pt.y-1);
+        if(celdis.contains(der)) meterCercanas(area, der, celdis);
+        if(celdis.isEmpty()) return;
+        if(celdis.contains(izq)) meterCercanas(area, izq, celdis);
+        if(celdis.isEmpty()) return;
+        if(celdis.contains(nor)) meterCercanas(area, nor, celdis);
+        if(celdis.isEmpty()) return;
+        if(celdis.contains(sur)) meterCercanas(area, sur, celdis);
+    }
+    private void corregirComponentesInconexas(){
+        ArrayList<ArrayList<Punto>> areasConexas = new ArrayList();
+        ArrayList<Punto> celdis = copiaPosicionesTransitables(); //copiaTransitables hace "refrescarPos" en todas las celdas.
+        while(!celdis.isEmpty()){
+            Punto c = celdis.get(0);
+            ArrayList<Punto> nuevaArea = new ArrayList();
+            meterCercanas(nuevaArea, c, celdis);
+            areasConexas.add(nuevaArea);
+        }
+        while(areasConexas.size() > 1){
+            Punto[] linea = masCercanas(areasConexas.get(0), areasConexas.get(1));
+            double menor = linea[0].dist(linea[1]);
+            int indice = 1;
+            for(int l=2; l < areasConexas.size(); l++){
+                Punto[] nlinea = masCercanas(areasConexas.get(0), areasConexas.get(l));
+                if(nlinea[0].dist(nlinea[1]) < menor){
+                    linea = nlinea;
+                    indice = l;
+                    menor = nlinea[0].dist(nlinea[1]);
+                }
+            }
+            
+            int minimoX = linea[0].x < linea[1].x?0:1;
+            int j;
+            for(j=Math.min(linea[0].x, linea[1].x); j <= Math.max(linea[0].x, linea[1].x); j++)
+                this.hacerTransitable(new Punto(j, linea[minimoX].y), false);
+            for(int i=Math.min(linea[0].y, linea[1].y); i <= Math.max(linea[0].y, linea[1].y); i++)
+                this.hacerTransitable(new Punto(j, i), false);
+            areasConexas.get(0).addAll(areasConexas.remove(indice)); //Añadimos a la primera la unida
+        }
+    }
+    
+    public Punto[] masCercanas(ArrayList<Punto> a1, ArrayList<Punto> a2){
+        Punto masCercana1 = a1.get(0);
+        Punto masCercana2 = a2.get(0);
+        double menorDist = masCercana1.dist(masCercana2);
+        for(Punto t: a1)
+            for(Punto t2: a2)
+                if(t.dist(t2) < menorDist){
+                    masCercana1 = t;
+                    masCercana2 = t2;
+                    menorDist = t.dist(t2);
+                }
+        
+        return new Punto[]{masCercana1, masCercana2};
     }
     
     public Juego getJuego() {
@@ -681,11 +760,25 @@ public final class Mapa {
     public void hacerTransitable(Punto posDe, boolean dejarEscombros) {
         if(posDe.en(getAncho(), getAlto()))
         {
-            Transitable t = new Transitable();
-            if(dejarEscombros && getCelda(posDe).tipo == ConstantesMapa.MURO)
-                t.addObjeto(new Escombros());
-            celdas.get(posDe.y).set(posDe.x, t);
-            t.setMapa(this);
+            Celda c = getCelda(posDe);
+            if(c instanceof NoTransitable){
+                Transitable t = new Transitable();
+                if(dejarEscombros && c.tipo == ConstantesMapa.MURO)
+                    t.addObjeto(new Escombros());
+                t.tipo = ConstantesMapa.SUELOS[r.nextInt(ConstantesMapa.SUELOS.length)];
+                celdas.get(posDe.y).set(posDe.x, t);
+                t.setMapa(this);
+            }
         }
+    }
+
+    public ArrayList<Punto> copiaPosicionesTransitables() {
+        ArrayList<Punto> al = new ArrayList();
+        for(int i=0; i < celdas.size(); i++)
+            for(int j=0; j < celdas.get(i).size(); j++)
+                if(celdas.get(i).get(j) instanceof Transitable){
+                    al.add(new Punto(j, i));
+                }
+        return al;
     }
 }

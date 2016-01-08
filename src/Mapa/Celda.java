@@ -25,7 +25,7 @@ public abstract class Celda {
         visitada = false;
     }
     
-
+    
     public boolean isBomba() {
         return bomba;
     }
