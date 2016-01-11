@@ -790,11 +790,13 @@ public abstract class Personaje {
         try{
             mochila.addObjeto(obj);
             //Cabe en la mochila, lo metemos
-            juego.log("Metes " + obj.getNombre() + " en la mochila.");
+            if(this instanceof Jugador)
+                juego.log("Metes " + obj.getNombre() + " en la mochila.");
         }catch(MaximoPesoException | MaximoObjetosException e){
             //No cabe en la mochila, se tira al suelo.
             ((Transitable)mapa.getCelda(posicion)).addObjeto(obj);
-            juego.log("Tiras " + obj.getNombre() + " al suelo (no cabía en la mochila).");
+            if(this instanceof Jugador)
+                juego.log("Tiras " + obj.getNombre() + " al suelo (no cabía en la mochila).");
         }
     }
     

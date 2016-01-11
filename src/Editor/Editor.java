@@ -720,6 +720,7 @@ public class Editor extends javax.swing.JFrame {
     }//GEN-LAST:event_sldZoomStateChanged
     //Click en el elemento del menú Archivo/Cerrar editor
     private void mitCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitCerrarActionPerformed
+        cerrarMapa();
         dispose();
     }//GEN-LAST:event_mitCerrarActionPerformed
     //Click en el elemento del menú Archivo/Cerrar mapa

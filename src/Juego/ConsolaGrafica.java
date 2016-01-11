@@ -424,8 +424,11 @@ public class ConsolaGrafica extends JFrame implements Consola{
         return ret;
     }
     
-    @Override
-    public void imprimirMapa() {
+    /**
+     * Imprime el mapa y actualiza los elementos gráficos.
+     * @param soloMapa si sólo se desea imprimir el mapa
+     */
+    public void imprimirMapa(boolean soloMapa) {
         if(mapa == null || mapa.getCelda(0,0) == null || paneles == null)
             return;
         
@@ -440,9 +443,16 @@ public class ConsolaGrafica extends JFrame implements Consola{
                     panel.getComponente().setCursor(Cursor.getDefaultCursor());
             }
         
-        actualizarIconosMochila();
-        actualizarIconosEquipacion();
-        actualizarPanelCelda();
+        if(!soloMapa){
+            actualizarIconosMochila();
+            actualizarIconosEquipacion();
+            actualizarPanelCelda();
+        }
+    }
+    
+    @Override
+    public void imprimirMapa(){
+        imprimirMapa(false);
     }
 
     /**

@@ -11,6 +11,7 @@ import Excepciones.ObjetoNoEncontradoException;
 import Excepciones.ObjetoNoEquipableException;
 import Excepciones.PosicionFueraDeAlcanceException;
 import Excepciones.PosicionFueraDeRangoException;
+import Juego.ConsolaGrafica;
 import Juego.Juego;
 import Mapa.Mapa;
 import Utilidades.Punto;
@@ -303,7 +304,8 @@ public abstract class Enemigo extends Personaje{
             } catch (MaximoObjetosException | MaximoPesoException | EnergiaInsuficienteException ex) {/*No hace nada*/}           
             
             if(mapa.getJugador().enRango(getPos())){
-                juego.impMapa();
+                if(juego.getConsola() instanceof ConsolaGrafica)
+                    ((ConsolaGrafica)juego.getConsola()).imprimirMapa(true);
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException ex) {
