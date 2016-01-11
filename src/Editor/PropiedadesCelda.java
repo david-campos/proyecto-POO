@@ -413,22 +413,22 @@ public class PropiedadesCelda extends javax.swing.JDialog {
             String nombre = editor.obtenerNombreObjeto("objeto", null); //Obtenemos el nombre del objeto
             switch(((JMenuItem)evt.getSource()).getLabel()){
                 case "Arma":
-                    ob = new Arma(10, nombre, "Es un arma", 10, 10, Arma.ARMA_UNA_MANO);
+                    ob = new Arma(0.1, nombre, "Es un arma", 10, 10, Arma.ARMA_UNA_MANO);
                     break;
                 case "Armadura":
-                    ob = new Armadura(nombre, "Es una armadura", 10, 10, 0, 0);
+                    ob = new Armadura(nombre, "Es una armadura", 2, 10, 0, 0);
                     break;
                 case "Binoculares":
-                    ob = new Binoculares(nombre, 10, 2);
+                    ob = new Binoculares(nombre, 0.1, 2);
                     break;
                 case "Botiquín":
-                    ob = new Botiquin(nombre, 10, 2);
+                    ob = new Botiquin(nombre, 0.1, 2);
                     break;
                 case "Explosivo":
-                    ob = new Explosivo(10, nombre);
+                    ob = new Explosivo(2, nombre);
                     break;
                 default:
-                    ob = new ToritoRojo(nombre, 10, 10);
+                    ob = new ToritoRojo(nombre, 0.1, 10);
                     break;
             }
             ((Transitable)celda).addObjeto(ob); //Lo añadimos
