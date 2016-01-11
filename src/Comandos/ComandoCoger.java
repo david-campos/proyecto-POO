@@ -5,7 +5,6 @@ import Excepciones.EnergiaInsuficienteException;
 import Excepciones.ImposibleCogerExcepcion;
 import Excepciones.MaximoObjetosException;
 import Excepciones.MaximoPesoException;
-import Excepciones.ObjetoNoEquipableException;
 import Personajes.Jugador;
 
 /**

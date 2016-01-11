@@ -1,7 +1,11 @@
 package Juego;
 
 import Comandos.Comando;
+import Comandos.ComandoAtacar;
+import Comandos.ComandoCoger;
 import Comandos.ComandoDesequipar;
+import Comandos.ComandoEquipar;
+import Comandos.ComandoTirar;
 import Excepciones.ComandoExcepcion;
 import Mapa.Celda;
 import Utilidades.CeldaGrafica;
@@ -25,6 +29,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -43,6 +48,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -63,6 +69,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
     //Variables necesarias
     private final Mapa mapa;
     private int dim;
+    private final Cursor cursorAtacar;
     
     //Elementos que formarán la consola
     private final ArrayList<CeldaGrafica> paneles;
@@ -76,6 +83,12 @@ public class ConsolaGrafica extends JFrame implements Consola{
     private final JPanel panelDerecho;
     private final JPanel panelMochila;
     private final JPanel panelObjetos;
+    private final JPanel panCeldaNotif;
+    private final JPanel panCelda;
+    private final JPanel panScrCelda;
+    private final JPanel panLblCelda;
+    private final JLayeredPane panGenCelda;
+    private final JScrollPane scrCelda;
     private final JProgressBar pbrCargaObjetos;
     private final JProgressBar pbrCargaPeso;
     private final ArrayBlockingQueue<String> comandos;
@@ -103,11 +116,18 @@ public class ConsolaGrafica extends JFrame implements Consola{
         panelDerecho = new JPanel();
         panelMochila = new JPanel();
         panelObjetos = new JPanel();
+        panCeldaNotif = new JPanel();
+        panCelda = new JPanel();
+        scrCelda = new JScrollPane();
+        panScrCelda = new JPanel();
+        panLblCelda = new JPanel();
+        panGenCelda = new JLayeredPane();
         pbrCargaObjetos = new JProgressBar();
         pbrCargaPeso = new JProgressBar();
         scrollP = new JScrollPane();
         comandos = new ArrayBlockingQueue(10);
         //Fijación de parametros para obtener la ventana adecuada
+        cursorAtacar = Toolkit.getDefaultToolkit().createCustomCursor(Toolkit.getDefaultToolkit().createImage("img/cursor_atacar.png"), new Point(16,16), "Atacar");
         initComponents();
         //Se hace visible al instanciar
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -135,13 +155,13 @@ public class ConsolaGrafica extends JFrame implements Consola{
         /*  LAYOUT DE LA VENTANA  */
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         /* DISEÑO */
-        /*****************
-         * panEstado     *                                           ****************
-         *****************     **********************************    * panelMochila *
-         * panelMapaDisp *  => *   panGenMap     * panelDerecho * => ****************
-         * ***************     **********************************    * scrollP      *
-         * panelConsola  *                                           ****************
-         * ***************/
+        /*****************                                           ****************
+         * panEstado     *                                           * panelMochila *    **************
+         *****************     **********************************    ****************    * panGenCelda* => panScrCelda/panLblCelda
+         * panelMapaDisp *  => *   panGenMap     * panelDerecho * => * panCeldaNotif* => **************
+         *****************     **********************************    ****************    * scrollP    *
+         * panelConsola  *                                           * panIconos    *    **************
+         *****************                                           ****************/
         
         /*  GENERAR LOS DOS PANELES GENERALES Y LA BARRA DE ESTADO*/
         panEstado.setBackground(new Color(0,0,50));
@@ -172,7 +192,10 @@ public class ConsolaGrafica extends JFrame implements Consola{
             celda.setImagen(new ImagenCelda(icon));
             celda.getComponente().setMinimumSize(new Dimension(dim, dim));
             celda.getComponente().setPreferredSize(new Dimension(dim, dim));
-            celda.getComponente().addMouseListener(new CoordenadaAlClick(areaConsola, mapa.getJugador(), celda.getId()));
+            celda.getComponente().addMouseListener(new CoordenadaAlClick(areaConsola, mapa.getJugador(), celda.getId(), MouseEvent.BUTTON1));
+            celda.getComponente().addMouseListener(new ComandoAlClick(areaConsola,
+                        new ComandoAtacar(mapa.getJugador(), null, celda.getId().x, celda.getId().y),
+                    this, MouseEvent.BUTTON3));
             panelMapa.add(celda.getComponente());
             paneles.add(celda);
         }
@@ -224,6 +247,51 @@ public class ConsolaGrafica extends JFrame implements Consola{
         
         panelDerecho.add(panelMochila, BorderLayout.NORTH);
         
+        // PANEL CELDA-NOTIFICACIONES
+        panCeldaNotif.setLayout(new BorderLayout());
+        panCeldaNotif.setBackground(panelDerecho.getBackground());
+        
+        // PANEL CELDA
+        panGenCelda.setLayout(new OverlayLayout(panGenCelda));
+        panScrCelda.setLayout(new BorderLayout());
+        panCelda.setLayout(new FlowLayout());
+        panCelda.setBackground(panelDerecho.getBackground());
+        scrCelda.setViewportView(panCelda);
+        scrCelda.setBackground(panelDerecho.getBackground());
+        scrCelda.setBorder(null);
+        scrCelda.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrCelda.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        panScrCelda.add(scrCelda, BorderLayout.CENTER);
+        
+        panLblCelda.setLayout(new BorderLayout());
+        panLblCelda.setOpaque(false);
+        JLabel lblIzq = new JLabel(new ImageIcon("img/desp_izq.png"));
+        lblIzq.setForeground(areaEstado.getForeground());
+        Dimension dimen = new Dimension(20,60);
+        lblIzq.setPreferredSize(dimen);
+        lblIzq.addMouseListener(new DesplazarAlHover(scrCelda, panGenCelda, panLblCelda, "izq"));
+        JLabel lblDer = new JLabel(new ImageIcon("img/desp_der.png"));
+        lblDer.setForeground(areaEstado.getForeground());
+        lblDer.setPreferredSize(dimen);
+        lblDer.addMouseListener(new DesplazarAlHover(scrCelda, panGenCelda, panLblCelda, "der"));
+        panLblCelda.add(lblIzq, BorderLayout.BEFORE_LINE_BEGINS);
+        JPanel relleno = new JPanel(); relleno.setOpaque(false);
+        relleno.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        panLblCelda.add(relleno, BorderLayout.CENTER);
+        panLblCelda.add(lblDer, BorderLayout.AFTER_LINE_ENDS);
+        
+        TitledBorder bordeCelda = BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(areaEstado.getForeground()), "Celda");
+        bordeCelda.setTitleJustification(TitledBorder.CENTER);
+        bordeCelda.setTitleColor(Color.white);
+        bordeCelda.setTitleFont(new Font("Verdana",Font.BOLD,15));
+        panGenCelda.setBackground(panelDerecho.getBackground());
+        panGenCelda.setBorder(bordeCelda);
+        panGenCelda.add(panLblCelda,0);
+        panGenCelda.add(panScrCelda,1);
+        
+        panCeldaNotif.add(panGenCelda, BorderLayout.NORTH);
+        
         // GENERAR CONSOLA DISPLAY
         areaConsolaDisplay.setFont(new Font("Verdana", Font.BOLD, 17));
         areaConsolaDisplay.setBackground(panelDerecho.getBackground());
@@ -244,8 +312,9 @@ public class ConsolaGrafica extends JFrame implements Consola{
         scrollP.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollP.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         
-        panelDerecho.add(scrollP, BorderLayout.CENTER);
+        panCeldaNotif.add(scrollP, BorderLayout.CENTER);
         
+        panelDerecho.add(panCeldaNotif, BorderLayout.CENTER);
         panelMapaDisp.add(panelDerecho);
         
         // GENERAR ICONOS EQUIPADO
@@ -255,16 +324,16 @@ public class ConsolaGrafica extends JFrame implements Consola{
         lblArmadura = new JLabel(); lblArmadura.setIcon(new ImageIcon("img/armadura_dis.png"));
         lblBinoculares = new JLabel(); lblBinoculares.setIcon(new ImageIcon("img/binoculares_dis.png"));
         lblArmaDer.setToolTipText("Arma derecha");
-        lblArmaDer.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "arma"), this));
+        lblArmaDer.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "arma"), this, MouseEvent.BUTTON3));
         lblArmaDer.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lblArmaIzq.setToolTipText("Arma izquierda");
-        lblArmaIzq.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "arma_izq"), this));
+        lblArmaIzq.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "arma_izq"), this, MouseEvent.BUTTON3));
         lblArmaIzq.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lblArmadura.setToolTipText("Armadura equipada");
-        lblArmadura.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "armadura"), this));
+        lblArmadura.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "armadura"), this, MouseEvent.BUTTON3));
         lblArmadura.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lblBinoculares.setToolTipText("Binoculares equipados");
-        lblBinoculares.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "binoculares"), this));
+        lblBinoculares.addMouseListener(new ComandoAlClick(areaConsola, new ComandoDesequipar(mapa.getJugador(), "binoculares"), this, MouseEvent.BUTTON3));
         lblBinoculares.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         LineBorder borde = new LineBorder(Color.white);
         lblArmaDer.setBorder(borde); panIconos.add(lblArmaDer);
@@ -363,11 +432,17 @@ public class ConsolaGrafica extends JFrame implements Consola{
         for(int y=0;y<mapa.getAlto();y++)
             for(int x=0; x<mapa.getAncho();x++){
                 Celda c = mapa.getCelda(x,y);
-                paneles.get(y*mapa.getAncho()+x).setImagen(imagenRepresentante(c));
+                CeldaGrafica panel = paneles.get(y*mapa.getAncho()+x);
+                panel.setImagen(imagenRepresentante(c));
+                if(mapa.getJugador().enRango(new Punto(x,y)) && c instanceof Transitable && ((Transitable)c).getNumEnemigos() > 0)
+                    panel.getComponente().setCursor(cursorAtacar);
+                else
+                    panel.getComponente().setCursor(Cursor.getDefaultCursor());
             }
         
         actualizarIconosMochila();
         actualizarIconosEquipacion();
+        actualizarPanelCelda();
     }
 
     /**
@@ -473,20 +548,22 @@ public class ConsolaGrafica extends JFrame implements Consola{
         if(mapa == null || mapa.getJugador() == null || mapa.getJugador().getMochila() == null)
             return;
         
-        for(Component c: panelObjetos.getComponents())
-            panelObjetos.remove(c);
+        panelObjetos.removeAll();
         
         for(Objeto o: mapa.getJugador().getMochila().getObjetos()){
             IconoObjetoMochila ico = new IconoObjetoMochila(o);
-            ico.addMouseListener(new TextoAlClick(areaConsola, o.getNombre()));
+            Comando comando = new ComandoEquipar(mapa.getJugador(), o.getNombre());
+            ico.addMouseListener(new ComandoAlClick(areaConsola, comando, this, MouseEvent.BUTTON1));
+            comando = new ComandoTirar(mapa.getJugador(), o.getNombre());
+            ico.addMouseListener(new ComandoAlClick(areaConsola, comando, this, MouseEvent.BUTTON3));
             ico.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             panelObjetos.add(ico);
         }
         
         pbrCargaObjetos.setValue(mapa.getJugador().getMochila().getNumObj());
-        pbrCargaObjetos.setToolTipText(mapa.getJugador().getMochila().getNumObj() + "/" + mapa.getJugador().getMochila().getMaxObjetos());
+        pbrCargaObjetos.setToolTipText("Objetos: " + mapa.getJugador().getMochila().getNumObj() + "/" + mapa.getJugador().getMochila().getMaxObjetos());
         pbrCargaPeso.setValue((int)Math.round(mapa.getJugador().getMochila().pesoActual() * 1000) );
-        pbrCargaPeso.setToolTipText(mapa.getJugador().getMochila().pesoActual() + "/" + mapa.getJugador().getMochila().getMaxPeso());
+        pbrCargaPeso.setToolTipText("Peso: " + mapa.getJugador().getMochila().pesoActual() + "/" + mapa.getJugador().getMochila().getMaxPeso());
         
         Rectangle r = panelMochila.getBounds();
         panelMochila.repaint(r);
@@ -496,19 +573,37 @@ public class ConsolaGrafica extends JFrame implements Consola{
         if(mapa != null && mapa.getJugador() != null){
             Jugador j = mapa.getJugador();
             lblArmaDer.setIcon(new ImageIcon("img/arma_der"+(j.getArma() != null?"":"_dis")+".png"));
+            lblArmaDer.setToolTipText(j.getArma()!=null?j.getArma().toString():"Arma equipada.");
             lblArmaIzq.setIcon(new ImageIcon("img/arma_izq"+(j.getArma_izq()!= null?"":"_dis")+".png"));
+            lblArmaIzq.setToolTipText(j.getArma_izq()!=null?j.getArma_izq().toString():"Arma equipada izquierda.");
             lblArmadura.setIcon(new ImageIcon("img/armadura"+(j.getArmadura() != null?"":"_dis")+".png"));
+            lblArmadura.setToolTipText(j.getArmadura()!=null?j.getArmadura().toString():"Armadura equipada.");
             lblBinoculares.setIcon(new ImageIcon("img/binoculares"+(j.tieneBinoculares()?"":"_dis")+".png"));
+            lblBinoculares.setToolTipText(j.tieneBinoculares()?j.getBinoculares().toString():"Binoculares equipados.");
         }
     }
-
+    private void actualizarPanelCelda(){
+        panCelda.removeAll();
+        
+        for(Objeto o: ((Transitable)mapa.getCelda(mapa.getJugador().getPos())).getObjetos()){
+            IconoObjetoMochila ico = new IconoObjetoMochila(o);
+            Comando comando = new ComandoCoger(mapa.getJugador(), o.getNombre());
+            ico.addMouseListener(new ComandoAlClick(areaConsola, comando, this, MouseEvent.BUTTON1));
+            ico.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            panCelda.add(ico);
+        }
+        panCelda.repaint();
+        panGenCelda.moveToFront(panLblCelda);
+    }
     //Adapter creado para escribir unas coordenadas relativas al jugador cuando
     //se hace click en un elemento
     private static class CoordenadaAlClick extends MouseAdapter {
-        Punto pt;
-        JTextField area;
-        Personaje personaje;
-        public CoordenadaAlClick(JTextField donde, Personaje relativo, Punto pt) {
+        private Punto pt;
+        private JTextField area;
+        private Personaje personaje;
+        private int boton;
+        
+        public CoordenadaAlClick(JTextField donde, Personaje relativo, Punto pt, int boton) {
             this.pt = pt;
             this.personaje = relativo;
             this.area = donde;
@@ -516,7 +611,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if(area.isEnabled()){
+            if(e.getButton() == boton && area.isEnabled()){
                 String pre = area.getText().substring(0, area.getSelectionStart());
                 String pos = area.getText().substring(area.getSelectionEnd());
                 String texto = String.format("%s%s%d %d%s%s",
@@ -532,8 +627,8 @@ public class ConsolaGrafica extends JFrame implements Consola{
     } 
     //Adapter creado para escribir un texto cuando se hace click en un elemento
     private static class TextoAlClick extends MouseAdapter {
-        String texto;
-        JTextField area;
+        private String texto;
+        private JTextField area;
         public TextoAlClick(JTextField donde, String texto) {
             this.texto = texto;
             this.area = donde;
@@ -557,18 +652,20 @@ public class ConsolaGrafica extends JFrame implements Consola{
     }
     //Adapter creado para ejecutar un comando cuando se hace click en un elemento
     private static class ComandoAlClick extends MouseAdapter {
-        Comando comando;
-        JTextField area;
-        ConsolaGrafica cg;
-        public ComandoAlClick(JTextField donde, Comando comando, ConsolaGrafica cg) {
+        private Comando comando;
+        private JTextField area;
+        private ConsolaGrafica cg;
+        private int boton;
+        public ComandoAlClick(JTextField donde, Comando comando, ConsolaGrafica cg, int boton) {
             this.comando = comando;
             this.area = donde;
             this.cg = cg;
+            this.boton = boton;
         }
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if(area.isEnabled()){
+            if(e.getButton() == boton && area.isEnabled()){
                 try {
                     comando.ejecutar();
                 } catch (ComandoExcepcion ex) {
@@ -578,5 +675,59 @@ public class ConsolaGrafica extends JFrame implements Consola{
                 cg.imprimirMapa();
             }
         }
-    }        
+    }    
+    //Adapter creado para desplazar un scroll-pane cuando se coloca el ratón encima
+    private static class DesplazarAlHover extends MouseAdapter{
+        private JScrollPane scroll;
+        private String dir;
+        private Thread movimiento;
+        private JLayeredPane panel;
+        private JPanel panelBotones;
+        
+        public DesplazarAlHover(JScrollPane scroll, JLayeredPane panel, JPanel panelBotones, String dir) {
+            this.scroll = scroll;
+            this.dir = dir;
+            this.panel = panel;
+            this.panelBotones = panelBotones;
+            movimiento = null;
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            if(movimiento != null){
+                movimiento.interrupt();
+                panel.moveToFront(panelBotones);
+            }
+            movimiento = null;
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            movimiento = new Thread(){
+                @Override
+                public void run() {
+                    while(true){
+                        Rectangle r = scroll.getViewport().getViewRect();
+                        switch(dir){
+                            case "der":
+                                r.x += 1;
+                                break;
+                            case "izq":
+                                r.x -= 1;
+                                break;
+                        }
+                        r.x = Math.max(0, r.x);
+                        scroll.getViewport().setViewPosition(r.getLocation());
+                        try {
+                            Thread.sleep(5);
+                        } catch (InterruptedException ex) {
+                            break;
+                        }
+                    }
+                }
+            };
+            movimiento.start();
+        }
+        
+    }
 }

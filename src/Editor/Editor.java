@@ -729,7 +729,6 @@ public class Editor extends javax.swing.JFrame {
     //Evento lanzado cuando el formulario se cerró.
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         new MenuGrafico().lanzar();
-        System.out.println("HEY");
     }//GEN-LAST:event_formWindowClosed
     //Click en el elemento del menú Editar/Nombre del mapa
     private void mitEditarNombreMapaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitEditarNombreMapaActionPerformed
