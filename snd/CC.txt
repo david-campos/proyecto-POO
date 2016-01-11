@@ -3,3 +3,7 @@ http://recursostic.educacion.es/bancoimagenes/web/
 Sin autor especificado.
 
 A excepción de muerte.wav, compuesta por David Campos Rodríguez.
+
+Y:
+"http://freemusicarchive.org/music/SunWalker/Yoncalla/Mystery_of_the_Nappoli_part_III_": Mystery of the Nappoli part III
+"http://freemusicarchive.org/music/SunWalker/": SunWalker

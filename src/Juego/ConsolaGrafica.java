@@ -23,7 +23,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Rectangle;
@@ -32,13 +31,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -84,6 +83,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
     private JLabel lblArmaIzq;
     private JLabel lblArmadura;
     private JLabel lblBinoculares;
+    private final Clip musica;
 
     /**
      * Crea una nueva 'consola' gráfica de juego
@@ -116,6 +116,10 @@ public class ConsolaGrafica extends JFrame implements Consola{
                 ConsolaGrafica.this.setVisible(true);
             } 
         });
+        musica = Utilidades.Sonido.play("SunWalker_MisteryOfTheNappolli_partIII");
+        musica.loop(Clip.LOOP_CONTINUOUSLY);
+        FloatControl control = (FloatControl)musica.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue(-35.0f);
     }
     
     //La función que inicia la ventana (pff tío, vaya rollo)
@@ -430,6 +434,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
     @Override
     public void cerrar(){
         dispose(); //Ceraramos la ventana
+        musica.stop();
         new MenuGrafico().lanzar(); //Lanzamos el menú inicial
     }
     
@@ -446,9 +451,10 @@ public class ConsolaGrafica extends JFrame implements Consola{
         getContentPane().add(imgMuerte, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(null);
+        musica.stop();
         Clip c = Utilidades.Sonido.play("muerte");
         try {
-            Thread.sleep(c.getMicrosecondLength()/1000);
+            Thread.sleep(c.getMicrosecondLength()/1500);
         } catch (InterruptedException ex) {
             Logger.getLogger(MenuGrafico.class.getName()).log(Level.SEVERE, null, ex);
         }
