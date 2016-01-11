@@ -170,7 +170,7 @@ public final class Mapa {
             iniciarLago();
         
         //---Caminos---//
-        int numCaminos = r.nextInt( getAncho()*getAncho()/500 + getAlto()*getAlto()/500 + 1);
+        int numCaminos = r.nextInt( getAncho()*getAncho()/1000 + getAlto()*getAlto()/1000 + 1);
         for(i = 0; i < numCaminos; i++)
             iniciarCamino();
         
@@ -213,6 +213,19 @@ public final class Mapa {
             ady = new Punto(pt.x+r.nextInt(3)-1, pt.y + r.nextInt(3)-1);
         }while(ady.x < 0 || ady.y < 0 || ady.x >= getAncho() || ady.y >= getAlto());
         return ady;
+    }
+    //Devuelve los puntos adyacentes al punto dado
+    private ArrayList<Punto> adyacentes(Punto pt){
+            ArrayList<Punto> pts = new ArrayList(4);
+            Punto der = new Punto(pt.x +1, pt.y);
+            Punto izq = new Punto(pt.x -1, pt.y);
+            Punto sur = new Punto(pt.x, pt.y+1);
+            Punto nor = new Punto(pt.x, pt.y-1);
+            if(der.en(getAncho(), getAlto())) pts.add(der);
+            if(izq.en(getAncho(), getAlto())) pts.add(izq);
+            if(nor.en(getAncho(), getAlto())) pts.add(nor);
+            if(sur.en(getAncho(), getAlto())) pts.add(sur);
+            return pts;
     }
     //Devuelve todos los puntos adyacentes a un punto dado
     private ArrayList<Punto> adyacentes(ArrayList<Punto> grupo){
@@ -404,8 +417,9 @@ public final class Mapa {
             int j;
             for(j=Math.min(linea[0].x, linea[1].x); j <= Math.max(linea[0].x, linea[1].x); j++)
                 this.hacerTransitable(new Punto(j, linea[minimoX].y), false);
-            for(int i=Math.min(linea[0].y, linea[1].y); i <= Math.max(linea[0].y, linea[1].y); i++)
+            for(int i=Math.min(linea[0].y, linea[1].y); i <= Math.max(linea[0].y, linea[1].y); i++){
                 this.hacerTransitable(new Punto(j, i), false);
+            }
             areasConexas.get(0).addAll(areasConexas.remove(indice)); //Añadimos a la primera la unida
         }
     }

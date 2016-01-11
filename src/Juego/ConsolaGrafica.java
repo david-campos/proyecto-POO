@@ -573,13 +573,13 @@ public class ConsolaGrafica extends JFrame implements Consola{
         if(mapa != null && mapa.getJugador() != null){
             Jugador j = mapa.getJugador();
             lblArmaDer.setIcon(new ImageIcon("img/arma_der"+(j.getArma() != null?"":"_dis")+".png"));
-            lblArmaDer.setToolTipText(j.getArma()!=null?j.getArma().toString():"Arma equipada.");
+            lblArmaDer.setToolTipText(j.getArma()!=null?"<html>"+j.getArma().toString().replace("\n", "<br>")+"</html>":"Arma equipada.");
             lblArmaIzq.setIcon(new ImageIcon("img/arma_izq"+(j.getArma_izq()!= null?"":"_dis")+".png"));
-            lblArmaIzq.setToolTipText(j.getArma_izq()!=null?j.getArma_izq().toString():"Arma equipada izquierda.");
+            lblArmaIzq.setToolTipText(j.getArma_izq()!=null?"<html>"+j.getArma_izq().toString().replace("\n", "<br>")+"</html>":"Arma equipada izquierda.");
             lblArmadura.setIcon(new ImageIcon("img/armadura"+(j.getArmadura() != null?"":"_dis")+".png"));
-            lblArmadura.setToolTipText(j.getArmadura()!=null?j.getArmadura().toString():"Armadura equipada.");
+            lblArmadura.setToolTipText(j.getArmadura()!=null?"<html>"+j.getArmadura().toString().replace("\n", "<br>")+"</html>":"Armadura equipada.");
             lblBinoculares.setIcon(new ImageIcon("img/binoculares"+(j.tieneBinoculares()?"":"_dis")+".png"));
-            lblBinoculares.setToolTipText(j.tieneBinoculares()?j.getBinoculares().toString():"Binoculares equipados.");
+            lblBinoculares.setToolTipText(j.tieneBinoculares()?"<html>"+j.getBinoculares().toString().replace("\n", "<br>")+"</html>":"Binoculares equipados.");
         }
     }
     private void actualizarPanelCelda(){

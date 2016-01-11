@@ -11,7 +11,7 @@ public interface ConstantesMapa {
     /**
      * Representación de las celdas transitables por texto (según su tipo)
      */
-    public String[] CE_REPR_TRANS={" ", " ", " ", "\u001B[32mx\u001B[0m","\u001B[33mx\u001B[0m", "x","\u001B[35mO\u001B[0m", " ", " ", " ", " ", "\u001B[31mx\u001B[0m"};
+    public String[] CE_REPR_TRANS={" ", " ", " ", "\u001B[32mx\u001B[0m","\u001B[33mx\u001B[0m", "x","\u001B[35mO\u001B[0m", " ", " ", " ", " ", "\u001B[31mx\u001B[0m", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
     /**
      * Representación de las celdas no transitables por texto (según su tipo)
      */
@@ -19,7 +19,7 @@ public interface ConstantesMapa {
     /**
      * Representación gráfica de las celdas transitables (según su tipo)
      */
-    public String[] CE_REPG_TRANS={"hierba","hierba2","hierba3", "arbusto","arbusto2","arbusto3","boquete", "camino", "madera", "arena", "fuente","arbusto_rojo"};
+    public String[] CE_REPG_TRANS={"hierba","hierba2","hierba3", "arbusto","arbusto2","arbusto3","boquete", "camino", "madera", "arena", "fuente","arbusto_rojo","arena/arena_n","arena/arena_ne","arena/arena_e","arena/arena_se","arena/arena_s","arena/arena_so","arena/arena_o","arena/arena_no", "arena/arena_one", "arena/arena_nes", "arena/arena_eso", "arena/arena_son"};
     /**
      * Representación gráfica de las celdas no transitables (según su tipo)
      */
@@ -73,6 +73,54 @@ public interface ConstantesMapa {
      * Tipo de la celda transitable arbusto rojo
      */
     public int ARBUSTO_ROJO = 11;
+    /**
+     * Arena orientación norte
+     */
+    public int ARENA_N = 12;
+    /**
+     * Arena orientación noreste
+     */
+    public int ARENA_NE = 13;
+    /**
+     * Arena orientación este
+     */
+    public int ARENA_E = 14;
+    /**
+     * Arena orientación sureste
+     */
+    public int ARENA_SE = 15;
+    /**
+     * Arena orientación sur
+     */
+    public int ARENA_S = 16;
+    /**
+     * Arena orientación suroeste
+     */
+    public int ARENA_SO = 17;
+    /**
+     * Arena orientación oeste
+     */
+    public int ARENA_O = 18;
+    /**
+     * Arena orientación noroeste
+     */
+    public int ARENA_NO = 19;
+    /**
+     * Arena orientación oeste-norte-este
+     */
+    public int ARENA_ONE = 20;
+    /**
+     * Arena orientación norte-este-sur
+     */
+    public int ARENA_NES = 21;
+    /**
+     * Arena orientación este-sur-oeste
+     */
+    public int ARENA_ESO = 22;
+    /**
+     * Arena orientación sur-oeste-norte
+     */
+    public int ARENA_SON = 23;
     
     /**
      * Tipo de celda no transitable agua
