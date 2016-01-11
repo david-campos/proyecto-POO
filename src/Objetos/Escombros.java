@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Objetos;
 
 import Excepciones.ObjetoNoUsableException;
@@ -10,16 +5,19 @@ import Personajes.Personaje;
 import java.util.Random;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * Escombros, que quedan tirados al destrozar un muro.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class Escombros extends Objeto{
     private static int id = 0;
     private static final Random r = new Random();
     private int usos = 0;
     
+    /**
+     * Crea escombros
+     */
     public Escombros() {
-        super(20+r.nextInt(20), "Monton_de_escombros_"+(++id), "Pesan, y ocupan espacio");
+        super(20+r.nextInt(20), "monton_de_escombros_"+(++id), "Pesan, y ocupan espacio.");
     }
 
     @Override

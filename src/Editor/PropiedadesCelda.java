@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Editor;
 
 import Excepciones.CeldaObjetivoNoValida;
@@ -30,14 +25,18 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * <p>Ventana de diálogo que permite editar las propiedades de la celda</p>
+ * <p>En este diálogo las modificaciones realizadas toman efecto al instante,
+ * de forma que hacer click en 'Aceptar' simplemente cierra el diálogo.</p>
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class PropiedadesCelda extends javax.swing.JDialog {
     private Celda celda;
     private final Editor editor;
     /**
      * Creates new form PropiedadesCelda
+     * @param celda la celda a la que modificar las propiedades
+     * @param contexto el editor en que se está editando el mapa
      */
     public PropiedadesCelda(Celda celda, Editor contexto) {
         this.celda = celda;
@@ -316,60 +315,69 @@ public class PropiedadesCelda extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Click en el botón de aceptar (cierra el diálogo)
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         dispose();
         this.setVisible(false);
     }//GEN-LAST:event_btnAceptarActionPerformed
-
+    //Click en el toggleButton Transitable (intercambia celda transitable y no transitable)
     private void tbtTransitableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtTransitableActionPerformed
         JToggleButton btn = (JToggleButton) evt.getSource();
         btn.setText(btn.isSelected()?"Transitable":"No transitable");
         celda = editor.toggleTransitable(celda);
+        //Cambiamos el modelo del spinner de tipos para que se adapte a los tipos que hay para esta
         spnTipo.setModel(new javax.swing.SpinnerNumberModel(0, 0, btn.isSelected()?ConstantesMapa.CE_REPG_TRANS.length-1:ConstantesMapa.CE_REPG_NOTRANS.length-1, 1));
-        spnTipoStateChanged(new ChangeEvent(spnTipo));
-        lstEnemigos.setEnabled(btn.isSelected());
-        lstEnemigos.setBackground(btn.isSelected()?Color.white:Color.gray);
-        btnEngadir.setEnabled(btn.isSelected());
+        spnTipoStateChanged(new ChangeEvent(spnTipo)); //Para que se actualice, sobre todo el icono
+        lstEnemigos.setEnabled(btn.isSelected()); //La lista de enemigos estará disponible si la celda es transitable
+        lstEnemigos.setBackground(btn.isSelected()?Color.white:Color.gray); //Si no está disponible, será gris
+        btnEngadir.setEnabled(btn.isSelected()); //El botón de añadir estará disponible si la celda es transitable
+        ((ModeloListaEnemigos)lstEnemigos.getModel()).actualizar(); //Actualiza la lista de enemigos
+        lstObjetos.setEnabled(btn.isSelected()); //La lista de objetos estará disponible si la celda es transitable
+        lstObjetos.setBackground(btn.isSelected()?Color.white:Color.gray); //Si no está disponible, será gris
+        btnEngadirObjeto.setEnabled(btn.isSelected()); //El botón de añadir está disponible si la celda es transitable
+        ((ObjetosListModel)lstObjetos.getModel()).actualizar(); //Actualiza la lista de objetos
     }//GEN-LAST:event_tbtTransitableActionPerformed
-
+    //Al cambiar el tipo de celda en el spinner correspondiente
     private void spnTipoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spnTipoStateChanged
         int i = ((SpinnerNumberModel)spnTipo.getModel()).getNumber().intValue();
-        if(i<0) return;
+        if(i<0) return; //este método se llama antes de corregir el valor, puede ser negativo
         if(tbtTransitable.isSelected()){
-            if(i >= ConstantesMapa.CE_REPG_TRANS.length) return;
+            if(i >= ConstantesMapa.CE_REPG_TRANS.length) return; //por la misma razón que if(i<0)
             celda.tipo = i;
         }else{
-            if(i >= ConstantesMapa.CE_REPG_NOTRANS.length) return;
+            if(i >= ConstantesMapa.CE_REPG_NOTRANS.length) return; //por la misma razón que if(i<0)
             celda.tipo = i;
         }
-        lblIconoCelda.setIcon(new ImageIcon(new ImageIcon("img/"+celda.representacionGrafica()+".png").getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH)));
+        //Actualizamos el icono
+        lblIconoCelda.setIcon(new ImageIcon(
+                new ImageIcon("img/"+celda.representacionGrafica()+".png")
+                    .getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH)
+        ));
     }//GEN-LAST:event_spnTipoStateChanged
-
+    //Al hacer click en el botón de añadir enemigos
     private void btnEngadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEngadirActionPerformed
         Punto pos = editor.getMapa().getPosDe(celda);
         
         try {
-            editor.getMapa().addEnemigo(new Sectoid(editor.obtenerNombreEnemigo("sectoid"),pos.toArray(),null));
+            editor.getMapa().addEnemigo(new Sectoid(editor.obtenerNombreEnemigo("sectoid", null),pos.toArray(),null));
         } catch (CeldaObjetivoNoValida ex) {
             JOptionPane.showMessageDialog(null,
                         "No se pudo generar el enemigo en esta celda.", "Errorcillo",
                         JOptionPane.ERROR_MESSAGE);
         }
-        
+        //Actualizamos la lista de enemigos
         ((ModeloListaEnemigos)lstEnemigos.getModel()).actualizar();
     }//GEN-LAST:event_btnEngadirActionPerformed
-
+    //Al cambiar la selección en la lista de enemigos
     private void lstEnemigosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstEnemigosValueChanged
         btnEliminar.setEnabled(!lstEnemigos.isSelectionEmpty());
-        
     }//GEN-LAST:event_lstEnemigosValueChanged
-
+    //Al hacer click en el botón de eliminar
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        System.out.println(((Enemigo)lstEnemigos.getSelectedValue()).toString());
         editor.eliminarEnemigo((Enemigo)lstEnemigos.getSelectedValue());
         ((ModeloListaEnemigos)lstEnemigos.getModel()).actualizar();
     }//GEN-LAST:event_btnEliminarActionPerformed
-
+    //Al hacer click en la lista de enemigos (el doble click despliega PropiedadesEnemigo)
     private void lstEnemigosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstEnemigosMouseClicked
         if(evt.getClickCount() > 1 && !lstEnemigos.isSelectionEmpty())
             java.awt.EventQueue.invokeLater(new Runnable() {
@@ -379,15 +387,15 @@ public class PropiedadesCelda extends javax.swing.JDialog {
                 }
             });
     }//GEN-LAST:event_lstEnemigosMouseClicked
-
+    //Al hacer click en añadir objeto (se despliega el menú de adición de objetos)
     private void btnEngadirObjetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEngadirObjetoActionPerformed
         pmnNuevoObjeto.show((Component)evt.getSource(), ((JButton)evt.getSource()).getWidth()/2, ((JButton)evt.getSource()).getHeight()/2);
     }//GEN-LAST:event_btnEngadirObjetoActionPerformed
-
+    //Al cambiar la selección en la lista de objetos
     private void lstObjetosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstObjetosValueChanged
         btnEliminarObj.setEnabled(!lstObjetos.isSelectionEmpty());
     }//GEN-LAST:event_lstObjetosValueChanged
-
+    //Al hacer click en la lista de objetos (el doble click despliega PropiedadesObjeto)
     private void lstObjetosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstObjetosMouseClicked
         if(evt.getClickCount() > 1 && !lstObjetos.isSelectionEmpty()){
             java.awt.EventQueue.invokeLater(new Runnable() {
@@ -398,12 +406,11 @@ public class PropiedadesCelda extends javax.swing.JDialog {
             });
         }
     }//GEN-LAST:event_lstObjetosMouseClicked
-
+    //Al hacer click en algún MenuItem del menú de adición de objetos
     private void nuevoObjeto(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoObjeto
-        if(celda instanceof Transitable){
+        if(celda instanceof Transitable){ //La celda debe ser transitable
             Objeto ob;
-            String nombre = editor.obtenerNombreObjeto("objeto");
-            
+            String nombre = editor.obtenerNombreObjeto("objeto", null); //Obtenemos el nombre del objeto
             switch(((JMenuItem)evt.getSource()).getLabel()){
                 case "Arma":
                     ob = new Arma(10, nombre, "Es un arma", 10, 10, Arma.ARMA_UNA_MANO);
@@ -424,15 +431,15 @@ public class PropiedadesCelda extends javax.swing.JDialog {
                     ob = new ToritoRojo(nombre, 10, 10);
                     break;
             }
-            ((Transitable)celda).addObjeto(ob);
-            ((ObjetosListModel)lstObjetos.getModel()).actualizar();
+            ((Transitable)celda).addObjeto(ob); //Lo añadimos
+            ((ObjetosListModel)lstObjetos.getModel()).actualizar();//Actualizamos la lista
         }
     }//GEN-LAST:event_nuevoObjeto
-
+    //Al hacer click en eliminar objeto
     private void btnEliminarObjActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarObjActionPerformed
         if(!lstObjetos.isSelectionEmpty()){
-            editor.eliminarObjeto((Objeto)lstObjetos.getSelectedValue());
-            ((ObjetosListModel)lstObjetos.getModel()).actualizar();
+            editor.eliminarObjeto((Objeto)lstObjetos.getSelectedValue()); //Se elimina el objeto
+            ((ObjetosListModel)lstObjetos.getModel()).actualizar(); //Se actualiza la lista
         }
     }//GEN-LAST:event_btnEliminarObjActionPerformed
 
@@ -464,6 +471,10 @@ public class PropiedadesCelda extends javax.swing.JDialog {
     private javax.swing.JToggleButton tbtTransitable;
     // End of variables declaration//GEN-END:variables
 }
+/**
+ * Modelo para la lista de enemigos
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
+ */
 class ModeloListaEnemigos extends AbstractListModel<Enemigo>{
     Transitable celda;
     public ModeloListaEnemigos(Celda c) {
@@ -496,7 +507,9 @@ class ModeloListaEnemigos extends AbstractListModel<Enemigo>{
             this.fireContentsChanged(this, 0, 0);
     }
 }
-
+/**
+ * Renderizador de la lista de enemigos
+ */
 class RenderizadorListaEnemigos extends JLabel implements ListCellRenderer<Enemigo> {
     @Override
     public Component getListCellRendererComponent(
@@ -530,6 +543,9 @@ class RenderizadorListaEnemigos extends JLabel implements ListCellRenderer<Enemi
         return this;
     }
 }
+/**
+ * Modelo para la lista de objetos
+ */
 class ObjetosListModel extends AbstractListModel<Objeto> implements ListModel<Objeto> {
     Transitable celda;
 

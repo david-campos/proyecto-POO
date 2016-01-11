@@ -1,38 +1,55 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Utilidades;
 
 import java.awt.Image;
 import java.util.Objects;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * Imagen compuesta que manejan las celdas, posee una parte delantera y un
+ * fondo.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class ImagenCelda {
     private Image fondo;
     private Image delante;
     
+    /**
+     * Crea una nueva imagen de celda con el fondo indicado y la parte delantera
+     * vacía.
+     * @param imagen imagen de fondo con la que se desea crear
+     */
     public ImagenCelda(Image imagen) {
         fondo = imagen;
         delante = null;
     }
 
+    /**
+     * Obtiene el fondo de la imagen
+     * @return Imagen que forma el fondo de la imagen compuesta
+     */
     public Image getFondo() {
         return fondo;
     }
 
+    /**
+     * Cambia el fondo
+     * @param fondo nueva imagen de fondo de la imagen compuesta
+     */
     public void setFondo(Image fondo) {
         this.fondo = fondo;
     }
 
+    /**
+     * Obtiene la imagen delantera
+     * @return La imagen de delante.
+     */
     public Image getDelante() {
         return delante;
     }
 
+    /**
+     * Cambia la imagen delantera
+     * @param delante nueva imagen de la capa delantera de la imagen compuesta
+     */
     public void setDelante(Image delante) {
         this.delante = delante;
     }

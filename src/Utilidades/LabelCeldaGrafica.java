@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Utilidades;
 
 import java.awt.Image;
@@ -12,7 +7,8 @@ import javax.swing.JLabel;
 
 /**
  * No usado actualmente...
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
+ * @deprecated 
  */
 public class LabelCeldaGrafica extends JLabel implements CeldaGrafica{
     private Punto id;

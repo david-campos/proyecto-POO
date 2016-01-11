@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Menus;
 
 import Juego.CargadorJuego;
-import Juego.CargarJuegoDeFicheros;
 import Juego.CargarJuegoPorDefecto;
 import Juego.ConsolaGrafica;
 import Juego.Juego;
@@ -14,21 +8,16 @@ import Editor.Editor;
 import Excepciones.CargadorException;
 import Excepciones.JuegoException;
 import Juego.CargarJuegoJson;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.Clip;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileView;
 
 /**
  * Menu de inicio, diseñado con el diseñador gráfico de NetBeans
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class MenuGrafico extends javax.swing.JFrame implements Menu{
     /**
@@ -284,7 +273,7 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
                 double dificultad = 0.75;
                 switch((String)cbbDificultad.getSelectedItem()){
                     case "Difícil":
-                        dificultad+=.25;
+                        dificultad+=.25; //Nótese que no hay break
                     case "Normal":
                         dificultad+=.25;
                 }
@@ -298,6 +287,8 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
                 }
         }
         //Hay que iniciar el juego en otro Thread
+        //para evitar que la lectura en consola gráfica
+        //bloquee la consola.
         new Thread(){
                 @Override
                 public void run() {
@@ -315,7 +306,7 @@ public class MenuGrafico extends javax.swing.JFrame implements Menu{
                         JOptionPane.showConfirmDialog(null, "Archivo de mapa no válido: " + ex.getMessage(), "Error cargando", JOptionPane.DEFAULT_OPTION);
                         return;
                     }
-                    j.setConsola(new ConsolaGrafica(j, j.getMapa()));
+                    j.setConsola(new ConsolaGrafica(j.getMapa()));
                     try {
                         j.iniciar();
                     } catch (JuegoException ex) {

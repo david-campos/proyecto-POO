@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Editor;
 
 import Objetos.*;
@@ -11,14 +6,19 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * <p>Diálogo que permite modificar las propiedades de un objeto</p>
+ * <p>Las propiedades se modifican al preciso momento en que se modifica
+ * cualquier valor en la interfaz. En concreto, cuando el elemento en cuestión
+ * pierde el foco.</p>
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class PropiedadesObjeto extends javax.swing.JDialog {
     private Objeto obj;
     private final Editor editor;
     /**
      * Creates new form PropiedadesObjeto
+     * @param contexto editor donde se está editando el objeto
+     * @param obj el objeto editado
      */
     public PropiedadesObjeto(Editor contexto, Objeto obj) {
         this.obj = obj;
@@ -28,9 +28,18 @@ public class PropiedadesObjeto extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Obtiene el objeto
+     * @return el objeto que modifica este cuadro de diálogo
+     */
     public Objeto getObj() {
         return obj;
     }
+
+    /**
+     * Cambia el objeto (no actualiza la UI)
+     * @param obj nuevo objeto que va a modificar este cuadro
+     */
     public void setObj(Objeto obj) {
         this.obj = obj;
     }
@@ -278,6 +287,11 @@ public class PropiedadesObjeto extends javax.swing.JDialog {
         txtPlus.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txtPlus.setText(getPlusVal(obj));
         txtPlus.setPreferredSize(new java.awt.Dimension(200, 22));
+        txtPlus.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPlusFocusLost(evt);
+            }
+        });
         txtPlus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPlusActionPerformed(evt);
@@ -320,66 +334,71 @@ public class PropiedadesObjeto extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // Cuando el cuadro de nombre pierde el foco
     private void txtNombreFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusLost
-        String nombre = editor.obtenerNombreObjeto(txtNombre.getText().replace(" ", "_"));
+        String nombre = editor.obtenerNombreObjeto(txtNombre.getText().replace(" ", "_"), obj);
         obj.setNombre(nombre);
         txtNombre.setText(obj.getNombre());
     }//GEN-LAST:event_txtNombreFocusLost
-
+    // Cuando se suelta una tecla en el cuadro de nombre
     private void txtNombreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyPressed
         if(evt.getKeyCode() == KeyEvent.VK_ENTER)
             txtNombreFocusLost(null);
     }//GEN-LAST:event_txtNombreKeyPressed
-
+    // Cuando el cuadro de descripción pierde el foco
     private void txtDescripcionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDescripcionFocusLost
         obj.setDescripcion(txtDescripcion.getText());
         txtDescripcion.setBackground(Color.white);
     }//GEN-LAST:event_txtDescripcionFocusLost
-
+    // Cuando se suelta una tecla en el cuadro de descripción
     private void txtDescripcionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescripcionKeyReleased
         if(!txtDescripcion.getText().equals(obj.getDescripcion()))
             txtDescripcion.setBackground(Color.lightGray);
     }//GEN-LAST:event_txtDescripcionKeyReleased
-
+    // Cuando el botón de arma a una mano/arma a dos manos es pulsado
     private void btnManosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManosActionPerformed
         ((Arma)obj).setTipo(btnManos.isSelected()?Arma.ARMA_UNA_MANO:Arma.ARMA_DOS_MANOS);
         btnManos.setText(((Arma)obj).getTipo()==Arma.ARMA_UNA_MANO?"Arma a una mano":"Arma a dos manos");
     }//GEN-LAST:event_btnManosActionPerformed
-
+    // Cuando el cuadro de peso pierde el foco
     private void txtPesoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPesoFocusLost
         obj.setPeso(Double.valueOf(txtPeso.getText()));
         txtPeso.setText(String.valueOf(obj.getPeso()));
     }//GEN-LAST:event_txtPesoFocusLost
-
+    // Cuando el cuadro de daño pierde el foco
     private void txtDanoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDanoFocusLost
         ((Arma)obj).setDano(Integer.valueOf(txtDano.getText()));
         txtDano.setText(String.valueOf(((Arma)obj).getDano()));
     }//GEN-LAST:event_txtDanoFocusLost
-
+    // Cuando el cuadro de rango pierde el foco
     private void txtRangoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRangoFocusLost
         ((Arma)obj).setRango(Integer.valueOf(txtRango.getText()));
         txtRango.setText(String.valueOf(((Arma)obj).getRango()));
     }//GEN-LAST:event_txtRangoFocusLost
-
+    // Cuando el cuadro de defensa pierde el foco
     private void txtDefensaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDefensaFocusLost
         ((Armadura)obj).setDefensa(Integer.valueOf(txtDefensa.getText()));
         txtDefensa.setText(String.valueOf(((Armadura)obj).getDefensa()));
     }//GEN-LAST:event_txtDefensaFocusLost
-
+    // Cuando el cuadro de vida pierde el foco
     private void txtVidaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtVidaFocusLost
         ((Armadura)obj).setBoostVida(Integer.valueOf(txtVida.getText()));
         txtVida.setText(String.valueOf(((Armadura)obj).getBoostVida()));
     }//GEN-LAST:event_txtVidaFocusLost
-
+    // Cuando el cuadro de energía pierde el foco
     private void txtEnergiaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEnergiaFocusLost
         ((Armadura)obj).setBoostEnergia(Integer.valueOf(txtEnergia.getText()));
         txtEnergia.setText(String.valueOf(((Armadura)obj).getBoostEnergia()));
     }//GEN-LAST:event_txtEnergiaFocusLost
-
+    // Cuando el cuadro de plus 
     private void txtPlusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlusActionPerformed
         setPlusVal(obj, txtPlus.getText());
         txtPlus.setText(getPlusVal(obj));
     }//GEN-LAST:event_txtPlusActionPerformed
+    // Cuando el cuadro de plus pierde el foco
+    private void txtPlusFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPlusFocusLost
+        txtPlusActionPerformed(null);
+    }//GEN-LAST:event_txtPlusFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnManos;
@@ -417,6 +436,11 @@ public class PropiedadesObjeto extends javax.swing.JDialog {
     private javax.swing.JFormattedTextField txtVida;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Devuelve el nombre del tipo de objeto
+     * @param obj objeto del que se desea obtener el tipo
+     * @return una cadena de texto agradable al usuario con el nombre del tipo de objeto
+     */
     public static String tipoObjeto(Objeto obj) {
         if(obj instanceof Arma)
             return "Arma";
@@ -435,7 +459,7 @@ public class PropiedadesObjeto extends javax.swing.JDialog {
         else
             return "Ni idea";
     }
-
+    //Cadena de texto que identifica el panel adecuado para este objeto
     private String getPanelObjeto() {
         if(obj instanceof Arma)
             return "Arma";
@@ -448,7 +472,7 @@ public class PropiedadesObjeto extends javax.swing.JDialog {
         else
             return "Nada";
     }
-
+    //Método que obtiene el valor de plus del objeto (si es de los que tienen un plus)
     private String getPlusVal(Objeto obj) {
         if(obj instanceof Binoculares){
             return String.valueOf(((Binoculares)obj).getPlusRango());
@@ -459,7 +483,7 @@ public class PropiedadesObjeto extends javax.swing.JDialog {
         }else
             return "0";
     }
-
+    //Método que cambia el valor de plus del objeto (si es de los que tienen un plus)
     private void setPlusVal(Objeto obj, String text) {
         if(obj instanceof Binoculares){
             ((Binoculares)obj).setPlusRango(Integer.valueOf(text));

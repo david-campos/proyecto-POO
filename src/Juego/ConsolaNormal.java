@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Juego;
 
 import Mapa.Mapa;
@@ -15,22 +10,30 @@ import java.util.Scanner;
 public final class ConsolaNormal implements Consola{
     private Mapa map;
 
+    /**
+     * Crea una nueva consola normal
+     * @param map mapa en que se desarrolla el juego
+     */
     public ConsolaNormal(Mapa map) {
         this.map = map;
     }
 
+    /**
+     * Obtiene el mapa asociado a esta consola
+     * @return El mapa asociado
+     */
     public Mapa getMap() {
         return map;
     }
 
+    /**
+     * Cambia el mapa asociado a esta consola
+     * @param map nuevo mapa a asociar
+     */
     public void setMap(Mapa map) {
         this.map = map;
     }
     
-    /**
-     * Imprime en la consola por defecto con System.out.println
-     * @param mensaje Mensaje a imprimir
-     */
     @Override
     public void imprimir(String mensaje) {
         if(mensaje != null)
@@ -51,11 +54,6 @@ public final class ConsolaNormal implements Consola{
             System.out.print(mensaje);
     }
     
-    /**
-     * Pide datos al usario en la consola por defecto
-     * @param descripcion Texto a mostrar previo a que el usuario escriba
-     * @return Entrada del usuario
-     */
     @Override
     public String leer(String descripcion) {
         Scanner scnr = new Scanner(System.in);
@@ -69,10 +67,6 @@ public final class ConsolaNormal implements Consola{
     public void imprimirEstado(String mensaje){
          imprimirSinSalto(mensaje);
     }
-        /**
-     * Pide datos al usario en la consola por defecto
-     * @return Entrada del usuario
-     */
     @Override
     public String leer() {
         Scanner scnr = new Scanner(System.in);
@@ -81,7 +75,8 @@ public final class ConsolaNormal implements Consola{
     }
 
     /**
-     *
+     * {@inheritDoc}<br>
+     * En este caso, no hace nada.
      */
     @Override
     public void cerrar(){}

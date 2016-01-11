@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Utilidades;
 
 import java.io.File;
@@ -11,14 +6,12 @@ import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileView;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * FileView que usan los diálogos de apertura de mapa, cambia el icono de los
+ * archivos con extensión de mapa por un mapita.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
+ * @see ConstantesGenerales#EXTENSION_MAPA
  */
 public class FileViewMapa extends FileView {
-    public FileViewMapa() {
-        super();
-    }
-
     @Override
     public Icon getIcon(File f) {
         if(!f.isDirectory())

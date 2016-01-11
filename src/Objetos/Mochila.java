@@ -2,9 +2,6 @@ package Objetos;
 
 import Excepciones.MaximoObjetosException;
 import Excepciones.MaximoPesoException;
-import Excepciones.ObjetoException;
-import Juego.Consola;
-import Juego.ConsolaNormal;
 import java.util.ArrayList;
 /**
  * Una bonita mochila, probablemente de color rosa, que portan enemigos y jugador para llevar sus cuernos de unicornio y demás cosas cuquis.
@@ -16,6 +13,12 @@ public class Mochila {
     private double peso;
     private ArrayList<Objeto> contenido;
 
+    /**
+     * Crea una mochila
+     * @param maxObjetos máximo número de objetos de la mochila
+     * @param maxPeso máximo peso de la mochila
+     * @param contenido array con el contenido inicial de la mochila
+     */
     public Mochila(int maxObjetos, int maxPeso, ArrayList<Objeto> contenido){
         if(maxObjetos > 0)
             this.maxObjetos = maxObjetos;
@@ -34,9 +37,17 @@ public class Mochila {
             }
         }
     }
+    /**
+     * Crea una mochila vacía
+     * @param maxObjetos máximo número de objetos de la mochila
+     * @param maxPeso máximo peso soportado por la mochila
+     */
     public Mochila(int maxObjetos, int maxPeso){
         this(maxObjetos, maxPeso, new ArrayList(maxObjetos));
     }
+    /**
+     * Crea una mochila vacía con un máximo de 10 objetos y 5Kg de peso.
+     */
     public Mochila(){
         this(10,5);
     }
@@ -56,22 +67,34 @@ public class Mochila {
         return maxPeso;
     }
 
+    /**
+     * Cambia el número máximo de objetos de la mochila, debe ser mayor
+     * que el número actual de objetos.
+     * @param maxObjetos número máximo de objetos deseado
+     */
     public void setMaxObjetos(int maxObjetos) {
-        if(maxObjetos > 0)
+        if(maxObjetos >= getNumObj())
             this.maxObjetos = maxObjetos;
+        else
+            this.maxObjetos = getNumObj();
     }
+    /**
+     * Cambia el peso máximo de la mochila
+     * @param maxPeso peso máximo deseado
+     */
     public void setMaxPeso(double maxPeso) {
-        if(maxPeso > 0){
+        if(maxPeso > pesoActual())
             this.maxPeso = maxPeso;
-        }
+        else
+            this.maxPeso = pesoActual();
     }
-    
-    
     
     /**
      * Añade un objeto a la mochila.
-     * @param obj El objeto a añadir
-     * @return True si el objeto se pudo añadir, false si no se pudo.
+     * @param obj el objeto a añadir
+     * @return siempre {@code true}
+     * @throws MaximoObjetosException si se supera el máximo de objetos
+     * @throws MaximoPesoException si se supera el máximo de peso
      */
     public boolean addObjeto(Objeto obj) throws MaximoObjetosException, MaximoPesoException {
         if(obj == null) return false;
@@ -86,7 +109,7 @@ public class Mochila {
     }
     /**
      * Elimina un objeto de la mochila.
-     * @param obj El objeto a eliminar.
+     * @param obj el objeto a eliminar.
      */
     public void remObjeto(Objeto obj) {
         if(obj!=null && contenido.remove(obj)){
@@ -96,7 +119,7 @@ public class Mochila {
     /**
      * Devuelve el objeto i-ésimo guardado en la mochila.
      * @param i índice del objeto que se quiere obtener, comenzando en 0.
-     * @return el objeto solicitado, null si no hay tal objeto.
+     * @return El objeto solicitado, o {@code null} si no hay tal objeto.
      */
     public Objeto getObjeto(int i){
         if(i >= 0 && i < contenido.size())
@@ -104,6 +127,12 @@ public class Mochila {
         else
             return null;
     }
+    /**
+     * Busca en la mochila el objeto con el nombre dado.
+     * @param nombre nombre del objeto a buscar
+     * @return El objeto cuyo nombre se corresponde con el dado, o {@code null}
+     *          si el objeto no está en la celda.
+     */
     public Objeto getObjeto(String nombre) {
         if(nombre != null)
             for (Objeto ob : contenido) 

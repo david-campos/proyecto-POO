@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Juego;
 
 import Utilidades.Punto;
@@ -13,19 +8,16 @@ import Excepciones.CargadorException;
 import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.MaximoObjetosException;
 import Excepciones.MaximoPesoException;
-import Excepciones.ObjetoNoEquipableException;
-import Excepciones.PersonajeException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- *
+ * No se usa ya, cargaba los antiguos archivos de juego.
  * @author crist
+ * @deprecated 
  */
 public class CargarJuegoDeFicheros implements CargadorJuego{
     private String ficheroMapa;
@@ -69,6 +61,7 @@ public class CargarJuegoDeFicheros implements CargadorJuego{
     
     /**
      * Sin argumentos da la ruta por defecto de los archivos
+     * @param tipoJugador el tipo de jugador con el que iniciar el juego
      */
     public CargarJuegoDeFicheros(String tipoJugador) {
        ficheroMapa = "ficheros/mapa.csv";

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Personajes;
 
 import Utilidades.Punto;
@@ -10,21 +5,46 @@ import Juego.*;
 import Mapa.*;
 import Objetos.*;
 import Excepciones.*;
-import java.util.Random;
 
 /**
- *
+ * Tipo de personaje Zapador. Maneja explosivos.
  * @author crist
  */
-public class Zapador extends Jugador {	
-    private static Random r = new Random();
+public class Zapador extends Jugador {
 
+    /**
+     * Crea un zapador nuevo
+     * @param nombre nombre del zapador
+     * @param vida vida del zapador
+     * @param energia energía del mismo
+     * @param mochila mochila que portará
+     * @param armadura armadura que porta
+     * @param arma arma que lleva
+     * @param bn binoculares equipados
+     * @param mapa mapa al que se asocia
+     * @param rango rango de visión
+     * @param juego juego al que se asocia
+     */
     public Zapador(String nombre, int vida, int energia, Mochila mochila, Armadura armadura, Arma arma, Binoculares bn, Mapa mapa, int rango, Juego juego) {
         super(nombre, vida, energia, mochila, armadura, arma, bn, mapa, rango, juego);      
     }
+    /**
+     * Crea un zapador
+     * @param nombre nombre del zapador
+     * @param vida vida del zapador
+     * @param mochilaMaxPeso máximo peso de la mochila
+     * @param mapa mapa al que se enlaza
+     * @param juego juego al que se enlaza
+     */
     public Zapador(String nombre, int vida, int mochilaMaxPeso, Mapa mapa, Juego juego) {
         super(nombre, vida, mochilaMaxPeso, mapa, juego); 
     }
+    /**
+     * Crea un nuevo zapador
+     * @param nombre nombre del zapador
+     * @param mapa mapa al que se enlaza
+     * @param juego juego al que se enlaza
+     */
     public Zapador(String nombre, Mapa mapa, Juego juego) {
         super(nombre, mapa, juego);
     }
@@ -50,7 +70,7 @@ public class Zapador extends Jugador {
     
     
     @Override
-    public void coger(String nombre) throws EnergiaInsuficienteException, ObjetoNoEquipableException, ImposibleCogerExcepcion, MaximoObjetosException, MaximoPesoException {
+    public void coger(String nombre) throws EnergiaInsuficienteException, ImposibleCogerExcepcion, MaximoObjetosException, MaximoPesoException {
         Objeto obj;
         if(mapa != null && (obj = ((Transitable)mapa.getCelda(getPos())).getObjeto(nombre)) != null) {
             if(obj instanceof Explosivo){

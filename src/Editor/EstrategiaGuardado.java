@@ -9,8 +9,10 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * Estrategia de guardado para el guardado con Gson del mapa. <br>
+ * Hace que no se guarden los atributos "mapa" y "juego" para evitar bucles
+ * infinitos.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class EstrategiaGuardado implements ExclusionStrategy{
     @Override
@@ -20,6 +22,6 @@ public class EstrategiaGuardado implements ExclusionStrategy{
     }
     @Override
     public boolean shouldSkipClass(Class<?> type) {
-        return false;
+        return false; //No excluye ninguna clase
     }
 }

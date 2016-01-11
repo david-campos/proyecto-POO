@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Editor;
 
 import Objetos.Objeto;
@@ -12,8 +7,9 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * Renderer que genera los elementos visuales de la lista de objetos de
+ * {@link PropiedadesCelda} y {@link PropiedadesEnemigo}.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class ObjetosRenderer extends JLabel implements ListCellRenderer<Objeto> {
         @Override

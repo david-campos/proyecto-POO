@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Juego;
 
 import Objetos.Objeto;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.io.File;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -15,10 +9,16 @@ import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * Clase creada para el elemento que representará un objeto cuando se guarde en
+ * la mochila en la consola gráfica.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class IconoObjetoMochila extends JLabel{
+
+    /**
+     * Crea un nuevo icono de representación de objeto
+     * @param ob objeto a representar
+     */
     public IconoObjetoMochila(Objeto ob){
         super();
         this.setIcon(icono(ob));

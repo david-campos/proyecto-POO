@@ -1,14 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Juego;
 
 import Comandos.Comando;
 import Comandos.ComandoDesequipar;
-import Comandos.ComandoTirar;
-import Editor.Editor;
 import Excepciones.ComandoExcepcion;
 import Mapa.Celda;
 import Utilidades.CeldaGrafica;
@@ -29,7 +22,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Image;
@@ -65,14 +57,15 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.BadLocationException;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * <p>Implementación de la Consola de juego mediante una ventana gráfica.</p>
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class ConsolaGrafica extends JFrame implements Consola{
+    //Variables necesarias
     private final Mapa mapa;
     private int dim;
-    private final Juego juego;
     
+    //Elementos que formarán la consola
     private final ArrayList<CeldaGrafica> paneles;
     private final HashMap<String, Image> imagenes;
     private final JTextField areaConsola;
@@ -92,10 +85,14 @@ public class ConsolaGrafica extends JFrame implements Consola{
     private JLabel lblArmadura;
     private JLabel lblBinoculares;
 
-    public ConsolaGrafica(Juego j, Mapa mapa) throws HeadlessException {
+    /**
+     * Crea una nueva 'consola' gráfica de juego
+     * @param mapa mapa sobre el que se desarrolla el juego
+     */
+    public ConsolaGrafica(Mapa mapa) {
         super();
-        juego = j;
         this.mapa = mapa;
+        //Iniciación de las componentes
         paneles = new ArrayList(mapa.getAlto()*mapa.getAncho());
         panelMapa = new JPanel(new GridLayout(mapa.getAlto(), mapa.getAncho(),0,0));
         imagenes = new HashMap();
@@ -110,7 +107,9 @@ public class ConsolaGrafica extends JFrame implements Consola{
         pbrCargaPeso = new JProgressBar();
         scrollP = new JScrollPane();
         comandos = new ArrayBlockingQueue(10);
+        //Fijación de parametros para obtener la ventana adecuada
         initComponents();
+        //Se hace visible al instanciar
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -119,6 +118,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
         });
     }
     
+    //La función que inicia la ventana (pff tío, vaya rollo)
     private void initComponents(){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Punto dim_total = new Punto((int)Math.round(screenSize.width * 0.85), (int) Math.round(screenSize.height * 0.85)); //Tamaño del mapa máximo
@@ -313,6 +313,14 @@ public class ConsolaGrafica extends JFrame implements Consola{
         this.setLocationRelativeTo(null);
     }
     
+    /**
+     * Obtiene la imagen representante de la celda indicada. Nótese que la
+     * imagen representante aquí y en el editor no son exactamente la misma
+     * debido a las mecánicas de juego.
+     * @param c celda de la que obtener representación
+     * @return una imagen compuesta con los valores adecuados de representación
+     * @see Editor.Editor#imagenRepresentante
+     */
     public ImagenCelda imagenRepresentante(Celda c){
         String representacionF, representacionD = null;
         
@@ -357,6 +365,13 @@ public class ConsolaGrafica extends JFrame implements Consola{
         actualizarIconosMochila();
         actualizarIconosEquipacion();
     }
+
+    /**
+     * Maneja la caché de imágenes.
+     * @param representacion representación de la que se desea obtener imagen
+     * @return La imagen correspondiente a esa representación
+     * @see Editor.Editor#obtenerImagen(java.lang.String)
+     */
     public Image obtenerImagen(String representacion) {
         if(imagenes.get(representacion) == null){
             Image img;
@@ -370,7 +385,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
     @Override
     public void imprimir(String mensaje) {
         areaConsolaDisplay.append("\n"+mensaje);
-        if(areaConsolaDisplay.getLineCount() > 50)
+        if(areaConsolaDisplay.getLineCount() > 50) //Tratamos de que nunca tenga más de 50 líneas
             try {
                 areaConsolaDisplay.setText(areaConsolaDisplay.getText().substring(areaConsolaDisplay.getLineStartOffset(areaConsolaDisplay.getLineCount() - 50)));
             } catch (BadLocationException ex) {
@@ -394,7 +409,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
     
     /**
      * Pide datos al usario en la consola por defecto
-     * @param descripcion Texto a mostrar previo a que el usuario escriba
+     * @param descripcion texto a mostrar previo a que el usuario escriba
      * @return Entrada del usuario
      */
     @Override
@@ -402,26 +417,26 @@ public class ConsolaGrafica extends JFrame implements Consola{
         imprimir(descripcion);
         return leer();
     }
-    /**
-     * Pide datos al usario en la consola por defecto
-     * @return Entrada del usuario
-     */
     @Override
     public String leer() {
         String ret=null;
         areaConsola.setEnabled(true);
-        while((ret = comandos.poll())==null)
-            Thread.yield();
+        while((ret = comandos.poll())==null) //Esperamos a que el usuario escriba algo y esto se añada a la cola
+            Thread.yield(); //La razón por la que el juego debe correr en un hilo aparte
         areaConsola.setEnabled(false);
         return ret;
     }
     
     @Override
     public void cerrar(){
-        dispose();
-        new MenuGrafico().lanzar();
+        dispose(); //Ceraramos la ventana
+        new MenuGrafico().lanzar(); //Lanzamos el menú inicial
     }
     
+    /**
+     * La consola muestra el mensaje de que te has muerto.
+     * Luego carga el menú de inicio.
+     */
     public void hasMuerto() {
         for(Component c : getContentPane().getComponents())
             getContentPane().remove(c);
@@ -441,9 +456,11 @@ public class ConsolaGrafica extends JFrame implements Consola{
         new MenuGrafico().lanzar();
     }
     
+    /**
+     * La consola se cierra. Podría usarse para mostrar un mensaje de victoria
+     */
     public void hasGanado(){
-        dispose();
-        new MenuGrafico().lanzar();
+        cerrar();
     }
 
     private void actualizarIconosMochila() {
@@ -469,7 +486,6 @@ public class ConsolaGrafica extends JFrame implements Consola{
         panelMochila.repaint(r);
         panelObjetos.revalidate();
     }
-
     private void actualizarIconosEquipacion() {
         if(mapa != null && mapa.getJugador() != null){
             Jugador j = mapa.getJugador();
@@ -480,6 +496,8 @@ public class ConsolaGrafica extends JFrame implements Consola{
         }
     }
 
+    //Adapter creado para escribir unas coordenadas relativas al jugador cuando
+    //se hace click en un elemento
     private static class CoordenadaAlClick extends MouseAdapter {
         Punto pt;
         JTextField area;
@@ -505,7 +523,8 @@ public class ConsolaGrafica extends JFrame implements Consola{
                 area.setText(texto);
             }
         }
-    }    
+    } 
+    //Adapter creado para escribir un texto cuando se hace click en un elemento
     private static class TextoAlClick extends MouseAdapter {
         String texto;
         JTextField area;
@@ -529,7 +548,8 @@ public class ConsolaGrafica extends JFrame implements Consola{
                 area.setText(text);
             }
         }
-    }    
+    }
+    //Adapter creado para ejecutar un comando cuando se hace click en un elemento
     private static class ComandoAlClick extends MouseAdapter {
         Comando comando;
         JTextField area;

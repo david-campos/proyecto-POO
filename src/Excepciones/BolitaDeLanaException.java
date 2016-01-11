@@ -1,6 +1,3 @@
-/*
- * 
- */
 package Excepciones;
 
 /**
@@ -10,6 +7,10 @@ package Excepciones;
 public class BolitaDeLanaException extends Exception{
     private final String color;
 
+    /**
+     * Crea una nueva excepción BolitaDeLana
+     * @param color color de la bolita
+     */
     public BolitaDeLanaException(String color) {
         this.color = color;
     }

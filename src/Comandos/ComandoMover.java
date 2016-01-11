@@ -9,35 +9,72 @@ import Excepciones.CeldaObjetivoNoValida;
 import Excepciones.ComandoExcepcion;
 import Excepciones.DireccionMoverIncorrecta;
 import Excepciones.EnergiaInsuficienteException;
-import Excepciones.PersonajeException;
 import Personajes.Jugador;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * Comando que permite al jugador moverse por el mapa. El movimiento se realiza
+ * indicando simplemente la dirección y por la distancia de una casilla.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
+ * 
+ * @see #setDir(java.lang.String)
  */
 public final class ComandoMover implements Comando{
     private String dir;
     private Jugador jug;
+
+    /**
+     * Crea una nueva instancia de este comando
+     * @param jug jugador a mover
+     * @param direccion direccion de movimiento (ver {@code setDir})
+     * @see #setDir(java.lang.String) 
+     */
     public ComandoMover(Jugador jug, String direccion){
-        dir = direccion.toLowerCase();
+        setDir(direccion);
         this.jug = jug;
     }
     
+    /**
+     * Obtiene el valor de dirección de movimiento especificado.
+     * @return El valor de dirección de movimiento especificado.
+     */
     public String getDir() {
         return dir;
     }
 
+    /**
+     * Cambia la dirección del movimiento del jugador realizado cuando se
+     * llame a {@code ejecutar} este comando. <br>
+     * Los valores posibles son:
+     * <ul>
+     * <li> 'N' para mover hacia el norte (parte superior de la pantalla,
+     * componente 'y' de la posición menor)
+     * <li> 'S' para mover hacia el sur (parte inferior de la pantalla,
+     * componente 'y' de la posición mayor)
+     * <li> 'O' para mover hacia el oeste (parte izquierda de la pantalla,
+     * componente 'x' de la posición menor)
+     * <li> 'E' para mover hacia el este (parte derecha de la pantalla,
+     * componente 'x' de la posición mayor)
+     * </ul>
+     * No se distinguen mayúsculas y minúsculas.
+     * @param dir nuevo valor de dirección de movimiento
+     */
     public void setDir(String dir) {
         this.dir = dir.toLowerCase();
     }
 
+    /**
+     * Obtiene el jugador
+     * @return jugador que realizará el movimiento
+     */
     public Jugador getJug() {
         return jug;
     }
 
+    /**
+     * Cambia el jugador
+     * @param jug jugador que realizará el movimiento
+     */
     public void setJug(Jugador jug) {
         this.jug = jug;
     }

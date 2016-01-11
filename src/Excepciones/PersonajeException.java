@@ -1,17 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Excepciones;
 
 /**
- *
+ * Excepción genérica referida a un personaje
  * @author crist
  */
 public abstract class PersonajeException extends Exception{
 
     public PersonajeException() {
+        super();
     }
 
     public PersonajeException(String message) {

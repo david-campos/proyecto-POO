@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Utilidades;
 
 import java.lang.reflect.Type;
@@ -16,8 +11,9 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * Adaptador de Gson para el guardado y lectura del mapa.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
+ * @param <T> clase adaptada
  */
 public class Adaptador<T> implements JsonSerializer<T>, JsonDeserializer<T> {
 
@@ -45,24 +41,18 @@ public class Adaptador<T> implements JsonSerializer<T>, JsonDeserializer<T> {
         return context.deserialize(data, actualType);
     }
 
-    private Type typeForName(final JsonElement typeElem) 
-    {
-        try 
-        {
+    private Type typeForName(final JsonElement typeElem) {
+        try{
             return Class.forName(typeElem.getAsString());
-        } 
-        catch (ClassNotFoundException e) 
-        {
+        }catch (ClassNotFoundException e){
             throw new JsonParseException(e);
         }
     }
 
-    private JsonElement get(final JsonObject wrapper, final String memberName) 
-    {
+    private JsonElement get(final JsonObject wrapper, final String memberName) {
         final JsonElement elem = wrapper.get(memberName);
 
-        if (elem == null) 
-        {
+        if (elem == null){
             throw new JsonParseException(
                 "no '" + memberName + "' member found in json file.");
         }

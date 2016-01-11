@@ -1,20 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Menus;
 
 import Juego.CargadorJuego;
 import Juego.CargarJuegoDeFicheros;
 import Juego.CargarJuegoPorDefecto;
-import Juego.Consola;
 import Juego.ConsolaNormal;
 import Juego.Juego;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * Implementación por consola standard del menú inicial de juego.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class MenuConsola implements Menu{
 

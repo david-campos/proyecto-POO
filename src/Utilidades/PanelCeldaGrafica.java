@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Utilidades;
 
 import java.awt.Image;
@@ -12,12 +7,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
 
-
+/**
+ * Implementación de celda gráfica basada en un panel con OverlayLayout
+ * con dos labels superpuestos.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
+ */
 public class PanelCeldaGrafica extends JPanel implements CeldaGrafica{
     private Punto id;
     private final JLabel fondo;
     private final JLabel delante;
     private ImagenCelda ultima;
+
+    /**
+     * Crea un nuevo {@code PanelCeldaGrafica} con el id indicado
+     * @param pt id que asocia esta celda gráfica a una celda concreta del mapa
+     */
     public PanelCeldaGrafica(Punto pt) {
         super();
         id = pt;

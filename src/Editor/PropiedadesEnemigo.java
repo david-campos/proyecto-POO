@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Editor;
 
 import Excepciones.CeldaObjetivoNoValida;
@@ -19,8 +14,6 @@ import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
@@ -31,14 +24,17 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListDataListener;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * <p>Cuadro de diálogo que modifica las propiedades de un enemigo </p>
+ * <p>En este cuadro, si se pusa cancelar, las propiedades no se ven modificadas,
+ * pero los cambios en la mochila tienen efecto de forma instantánea, dando igual
+ * entonces el método de cierre.</p>
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class PropiedadesEnemigo extends javax.swing.JDialog {
 
+    //Nombres para los labels del menú desplegable para añadir objeto a la mochila
     private static final String MIT_ARMA = "Arma";
     private static final String MIT_ARMADURA = "Armadura";
     private static final String MIT_BOTIQUIN = "Botiquín";
@@ -55,6 +51,8 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
 
     /**
      * Creates new form PropiedadesEnemigo
+     * @param contexto el editor en que se está editando al enemigo
+     * @param enemigo el enemigo editado
      */
     public PropiedadesEnemigo(Editor contexto, Enemigo enemigo) {
         this.enemigo = enemigo;
@@ -481,37 +479,36 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    //Cuando se selecciona el cuadro de texto del nombre
     private void txtNombreFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusGained
         txtNombre.setBackground(Color.white);
         txtNombre.setBorder(new javax.swing.border.LineBorder(Color.black, 1, false));
     }//GEN-LAST:event_txtNombreFocusGained
-
+    //Cuando se deselecciona (pierde el focus) el cuadro de texto del nombre
     private void txtNombreFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusLost
         txtNombre.setBackground(Color.getColor("control"));
-        txtNombre.setText(editor.obtenerNombreEnemigo(txtNombre.getText()));
+        txtNombre.setText(editor.obtenerNombreEnemigo(txtNombre.getText(), enemigo)); //Obtenemos un nombre válido en base al del usuario
         txtNombre.setBorder(null);
     }//GEN-LAST:event_txtNombreFocusLost
-
+    //Cuando entra el ratón en el área del cuadro de texto del nombre
     private void txtNombreMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNombreMouseEntered
-        if (txtNombre.getBorder() == null) {
+        if (txtNombre.getBorder() == null) { //Solo actualizamos el borde si era null, pues no tiene el focus
             txtNombre.setBorder(new javax.swing.border.LineBorder(Color.gray, 1, false));
         }
     }//GEN-LAST:event_txtNombreMouseEntered
-
+    //Cuando sale el ratón del área correspondiente al cuadro de texto del nombre
     private void txtNombreMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNombreMouseExited
-        if (txtNombre.getBorder() != null
-                && txtNombre.getBorder() instanceof javax.swing.border.LineBorder
-                && ((javax.swing.border.LineBorder) txtNombre.getBorder()).getLineColor().equals(Color.gray)) {
-            txtNombre.setBorder(null);
+        if (!txtNombre.hasFocus()) {
+            txtNombre.setBorder(null); //Solo quitamos el borde si no tiene el focus
         }
     }//GEN-LAST:event_txtNombreMouseExited
-
+    //Cuando se clicka el botón de cancelar
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         setVisible(false);
         dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
-
+    //Cuando el texto de selección de vida es cambiado (y se pulsa enter, o se pierde el focus)
     private void txtVidaMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtVidaMaxActionPerformed
         Integer n = Integer.parseInt(txtVidaMax.getText());
         if (n < 1) {
@@ -521,25 +518,25 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
             sldVida.setMaximum(n);
         }
     }//GEN-LAST:event_txtVidaMaxActionPerformed
-
+    //Cuando se mueve el slider de la vida actual
     private void sldVidaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sldVidaStateChanged
         lblVida.setText(String.valueOf(sldVida.getValue()));
     }//GEN-LAST:event_sldVidaStateChanged
-
+    //Cuando el texto de vida pierde el foco
     private void txtVidaMaxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtVidaMaxFocusLost
-        txtVidaMaxActionPerformed(null);
+        txtVidaMaxActionPerformed(null); //Llamamos al action performed
     }//GEN-LAST:event_txtVidaMaxFocusLost
-
+    //Cuando el texto de energía sufre una pulsación de enter
     private void txtEnergiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEnergiaActionPerformed
         Integer n = Integer.parseInt(txtVidaMax.getText());
         if (n < 1) {
             txtEnergia.setText("1");
         }
     }//GEN-LAST:event_txtEnergiaActionPerformed
-
+    //Cuando aceptar es pulsado muy bastamente
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         Enemigo guardado = enemigo;
-        if(tipoCambiado()){
+        if(tipoCambiado()){ //Si se ha cambiado el tipo de enemigo, hay que crear otro
             editor.eliminarEnemigo(enemigo);
             try{
                 if((Class)cbxTipo.getSelectedItem() == Floater.class)
@@ -556,7 +553,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
                 //Esto no debería ocurrir, no es posible
             }
         }
-        guardado.setNombre(editor.obtenerNombreEnemigo(txtNombre.getText()));
+        guardado.setNombre(editor.obtenerNombreEnemigo(txtNombre.getText(),guardado));
         guardado.setMaxVida(Integer.valueOf(txtVidaMax.getText()));
         guardado.setVida(sldVida.getValue());
         guardado.setEnergiaPorTurno(Integer.valueOf(txtEnergia.getText()));
@@ -566,57 +563,57 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
         for(Objeto obj: objetosAtirar){
             //Antes de añadirlos, los renombramos, esto evita que los objetos creados hayan
             //duplicado los nombres.
-            obj.setNombre(editor.obtenerNombreObjeto(obj.getNombre()));
+            obj.setNombre(editor.obtenerNombreObjeto(obj.getNombre(), obj));
             ((Transitable)editor.getMapa().getCelda(guardado.getPos())).addObjeto(obj);
         }
         dispose();
         editor.repintarCelda(editor.grafica(guardado.getPos()));
     }//GEN-LAST:event_btnAceptarActionPerformed
-
+    //Cuando cambia el elemento seleccionado en la lista de la mochila
     private void lstMochilaValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstMochilaValueChanged
         mitEliminar.setEnabled(!lstMochila.isSelectionEmpty());
     }//GEN-LAST:event_lstMochilaValueChanged
-
+    //Cuando se hace click en la lista de la mochila (el derecho despliega el menú de añadir objetos, por ejemplo)
     private void lstMochilaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstMochilaMouseClicked
         if (evt.getButton() == MouseEvent.BUTTON3) {
             pmnLista.show((Component) evt.getSource(), evt.getX(), evt.getY());
-        } else if (evt.getClickCount() > 1 && !lstMochila.isSelectionEmpty()) {
+        } else if (evt.getClickCount() > 1 && !lstMochila.isSelectionEmpty()) { //El doble click abre las propiedades de objeto
             new PropiedadesObjeto(editor, (Objeto) lstMochila.getSelectedValue()).setVisible(true);
-            ((MochilaListModel) lstMochila.getModel()).actualizar();
-            actualizarValoresMochila();
+            ((MochilaListModel) lstMochila.getModel()).actualizar(); //Podría haber cambiado el nombre por ejemplo
+            actualizarValoresMochila(); //Podría haber cambiado el peso
         }
     }//GEN-LAST:event_lstMochilaMouseClicked
-
+    //Cuando haces click en un elemento del menú de añadir objeto a la mochila
     private void mitEng_ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitEng_ActionPerformed
         Objeto obj;
         switch (((JMenuItem) evt.getSource()).getText()) {
             case MIT_ARMA: {
-                String nombre = editor.obtenerNombreObjeto("arma");
+                String nombre = editor.obtenerNombreObjeto("arma", null);
                 obj = new Arma(0.2, nombre, "Teme a este arma.", 4, 10, Arma.ARMA_UNA_MANO);
                 break;
             }
             case MIT_ARMADURA: {
-                String nombre = editor.obtenerNombreObjeto("armadura");
+                String nombre = editor.obtenerNombreObjeto("armadura", null);
                 obj = new Armadura(nombre, "Es una durísima armadura.", 0.5, 10, 0, 0);
                 break;
             }
             case MIT_BOTIQUIN: {
-                String nombre = editor.obtenerNombreObjeto("botiquin");
+                String nombre = editor.obtenerNombreObjeto("botiquin", null);
                 obj = new Botiquin(nombre, 0.2, 10);
                 break;
             }
             case MIT_BINOCULARES: {
-                String nombre = editor.obtenerNombreObjeto("binoculares");
+                String nombre = editor.obtenerNombreObjeto("binoculares", null);
                 obj = new Binoculares(nombre, 0.1, 3);
                 break;
             }
             case MIT_EXPLOSIVO: {
-                String nombre = editor.obtenerNombreObjeto("explosivo");
+                String nombre = editor.obtenerNombreObjeto("explosivo", null);
                 obj = new Explosivo(0.4, nombre);
                 break;
             }
             default: {
-                String nombre = editor.obtenerNombreObjeto("torito");
+                String nombre = editor.obtenerNombreObjeto("torito", null);
                 obj = new ToritoRojo(nombre, 0.2, 10);
                 break;
             }
@@ -626,15 +623,16 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
         } catch (MaximoObjetosException ex) {
             JOptionPane.showMessageDialog(null, "No se pueden añadir más objetos, la mochila está llena!", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (MaximoPesoException ex) {
+            //Tratamos de ajustar el peso del objeto a lo que le falta a la mochila
             double dif = enemigo.getMochila().getMaxPeso()-enemigo.getMochila().pesoActual();
-            if( dif > 0.0009){
+            if( dif > 0.0009){ //Si lo que falta no es mínimo, pues adelante
                 obj.setPeso(Math.floor(dif*1000)/1000.0); //Redondeamos hacia abajo con 3 decimales
                 try {
                     enemigo.getMochila().addObjeto(obj);
                 } catch (MaximoObjetosException ex1) {
-                    System.out.println("QUE? IMPOSIBLE");
+                    System.out.println("QUE? IMPOSIBLE"); //No puede pasar
                 } catch (MaximoPesoException ex1) {
-                    System.out.println("TENEMOS UN FALLITO NEN.");
+                    System.out.println("TENEMOS UN FALLITO NEN."); //No puede pasar
                 }
             }else
                 JOptionPane.showMessageDialog(null, "La mochila está al máximo de peso.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -643,7 +641,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
         actualizarValoresMochila();
         ((MochilaListModel)lstMochila.getModel()).actualizar();
     }//GEN-LAST:event_mitEng_ActionPerformed
-
+    //Cuando haces click en eliminar un objeto de la mochila
     private void mitEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitEliminarActionPerformed
        if(!lstMochila.isSelectionEmpty()){
            enemigo.getMochila().remObjeto((Objeto)lstMochila.getSelectedValue());
@@ -651,14 +649,14 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
             actualizarValoresMochila();
        }
     }//GEN-LAST:event_mitEliminarActionPerformed
-
+    //Cuando haces click en el label del arma derecha
     private void lblArmaDerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblArmaDerMouseClicked
         switch(evt.getButton()){
-            case MouseEvent.BUTTON1:
-                if(arma_der == null)
-                    arma_der = new Arma(0.2, editor.obtenerNombreObjeto("arma"), "Un arma", 3, 10, Arma.ARMA_UNA_MANO);
+            case MouseEvent.BUTTON1: //El botón izquierdo la edita
+                if(arma_der == null) //Si no teníamos arma previa, creamos una
+                    arma_der = new Arma(0.2, editor.obtenerNombreObjeto("arma", null), "Un arma", 3, 10, Arma.ARMA_UNA_MANO);
                 else if(arma_der.equals(arma_izq))
-                    arma_izq = null;
+                    arma_izq = null; //Si era un arma a dos manos, por ahora dejamos la otra a null
                 new PropiedadesObjeto(editor,arma_der).setVisible(true);
 
                 if(arma_der.getTipo() == Arma.ARMA_DOS_MANOS){
@@ -681,7 +679,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
                     }
                 }
                 break;
-            case MouseEvent.BUTTON3:
+            case MouseEvent.BUTTON3: //El botón derecho tira el arma
                 if(arma_der != null)
                     switch(JOptionPane.showConfirmDialog(this,
                             "¿Tirar " + arma_der.getNombre() + " a la celda?",
@@ -697,15 +695,16 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
                     }
                 break;
         }
-        lblArmaDer.setText(textoArmaDer());
+        lblArmaDer.setText(textoArmaDer()); //Actualizamos textos
         lblArmaIzq.setText(textoArmaIzq());
     }//GEN-LAST:event_lblArmaDerMouseClicked
-
+    //Cuando haces click en el label del arma izquierda
     private void lblArmaIzqMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblArmaIzqMouseClicked
+        //Para entender funcionamiento mirar lblArmaDerMouseClicked si no se entiende algo
         switch(evt.getButton()){
             case MouseEvent.BUTTON1:
                 if(arma_izq == null)
-                    arma_izq = new Arma(0.2, editor.obtenerNombreObjeto("arma"), "Un arma", 3, 10, Arma.ARMA_UNA_MANO);
+                    arma_izq = new Arma(0.2, editor.obtenerNombreObjeto("arma", null), "Un arma", 3, 10, Arma.ARMA_UNA_MANO);
                 else if(arma_izq.equals(arma_der))
                     arma_der = null;
                 new PropiedadesObjeto(editor,arma_izq).setVisible(true);
@@ -749,15 +748,15 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
         lblArmaDer.setText(textoArmaDer());
         lblArmaIzq.setText(textoArmaIzq());
     }//GEN-LAST:event_lblArmaIzqMouseClicked
-
+    //Cuando haces click en el label de la armadura
     private void lblArmaduraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblArmaduraMouseClicked
         switch(evt.getButton()){
-            case MouseEvent.BUTTON1:
-                if(armadura == null)
-                    armadura = new Armadura(editor.obtenerNombreObjeto("armadura"), "Protege! Wow!", 0.6, 12, 0, 0);
+            case MouseEvent.BUTTON1: //El botón izquierdo la modifica
+                if(armadura == null) //Si no tenía antes, la crea
+                    armadura = new Armadura(editor.obtenerNombreObjeto("armadura", null), "Protege! Wow!", 0.6, 12, 0, 0);
                 new PropiedadesObjeto(editor, armadura).setVisible(true);
                 break;
-            case MouseEvent.BUTTON3:
+            case MouseEvent.BUTTON3: //El botón derecho la arroja a la celda
                 if(armadura != null)
                     switch(JOptionPane.showConfirmDialog(this,
                             "¿Tirar " + armadura.getNombre() + " a la celda?",
@@ -773,42 +772,39 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
         }
         lblArmadura.setText(textoArmadura());
     }//GEN-LAST:event_lblArmaduraMouseClicked
-
+    //Cuando el texto del máximo de objetos pierde el foco
     private void txtMaxObjetosMochilaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaxObjetosMochilaFocusLost
         try{
-            enemigo.getMochila().setMaxObjetos(Integer.parseInt(txtMaxObjetosMochila.getText()));
-        }catch (NumberFormatException ne){
-            //No pasa nada, simplemente se anulará en la siguientes líneas tt.
-        }
-        txtMaxObjetosMochila.setText(String.valueOf(enemigo.getMochila().getMaxObjetos()));
-        pbrMaxObjetos.setMaximum(enemigo.getMochila().getMaxObjetos());
+            enemigo.getMochila().setMaxObjetos(Integer.parseInt(txtMaxObjetosMochila.getText())); //Hacemos el set
+        }catch (NumberFormatException ne){/*No pasa nada, simplemente se anulará en la siguientes líneas tt.*/ }
+        txtMaxObjetosMochila.setText(String.valueOf(enemigo.getMochila().getMaxObjetos())); //Obtenemos el maximo de objetos real
+        pbrMaxObjetos.setMaximum(enemigo.getMochila().getMaxObjetos()); //Actualizamos la progress bar
     }//GEN-LAST:event_txtMaxObjetosMochilaFocusLost
-
+    //Cuando el texto del máximo de peso pierde el foco
     private void txtMaxPesoMochilaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaxPesoMochilaFocusLost
         try{
             double peso = (double)txtMaxPesoMochila.getValue();
-            enemigo.getMochila().setMaxPeso(peso);
+            enemigo.getMochila().setMaxPeso(peso); //Tratamos de asignar el peso
         }catch (NumberFormatException ne){
             //No pasa nada, simplemente se anulará en la siguientes líneas tt.
         }
-        txtMaxPesoMochila.setValue(enemigo.getMochila().getMaxPeso());
-        pbrMaxPeso.setMaximum((int)Math.round(enemigo.getMochila().getMaxPeso() * 1000));
+        txtMaxPesoMochila.setValue(enemigo.getMochila().getMaxPeso()); //Obtenemos el peso asignado realmente
+        pbrMaxPeso.setMaximum((int)Math.round(enemigo.getMochila().getMaxPeso() * 1000)); //Fijamos el máximo de la barra
     }//GEN-LAST:event_txtMaxPesoMochilaFocusLost
-
+    //Cuando se despulsa una tecla en el texto de máximo peso
     private void txtMaxPesoMochilaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMaxPesoMochilaKeyReleased
         if(evt.getKeyCode() == KeyEvent.VK_ENTER)
             txtMaxPesoMochilaFocusLost(null);
     }//GEN-LAST:event_txtMaxPesoMochilaKeyReleased
-
+    //Cuando se despulsa una tecla en el texto de máximo de objetos
     private void txtMaxObjetosMochilaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMaxObjetosMochilaKeyReleased
         if(evt.getKeyCode() == KeyEvent.VK_ENTER)
             txtMaxPesoMochilaFocusLost(null);
     }//GEN-LAST:event_txtMaxObjetosMochilaKeyReleased
-
+    //Cuando se modifica el texto del cuadro de nombre
     private void txtNombreTextoCambiado() {
         //Recalculamos el ancho del cuadro de texto
-        AffineTransform affinetransform = new AffineTransform();
-        FontRenderContext frc = new FontRenderContext(affinetransform, true, true);
+        FontRenderContext frc = new FontRenderContext(new AffineTransform(), true, true);
         int ancho = (int) (txtNombre.getFont().getStringBounds(txtNombre.getText(), frc).getWidth()) + 2;
         ancho = Math.min(Math.max(20, ancho), panGeneral.getWidth());
         txtNombre.setSize(new Dimension(ancho, txtNombre.getPreferredSize().height));
@@ -861,7 +857,8 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
     private javax.swing.JTextField txtNombre;
     private javax.swing.JFormattedTextField txtVidaMax;
     // End of variables declaration//GEN-END:variables
-
+    
+    //Texto a poner en el lblArmadura
     private String textoArmadura() {
         if (armadura != null) {
             return "<html>"+armadura.toString().replace("\n", "<br>")+"</html>";
@@ -869,7 +866,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
             return "<html>Sin<br>armadura</html>";
         }
     }
-
+    //Texto a poner en el lblArmaDer
     private String textoArmaDer() {
         if (arma_der != null) {
             return "Editar";
@@ -877,7 +874,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
             return "No";
         }
     }
-
+    //Texto a poner en el lblArmaIzq
     private String textoArmaIzq() {
         if (arma_izq != null) {
             return "Editar";
@@ -885,14 +882,14 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
             return "No";
         }
     }
-
+    //Actualiza las barras de la mochila y sus tooltip
     private void actualizarValoresMochila() {
         pbrMaxPeso.setValue((int)Math.round(enemigo.getMochila().pesoActual()*1000) );
         pbrMaxPeso.setToolTipText(String.valueOf(enemigo.getMochila().pesoActual()));
         pbrMaxObjetos.setValue(enemigo.getMochila().getNumObj());
         pbrMaxObjetos.setToolTipText(String.valueOf(enemigo.getMochila().getNumObj()));
     }
-
+    //Comprueba si se ha cambiado el tipo de enemigo con respecto al que ya tenía
     private boolean tipoCambiado() {
         if((Class)cbxTipo.getSelectedItem() == Floater.class){
             return !(enemigo instanceof Floater);
@@ -904,7 +901,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
             return !(enemigo instanceof Sectoid);
         }
     }
-
+    //Modelo de combobox del tipo de enemigo
     private static class ModeloCbxTipoEnemigo extends AbstractListModel<Class> implements ComboBoxModel<Class> {
 
         ArrayList<Class> tipos;
@@ -942,7 +939,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
             return selecto;
         }
     }
-
+    //Renderizador de las clases en el combobox
     private static class RenderizadorClases extends JLabel implements ListCellRenderer<Class> {
 
         public RenderizadorClases() {
@@ -974,7 +971,7 @@ public class PropiedadesEnemigo extends javax.swing.JDialog {
             return this;
         }
     }
-
+    //Modelo de la lista de objetos en la mochila
     private static class MochilaListModel extends AbstractListModel<Objeto> implements ListModel<Objeto> {
 
         private Mochila mochila;

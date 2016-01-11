@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Editor;
 
+import Excepciones.CeldaObjetivoNoValida;
 import Mapa.Celda;
 import Utilidades.CeldaGrafica;
 import Mapa.Transitable;
@@ -13,6 +9,8 @@ import Personajes.Enemigo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -20,8 +18,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * Menu desplegable que se muestra al hacer click derecho con la herramienta
+ * {@code NORMAL} seleccionada sobre una celda del editor.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class MenuCelda extends javax.swing.JPopupMenu{
     private static final String MENU_EDITAR = "Editar";
@@ -34,8 +33,13 @@ public class MenuCelda extends javax.swing.JPopupMenu{
     private final HashMap<JMenu, Enemigo> mapaEnemigos;
     private final HashMap<JMenu, Objeto> mapaObjetos;
     
-    JCheckBoxMenuItem mitToggleTransitable;
+    private JCheckBoxMenuItem mitToggleTransitable;
     
+    /**
+     * Crea una nueva instancia del menú para una celda y editor concretos
+     * @param cg celda a la que referencia el menú
+     * @param ed editor sobre el que opera
+     */
     public MenuCelda(CeldaGrafica cg, Editor ed) {
         celdaAsociada = cg;
         editor = ed;
@@ -87,7 +91,9 @@ public class MenuCelda extends javax.swing.JPopupMenu{
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         CeldaGrafica anterior = editor.grafica(editor.getMapa().getPosicionInicial());
-                        editor.getMapa().setPosicionInicial(celdaAsociada.getId());
+                        try {
+                            editor.getMapa().setPosicionInicial(celdaAsociada.getId());
+                        } catch (CeldaObjetivoNoValida ex) {} //La celda es transitable.
                         editor.repintarCelda(celdaAsociada);
                         editor.repintarCelda(anterior);
                     }

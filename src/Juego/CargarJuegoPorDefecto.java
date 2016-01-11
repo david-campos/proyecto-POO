@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Juego;
 
 import Excepciones.CeldaObjetivoNoValida;
@@ -15,7 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Crea un juego por defecto. El juego por defecto es un juego con una dificultad
+ * concreta en un mapa generado aleatoriamente.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  * @author crist
  */
 public final class CargarJuegoPorDefecto implements CargadorJuego{
@@ -23,24 +20,64 @@ public final class CargarJuegoPorDefecto implements CargadorJuego{
     private String nombre;
     private double modDificultad;
     
+    /**
+     * Crea un nuevo cargador de juego por defecto
+     * @param nombre nombre del jugador que tendrá el juego
+     * @param tipoJugador tipo de jugador que tendrá el juego (ver {@link #setTipoJugador}
+     * @param dificultad dificultad con la que se iniciará el juego
+     */
     public CargarJuegoPorDefecto(String nombre, String tipoJugador, double dificultad) {
         this.nombre = nombre;
         this.tipoJugador = tipoJugador;
         modDificultad = dificultad;
     }
 
+    /**
+     * Obtiene el tipo de jugador
+     * @return El tipo de jugador
+     * @see #setTipoJugador
+     */
     public String getTipoJugador() {
         return tipoJugador;
     }
 
+    /**
+     * Fija el tipo de jugador. Para ver los posibles tipos de jugador
+     * consultar {@link CargarJuegoJson#setTipoJugador}
+     * @param tipoJugador tipo de jugador que se desea fijar
+     */
     public void setTipoJugador(String tipoJugador) {
         this.tipoJugador = tipoJugador;
     }
 
+    /**
+     * Obtiene el nombre actual para el jugador que se creará
+     * @return El nombre que tendrá el jugador cuando se cargue el juego
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * Obtiene la dificultad con la que se creará el juego
+     * @return La dificultad con la que se creará el juego
+     */
+    public double getModDificultad() {
+        return modDificultad;
+    }
+
+    /**
+     * Modifica la dificultad con la que se iniciará el juego
+     * @param modDificultad la nueva dificultad deseada
+     */
+    public void setModDificultad(double modDificultad) {
+        this.modDificultad = modDificultad;
+    }
+    
+    /**
+     * Modifica el nombre que tomará el jugador cuando se cargue el juego
+     * @param nombre nuevo nombre deseado para el jugador creado
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }

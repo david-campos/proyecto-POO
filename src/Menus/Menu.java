@@ -1,14 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Menus;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * Interfaz para los menús de inicio del juego.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public interface Menu {
-    public void lanzar(); //Lanza el menú al usuario
+    /**
+     * Lanza el menú al usuario
+     */
+    public void lanzar();
 }

@@ -1,16 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Utilidades;
 
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
 /**
- *
- * @author David Campos Rodríguez <david.campos@rai.usc.es>
+ * Filtro de archivos de los diálogos de apertura de mapa.<br>
+ * Sólo se muestran los archivos con la extensión de archivo de mapa.
+ * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public class FiltroMapa extends FileFilter {
     @Override
