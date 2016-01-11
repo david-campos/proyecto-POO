@@ -84,8 +84,8 @@ public final class CargarJuegoPorDefecto implements CargadorJuego{
     
     @Override
     public Juego cargarJuego(Consola c){
-        boolean[] tipos = Mapa.getPlantillaAleatoria(30, 30);
-        Mapa map = new Mapa("Mapa1", "Es un bonito mapa de prueba.", 30, 30, tipos, null);
+        boolean[] tipos = Mapa.getPlantillaAleatoria(30, 20);
+        Mapa map = new Mapa("Mapa1", "Es un bonito mapa de prueba.", 30, 20, tipos, null);
         
         Juego juego = new Juego(map, null, c);
         juego.setModDificultad(modDificultad);

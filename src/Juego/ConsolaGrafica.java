@@ -412,11 +412,17 @@ public class ConsolaGrafica extends JFrame implements Consola{
                 representacionD = "jugador";
             else if(c instanceof Transitable){
                 Transitable transitable = (Transitable) c;
-                if(transitable.getEnemigos().size() > 0)
+                if(transitable.getNumEnemigos() > 0)
                     if(mapa.getJugador().enAlcance(mapa.getPosDe(c)))
-                        representacionD = "enemigo";
+                        if(transitable.getNumEnemigos() == 1)
+                            representacionD = "enemigo";
+                        else
+                            representacionD = "enemigos";
                     else
-                        representacionD = "ed_mover_enemigo";
+                        if(transitable.getNumEnemigos() == 1)
+                            representacionD = "ed_mover_enemigo";
+                        else
+                            representacionD = "ed_mover_enemigos";
             }
         ImagenCelda ret =  new ImagenCelda(obtenerImagen(representacionF));
         if(representacionD != null)
