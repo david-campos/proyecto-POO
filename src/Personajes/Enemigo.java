@@ -19,15 +19,16 @@ import Mapa.Transitable;
 import Objetos.*;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Clase abstracta que representa un enemigo del juego.
  * @author David Campos Rodríguez <a href="mailto:david.campos@rai.usc.es">david.campos@rai.usc.es</a>
  */
 public abstract class Enemigo extends Personaje{
-    private final static Random r = new Random();
+    /**
+     * Generador aleatorio para la IA de los enemigos
+     */
+    protected final static Random r = new Random();
     
     /**
      * Crea un nuevo enemigo
@@ -262,7 +263,11 @@ public abstract class Enemigo extends Personaje{
             }
         }
     }
-    private String direccionAleatoria() {
+    /**
+     * Genera una dirección de movimiento aleatoria
+     * @return La cadena de la dirección de movimiento
+     */
+    protected String direccionAleatoria() {
         String dir = "";
         switch(r.nextInt(4)){
                 case 0: dir = "S"; break;
@@ -304,16 +309,31 @@ public abstract class Enemigo extends Personaje{
             } catch (MaximoObjetosException | MaximoPesoException | EnergiaInsuficienteException ex) {/*No hace nada*/}           
             
             if(mapa.getJugador().enRango(getPos())){
-                if(juego.getConsola() instanceof ConsolaGrafica)
+                if(juego.getConsola() instanceof ConsolaGrafica){
                     ((ConsolaGrafica)juego.getConsola()).imprimirMapa(true);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException ex) {
-                    //Pues nada...
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                        //Pues nada...
+                    }
                 }
             }
             if(!hizoAlgo)
                 break;
         }
+    }
+
+    @Override
+    public String toString() {
+        if(this instanceof HeavyFloater)
+            return String.format("%s\n\t[Heavy Floater]", super.toString());
+        if(this instanceof LightFloater)
+            return String.format("%s\n\t[Light Floater]", super.toString());
+        if(this instanceof Floater)
+            return String.format("%s\n\t[Floater]", super.toString());
+        if(this instanceof Sectoid)
+            return String.format("%s\n\t[Sectoid]", super.toString());
+        return String.format("%s\n\t[Raza desconocida]", super.toString());
+        
     }
 }

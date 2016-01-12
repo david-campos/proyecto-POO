@@ -195,7 +195,7 @@ public class ConsolaGrafica extends JFrame implements Consola{
             celda.getComponente().addMouseListener(new CoordenadaAlClick(areaConsola, mapa.getJugador(), celda.getId(), MouseEvent.BUTTON1));
             celda.getComponente().addMouseListener(new ComandoAlClick(areaConsola,
                         new ComandoAtacar(mapa.getJugador(), null, celda.getId().x, celda.getId().y),
-                    this, MouseEvent.BUTTON3));
+                   this, MouseEvent.BUTTON3));
             panelMapa.add(celda.getComponente());
             paneles.add(celda);
         }
@@ -614,19 +614,21 @@ public class ConsolaGrafica extends JFrame implements Consola{
     //Adapter creado para escribir unas coordenadas relativas al jugador cuando
     //se hace click en un elemento
     private static class CoordenadaAlClick extends MouseAdapter {
-        private Punto pt;
-        private JTextField area;
-        private Personaje personaje;
-        private int boton;
+        private final Punto pt;
+        private final JTextField area;
+        private final Personaje personaje;
+        private final int boton;
         
         public CoordenadaAlClick(JTextField donde, Personaje relativo, Punto pt, int boton) {
             this.pt = pt;
             this.personaje = relativo;
             this.area = donde;
+            this.boton = boton;
         }
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            
             if(e.getButton() == boton && area.isEnabled()){
                 String pre = area.getText().substring(0, area.getSelectionStart());
                 String pos = area.getText().substring(area.getSelectionEnd());
