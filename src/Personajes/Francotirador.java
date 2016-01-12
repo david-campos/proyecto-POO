@@ -56,7 +56,7 @@ public class Francotirador extends Jugador {
             //Comprobamos la distancia
             Punto pt = atacado.getPos();
             double dist = this.getPos().dist(pt);
-            if (dist > 4)	//Mayor daño a larga distancia
+            if (dist > 5)	//Mayor daño a larga distancia
             	return danoBase + (int)Math.round(Math.pow(dist, 1.2));
             return danoBase;
     }

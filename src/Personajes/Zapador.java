@@ -54,7 +54,7 @@ public class Zapador extends Jugador {
         //Comprobamos la distancia
         Punto pt = atacado.getPos();
         double dist = this.getPos().dist(pt);
-        if (dist > 2)	//5% de daño a larga distancia
+        if (dist > 3)	//5% de daño a larga distancia
             danoBase = (int)Math.round(danoBase * 0.05);
         return danoBase;
     }

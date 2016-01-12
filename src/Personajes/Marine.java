@@ -64,7 +64,7 @@ public class Marine extends Jugador {
         double dist = this.getPos().dist(pt);
         if (dist < 2)	//Doble de daño a corta distancia
             return danoBase * 2;
-        else if (dist > 2) 	//5% de daño a más de 2 casillas
+        else if (dist > 4) 	//5% de daño a más de 4 casillas
             return (int)Math.round(danoBase * 0.05);
         else
             return danoBase;

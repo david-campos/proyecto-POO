@@ -79,7 +79,8 @@ public class CeldasML extends MouseAdapter {
         botonPulsado = MouseEvent.NOBUTTON; //El botón pulsado, vuelve a ser ninguno
     }
 
-    //Cuando la rueda del ratón es girada sobre una celda, esta debe cambiar de tipo
+    //Cuando la rueda del ratón es girada sobre una celda, esta debe cambiar de tipo,
+    //por desgracia el scroll panel se come este evento jaja
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         //Solo responder si la herramienta es la NORMAL

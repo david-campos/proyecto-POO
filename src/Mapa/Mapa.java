@@ -170,7 +170,7 @@ public final class Mapa {
             iniciarLago();
         
         //---Caminos---//
-        int numCaminos = r.nextInt( getAncho()*getAncho()/1000 + getAlto()*getAlto()/1000 + 1);
+        int numCaminos = r.nextInt(getAlto()*getAlto()/250 + 1);
         for(i = 0; i < numCaminos; i++)
             iniciarCamino();
         
