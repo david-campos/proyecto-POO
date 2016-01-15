@@ -746,7 +746,7 @@ public final class Mapa {
                         try
                         {
                             Enemigo ene;
-                            String[] nombres = {"Samuel","David","Lara","Patri","Elisa","Jose","Luís","Bea","Tere","Antonio","Alfredo","Eustaquio","Daniel","Einstein","Locke","Kant","Turing","Allan","Tesla","Java","Beethoven","Trotsky","Alfred","Pinochet","Bot","xX_n00bKiller69_Xx","Javi","Snoopy","María","Colón","Euclides","Platón","Epicuro","Aristarco de Samos","Isabel","Felipe","Carlos","Juan","Filipino","Alien","Marciano","Enemigo","Alberto"};
+                            String[] nombres = {"Samuel","David","Lara","Patri","Elisa","Jose","Luís","Bea","Tere","Antonio","Alfredo","Eustaquio","Daniel","Einstein","Locke","Kant","Turing","Allan","Tesla","Java","Beethoven","Trotsky","Alfred","Pinochet","Bot","xX_n00bKiller69_Xx","Javi","Snoopy","María","Colón","Euclides","Platón","Epicuro","Aristarco de Samos","Isabel","Felipe","Carlos","Juan","Filipino","Alien","Marciano","Enemigo","Alberto","Tomás","Silverio","Gumersindo"};
                             String[] adjetivos = {" el sabio",""," el necio"," el valiente"," el que foca"," el masticatanques"," el rebientapollos"," el encofrador"," el artista"," el empalador"," el inútil"," el bárbaro"," el pesado"," el afilalápices"," el unicornio"," el alien"," el marciano"," el sabrosón"};
                             String nombreEne = obtenerNombreEnemigo(
                                                 String.format("%s%s", nombres[r.nextInt(nombres.length)], r.nextFloat()>0.75?adjetivos[r.nextInt(adjetivos.length)]:"")
